@@ -1,0 +1,174 @@
+/* Sass Template */
+@import url("https://fonts.googleapis.com/css2?family=Spartan:wght@100;200;300;400;500;600;700;800;900&display=swap");
+.primary {
+  color: #000;
+}
+
+.secondary {
+  color: #000;
+}
+
+.text {
+  color: #000;
+}
+
+.span {
+  color: #000;
+}
+
+.anchor {
+  color: #000;
+}
+
+.white {
+  color: #000;
+}
+
+.black {
+  color: #000;
+}
+
+.hover {
+  color: red;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.bg-light {
+  background-color: #f1f1f1;
+}
+
+body {
+  font-size: 16px;
+  font-family: "Spartan", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Spartan", sans-serif;
+}
+
+h1 {
+  font-size: 52px;
+}
+
+h2 {
+  font-size: 42px;
+}
+
+h3 {
+  font-size: 32px;
+}
+
+h4 {
+  font-size: 27px;
+}
+
+h5 {
+  font-size: 21px;
+}
+
+h6 {
+  font-size: 18px;
+}
+
+p {
+  color: #000;
+  font-size: 16px;
+  line-height: 1.7em;
+  margin-bottom: 15px;
+  font-family: "Spartan", sans-serif;
+}
+
+ul, ol {
+  text-decoration: none;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+.list01 {
+  font-size: 16px;
+  line-height: 1.7em;
+  font-family: "Spartan", sans-serif;
+}
+.list01 li {
+  position: relative;
+  padding-left: 15px;
+  transition: 0.3s ease-in;
+}
+.list01 li::after {
+  display: block;
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 8px;
+  height: 3px;
+  background: #000;
+  bottom: 0;
+  margin: auto;
+  transition: 0.3s ease-in;
+}
+.list01 li:hover {
+  color: red;
+  padding-left: 20px;
+  transition: 0.3s ease-in;
+}
+.list01 li:hover::after {
+  width: 15px;
+  background: red;
+  transition: 0.3s ease-in;
+}
+
+table th, table td, .table th, .table td {
+  border: 1px solid transparent;
+}
+table thead tr th, .table thead tr th {
+  font-size: 16px;
+  line-height: 1.7em;
+  font-family: "Spartan", sans-serif;
+  color: #fff;
+  background-color: red;
+  border: 1px solid red;
+}
+table tbody tr td, .table tbody tr td {
+  font-size: 16px;
+  line-height: 1.7em;
+  font-family: "Spartan", sans-serif;
+  font-size: 14px;
+  border: 1px solid transparent;
+}
+table tbody tr:nth-child(odd), .table tbody tr:nth-child(odd) {
+  background: #f1f1f1 !important;
+  background-color: #f1f1f1 !important;
+}
+table tbody tr:nth-child(even), .table tbody tr:nth-child(even) {
+  background: #fff !important;
+  background-color: #fff !important;
+}
+
+form input,
+form input.form-control {
+  height: 50px;
+  border: 1px solid #cccccc;
+  border-radius: 0;
+  padding: 0 15px;
+  line-height: 1em;
+  font-size: 16px;
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+  background-clip: border-box;
+}
+form input:focus,
+form input.form-control:focus {
+  color: #000;
+  background-color: #fff;
+  border-color: red;
+  outline: 0;
+  box-shadow: unset;
+}
+
+/*# sourceMappingURL=sass.css.map */

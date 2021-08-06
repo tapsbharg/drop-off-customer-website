@@ -1,0 +1,263 @@
+.product_management table tr td.content ul li.heading a {
+    color: #d20400;
+}
+.tabs03 .nav-tabs a {
+    width: 180px;
+    text-align: center;
+}
+.pro-sidebar .pro-menu {
+    padding: 0;
+    background: transparent;
+}
+
+.pro-sidebar > .pro-sidebar-inner {
+    background: transparent;
+}
+
+.pro-sidebar .pro-menu .pro-menu-item > .pro-inner-item {
+    padding: 0;
+}
+
+.pro-sidebar .pro-menu .pro-menu-item.pro-sub-menu .pro-inner-item {
+    padding: 12px 15px;
+    color: #fff;
+}
+.dashbord_outer .dashbord_left ul li a.isActive{
+    background-color: #d20400;
+}
+.change_pass_outer .comman_from nav {
+    width: 100%;
+}
+
+.comman_from .tab-content {
+    width: 100%;
+}
+.order_pickup_outer {
+    min-height: auto;
+}
+.order_Confirmed {
+    min-height: auto;
+}
+.modal-gray.modal {
+    background-color: #f6f8f9;
+}
+.errorMsg {
+    font-size: 12px;
+    color: red;
+    margin-top: 5px;
+    width: 100%;
+}
+form .fileright input[type=file] {
+    height: 30px;
+}
+.changImage {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.changImage input {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    opacity: 0;
+}
+.dashbord_outer .dashbord_right .editsession {
+    flex-wrap: wrap;
+    text-align: center;
+}
+.dashbord_outer {
+    display: flex;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+    min-height: 300px;
+}
+
+.mainPageWraper {
+    width: 100%;
+}
+header .after_login ul li.notice .dropdown-menu {
+    width: 500px;
+    padding: 0;
+    border: 0;
+}
+header .after_login ul li.notice .dropdown-toggle::after{
+    display: none;
+}
+.Withdraw_outer {
+    min-height: auto;
+    padding: 0;
+}
+.Withdraw_outer .Withdraw_inner {
+    max-width: 100%;
+}
+.Withdraw_outer .Withdraw_inner .cus_btn {
+    margin: 15px auto 0;
+}
+form input, form textarea {
+    color: #000;
+    border-radius: 0;
+    padding: 15px 15px;
+    line-height: 1em;
+    font-size: 15px;
+    width: 100%;
+    display: block;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #f6f8f9;
+    border: 1px solid #f6f8f9;
+}
+form  .user_image input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    width: 100%;
+}
+
+.user_image {
+    position: relative;
+}
+.dashbord_outer .dashbord_left {
+    padding-bottom: 70px;
+}
+.release {
+    font-size: 12px;
+    color: #fff;
+    letter-spacing: 2px;
+    text-align: center;
+}
+.profielUpld input {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    opacity: 0;
+}
+
+.profielUpld {
+    overflow: hidden;
+}
+.fileleft {
+    width: 70%;
+}
+
+.fileright {
+    width: 30%;
+    padding-left: 10px;
+    padding-top: 26px;
+}
+.fileright button {
+    width: auto;
+    min-width: 100px;
+}
+.react-confirm-alert-overlay {
+    z-index: 9999 !important;
+}
+
+.react-confirm-alert-body > h1 {
+    font-size: 24px !important;
+    margin-bottom: 21px !important;
+}
+
+.react-confirm-alert-body {
+    font-size: 14px;
+    text-align: center !important;
+}
+
+.react-confirm-alert-button-group {
+    justify-content: center !important;
+}
+
+/*customer*/
+.my_order_outer {
+    display: flex;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.my_order_outer .tab-content {
+    width: 100%;
+}
+.add_new_card .add_new_card_contant{
+    max-width: 100%;
+}
+.add_new_card {
+    height: auto;
+}
+.modal-content {
+    box-shadow: 0px 5px 6px #00000029;
+    background-color: #fff;
+    border: 0;
+}
+.loader {
+	height:50px;
+	width:50px;
+}
+.loaderWRapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    background: rgb(255 255 255 / 68%);
+}
+.loading_page .loaderWRapper {
+    display: flex;
+    display: -webkit-flex;
+}
+.loaderCircle {
+    border: calc(48px / 8) solid transparent;
+    border-left: calc(48px / 8) solid #d20400;
+    border-radius: 100%;
+    box-sizing: border-box;
+    position: relative;
+    animation: spin .7s linear infinite;
+}
+@keyframes spin {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+.pass_rest_success {
+    height: auto;
+}
+.liquor_store .liquor_store_03 .searchRlighshwo .browse_our_menu {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.searchRlighshwo {
+    position: absolute;
+    right: 0;
+}
+
+.liquor_store_03 {
+    position: relative;
+}
+
+.liquor_store .liquor_store_03 .browse_our_menu {
+    justify-content: flex-start;
+}
+.recomDedBWrp{
+    background-color: #fff;
+}
+
+

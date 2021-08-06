@@ -1,4 +1,15 @@
+import { useState } from "react";
+import { Modal } from "react-bootstrap"
+
 export default function CheckoutPage(props) {
+    const [withdrawalModal,setWithdrawalModal]=useState(false);
+    const [couponModal,setCouponModal]=useState(false);
+    const addCardModal = (type) =>{
+        setWithdrawalModal(type)
+    }
+    const couponModalFunc = (type) =>{
+        setCouponModal(type)
+    }
     return (
       <>
          <div className="checkout py-3">
@@ -185,13 +196,94 @@ export default function CheckoutPage(props) {
                                 </div>
                             </div>
                             
-                            <a className="but03" href="#"> <i className="fas fa-plus"></i>  Add New Card </a>
+                            <a className="but03" onClick={()=>addCardModal(true)}> <i className="fas fa-plus"></i>  Add New Card </a>
                         </div>
 
                     </div>
                 </div>
             </div>
         </div>
+
+
+        <Modal
+                show={withdrawalModal}
+                onHide={()=>{addCardModal(false)}}
+                backdrop="static"
+                keyboard={false}
+                className="modal-gray"
+                centered
+            >
+                <div className="add_new_card">
+                    <div className="add_new_card_contant bg-white p-5 rounded-3">
+                        <i className="fal fa-times-circle" onClick={()=>addCardModal(false)}></i>
+                        <h5> Add New Card </h5>
+                        <form className=" " action="">
+                            <div className="row bg-black p-4 rounded-3 mb-3">
+                                <div className="col-sm-12 mb-3">
+                                    <input type="text" placeholder="Enter Card Number"/>
+                                </div>
+                                <div className="col-sm-7  mb-3">
+                                    <input type="text" placeholder="Card Holder's Name"/>
+                                </div>
+                                <div className="col-sm-5  mb-3">
+                                    <input type="text" placeholder="Expiry Date"/>
+                                </div>
+                            </div>
+                            <button className="btn cus_btn custom01" onClick={()=>addCardModal(false)}> Continue </button>
+                        </form>
+                        
+                    </div>
+                </div>
+            </Modal>
+        <Modal
+                show={couponModal}
+                onHide={()=>{couponModalFunc(false)}}
+                backdrop="static"
+                keyboard={false}
+                className="modal-gray"
+                centered
+            >
+                <div class="apply_coupon d-flex justify-content-center align-items-center bg-light02">
+                    <div class="apply_coupon_contant bg-white p-5 rounded-3"  data-aos="zoom-in" data-aos-anchor-placement="top-bottom" data-aos-duration="1500" data-aos-delay="800">
+                        <i class="fal fa-times-circle"  onClick={()=>{couponModalFunc(false)}}></i>
+                        <h5> Apply Coupon </h5>
+                        <form class="mb-3" action="">
+                            <div>
+                                <i class="far fa-search"></i>
+                                <input type="search" class="form-control" placeholder="Search Item..." aria-label="Search"/> 
+                            </div>
+                        </form>
+                        <div class="coupon_code mb-3">
+                            <ul>
+                                <li class="off"><b> 50% OFF </b></li>
+                                <li class="content">Use code NEW50 to avail this offer</li>
+                                <li class="edit">
+                                    <a href="#"> Apply </a> 
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="coupon_code mb-3">
+                            <ul>
+                                <li class="off"><b> 50% OFF </b></li>
+                                <li class="content">Use code NEW50 to avail this offer</li>
+                                <li class="edit">
+                                    <a href="#"> Apply </a> 
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="coupon_code mb-3">
+                            <ul>
+                                <li class="off"><b> 50% OFF </b></li>
+                                <li class="content">Use code NEW50 to avail this offer</li>
+                                <li class="edit">
+                                    <a href="#"> Apply </a> 
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+
       </>
     )
   }

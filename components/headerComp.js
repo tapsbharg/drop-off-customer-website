@@ -19,7 +19,7 @@ export default function Header(appProps) {
                 <nav className="d-flex flex-wrap">
                     <ul className="d-flex text-end ">
                         <li className="active"><Link href="/">Home</Link></li>
-                        <li><Link href="/login">Sign in</Link></li>
+                        <li><Link href="/sign-in">Sign in</Link></li>
                     </ul>
                 </nav>
             )}

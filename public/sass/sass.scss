@@ -3774,11 +3774,8 @@ input.form-check-input:checked {
                     order_placed                    
 ============================================================= */
 .order_placed{
-    height: 100vh;
     .order_Confirmed_contant{
-        max-width: 450px;
         position: relative;
-        box-shadow: 0px 5px 6px #00000029;
 
         i.fa-times-circle{
             font-size: 30px;
@@ -3794,12 +3791,9 @@ input.form-check-input:checked {
                     cancel_popup                    
 ============================================================= */
 .cancel_popup{
-    height: 100vh;
     .cancel_popup_content{
         width: 100%;
-        max-width: 450px;
         position: relative;
-        box-shadow: 0px 5px 6px #00000029;
 
         i.fa-times-circle{
             font-size: 30px;

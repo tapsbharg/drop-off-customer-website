@@ -44,7 +44,7 @@ export default function SearchPage(props) {
                             <button className={`nav-link ${category=='Liquor Stores'?'active':''}`} onClick={()=>categoryChange('Liquor Stores')}> Liquor Stores</button>
                             <button className={`nav-link ${category=='Mom & Pop Stores'?'active':''}`} onClick={()=>categoryChange('Mom & Pop Stores')}> Mom & Pop Stores</button>
                             <button className={`nav-link ${category=='Dispensaries'?'active':''}`} onClick={()=>categoryChange('Dispensaries')}> Dispensaries</button>
-                            <button className={`nav-link ${category=='Pharmacies'?'active':''}`} onClick={()=>categoryChange('Liquor Stores')}> Pharmacies</button>
+                            <button className={`nav-link ${category=='Pharmacies'?'active':''}`} onClick={()=>categoryChange('Pharmacies')}> Pharmacies</button>
                         </div>
                     </nav>
                     <div className="searcCosngpp">

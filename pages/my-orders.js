@@ -45,7 +45,7 @@ export default function MyOrdersPage(props) {
                                                 </ul>
                                                 <ul className="my_order03 d-flex flex-wrap justify-content-between align-items-center ">
                                                     <li> <a href="#"> $811.11 </a> </li>
-                                                    <li> <Link href="/order/123456">Track Details </Link> </li>
+                                                    <li> <Link href="/order-detail?orderId=123456">Track Details </Link> </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -76,7 +76,7 @@ export default function MyOrdersPage(props) {
                                                 </ul>
                                                 <ul className="my_order03 d-flex flex-wrap justify-content-between align-items-center ">
                                                     <li> <a href="#"> $811.11 </a> </li>
-                                                    <li> <Link href="/order/123456">Track Details </Link> </li>
+                                                    <li> <Link href="/order-detail?orderId=123456">Track Details </Link> </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -111,7 +111,7 @@ export default function MyOrdersPage(props) {
                                             </ul>
                                             <ul className="my_order03 d-flex flex-wrap justify-content-between align-items-center ">
                                                 <li> <a href="#"> $811.11 </a> </li>
-                                                <li> <Link href="/order/123456">Track Details </Link> </li>
+                                                <li> <Link href="/order-detail?orderId=123456">Track Details </Link> </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -141,7 +141,7 @@ export default function MyOrdersPage(props) {
                                             </ul>
                                             <ul className="my_order03 d-flex flex-wrap justify-content-between align-items-center ">
                                                 <li> <a href="#"> $811.11 </a> </li>
-                                                <li> <Link href="/order/123456">Track Details </Link> </li>
+                                                <li> <Link href="/order-detail?orderId=123456">Track Details </Link> </li>
                                             </ul>
                                         </div>
                                     </div> 

@@ -30,25 +30,31 @@ export default function HomePage(props) {
           <div className="container">
               <ul className="d-flex flex-wra align-items-center justify-content-center" >
                   <li data-aos="fade-up" data-aos-duration="1000">
-                      <a href="">
-                          <img src="/assets/images/liquor (2).svg" alt=""/>    
-                          <span>Liquor Stores</span>
-                      </a>
+                      <Link href="/search?category=Liquor Stores">
+                            <a>
+                                <img src="/assets/images/liquor (2).svg" alt=""/>    
+                                <span>Liquor Stores</span>
+                            </a>
+                        </Link>
                   </li>
                   <li  data-aos="fade-up" data-aos-duration="1500">
-                      <a href="">
-                          <img src="/assets/images/shops (1).svg" alt=""/>
-                          <span>Mom & Pop Stores</span>
-                      </a>
+                      <Link href="/search?category=Mom & Pop Stores">
+                            <a>
+                                <img src="/assets/images/shops (1).svg" alt=""/>
+                                <span>Mom & Pop Stores</span>
+                            </a>
+                        </Link>
                   </li>
                   <li  data-aos="fade-up" data-aos-duration="2000">
-                      <a href="">
-                          <img src="/assets/images/pharmacy (2).svg" alt=""/>
-                          <span>Dispensaries</span>
-                      </a>
+                      <Link href="/search?category=Dispensaries">
+                            <a>
+                                <img src="/assets/images/pharmacy (2).svg" alt=""/>
+                                <span>Dispensaries</span>
+                            </a>
+                        </Link>
                   </li>
                   <li  data-aos="fade-up" data-aos-duration="3000">
-                        <Link href="/search/Pharmacies">
+                        <Link href="/search?category=Pharmacies">
                             <a>
                                 <img src="/assets/images/drugs (2).svg" alt=""/>
                                 <span>Pharmacies</span>

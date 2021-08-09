@@ -1,14 +1,18 @@
 import { useState } from "react";
 import { Modal } from "react-bootstrap"
-
+import Link from "next/link";
 export default function CheckoutPage(props) {
     const [withdrawalModal,setWithdrawalModal]=useState(false);
     const [couponModal,setCouponModal]=useState(false);
+    const [orderMsgModal,setOrderMsgModal]=useState(false);
     const addCardModal = (type) =>{
         setWithdrawalModal(type)
     }
     const couponModalFunc = (type) =>{
         setCouponModal(type)
+    }
+    const orderMsgModalFunc = (type) =>{
+        setOrderMsgModal(type)
     }
     return (
       <>
@@ -22,39 +26,39 @@ export default function CheckoutPage(props) {
                                 <table className="order_from">
                                     <thead>
                                         <tr>
-                                            <th colspan="4"> Order From </th>
+                                            <th colSpan="4"> Order From </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td className="address" colspan="2"> The Austin Store <span><i className="fas fa-map-marker-alt"></i> Austin, Texas</span> </td>
-                                            <td colspan="2"> Upload Your Identity/ Prescriptions </td>
+                                            <td className="address" colSpan="2"> The Austin Store <span><i className="fas fa-map-marker-alt"></i> Austin, Texas</span> </td>
+                                            <td colSpan="2" align="right"> Upload Your Identity/ Prescriptions </td>
                                         </tr>
                                         <tr>
                                             <td className="on-off"> 
                                                 <div className="  form-check form-switch">
-                                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked=""/>
+                                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" />
                                                 </div>
                                             </td>
                                             <td className="content">Glenfiddich Excellence</td>
                                             <td className="quntity">  
-                                                <input type="button" value="-" className="qty-minus"/>
-                                                <input type="number" value="1" className="qty"/>
-                                                <input type="button" value="+" className="qty-plus"/> 
+                                                <input type="button" defaultValue="-" className="qty-minus"/>
+                                                <input type="number" defaultValue="1" className="qty"/>
+                                                <input type="button" defaultValue="+" className="qty-plus"/> 
                                             </td>
                                             <td className="price" > $50 </td>
                                         </tr>
                                         <tr>
                                             <td className="on-off"> 
                                                 <div className="  form-check form-switch">
-                                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked=""/>
+                                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" />
                                                 </div>
                                             </td>
                                             <td className="content">Glenfiddich Excellence</td>
                                             <td  className="quntity">  
-                                                <input type="button" value="-" className="qty-minus"/>
-                                                <input type="number" value="1" className="qty"/>
-                                                <input type="button" value="+" className="qty-plus"/> 
+                                                <input type="button" defaultValue="-" className="qty-minus"/>
+                                                <input type="number" defaultValue="1" className="qty"/>
+                                                <input type="button" defaultValue="+" className="qty-plus"/> 
                                             </td>
                                             <td className="price"> $50 </td>
                                         </tr>
@@ -65,7 +69,7 @@ export default function CheckoutPage(props) {
                             <div className="summer_box01 bg-light02 rounded-3 p-3 mb-3">
                                 <ul className="d-flex justify-content-between">
                                     <li> Select Coupon Code </li>
-                                    <li> <a href="#"> View Coupons </a> </li>
+                                    <li> <a  onClick={()=>{couponModalFunc(true)}}> View Coupons </a> </li>
                                 </ul>
                             </div>
                             <div className="summer_box02 bg-light02 rounded-3 p-3 mb-3">
@@ -90,7 +94,7 @@ export default function CheckoutPage(props) {
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th colspan="2">Billing Summary</th>
+                                            <th colSpan="2">Billing Summary</th>
                                         </tr>
                                     </thead>
                                     <tbody>   
@@ -114,7 +118,7 @@ export default function CheckoutPage(props) {
                                 </table>
                             </div>
 
-                            <a className="btn cus_btn custom01" href="#"> Place Order </a>
+                            <a className="btn cus_btn custom01" onClick={()=>orderMsgModalFunc(true)}> Place Order </a>
                             
                             
 
@@ -243,43 +247,66 @@ export default function CheckoutPage(props) {
                 className="modal-gray"
                 centered
             >
-                <div class="apply_coupon d-flex justify-content-center align-items-center bg-light02">
-                    <div class="apply_coupon_contant bg-white p-5 rounded-3"  data-aos="zoom-in" data-aos-anchor-placement="top-bottom" data-aos-duration="1500" data-aos-delay="800">
-                        <i class="fal fa-times-circle"  onClick={()=>{couponModalFunc(false)}}></i>
+                <div className="apply_coupon">
+                    <div className="apply_coupon_contant bg-white p-5 rounded-3">
+                        <i className="fal fa-times-circle"  onClick={()=>{couponModalFunc(false)}}></i>
                         <h5> Apply Coupon </h5>
-                        <form class="mb-3" action="">
+                        <form className="mb-3" action="">
                             <div>
-                                <i class="far fa-search"></i>
-                                <input type="search" class="form-control" placeholder="Search Item..." aria-label="Search"/> 
+                                <i className="far fa-search"></i>
+                                <input type="search" className="form-control" placeholder="Search Item..." aria-label="Search"/> 
                             </div>
                         </form>
-                        <div class="coupon_code mb-3">
+                        <div className="coupon_code mb-3">
                             <ul>
-                                <li class="off"><b> 50% OFF </b></li>
-                                <li class="content">Use code NEW50 to avail this offer</li>
-                                <li class="edit">
+                                <li className="off"><b> 50% OFF </b></li>
+                                <li className="content">Use code NEW50 to avail this offer</li>
+                                <li className="edit">
                                     <a href="#"> Apply </a> 
                                 </li>
                             </ul>
                         </div>
-                        <div class="coupon_code mb-3">
+                        <div className="coupon_code mb-3">
                             <ul>
-                                <li class="off"><b> 50% OFF </b></li>
-                                <li class="content">Use code NEW50 to avail this offer</li>
-                                <li class="edit">
+                                <li className="off"><b> 50% OFF </b></li>
+                                <li className="content">Use code NEW50 to avail this offer</li>
+                                <li className="edit">
                                     <a href="#"> Apply </a> 
                                 </li>
                             </ul>
                         </div>
-                        <div class="coupon_code mb-3">
+                        <div className="coupon_code mb-3">
                             <ul>
-                                <li class="off"><b> 50% OFF </b></li>
-                                <li class="content">Use code NEW50 to avail this offer</li>
-                                <li class="edit">
+                                <li className="off"><b> 50% OFF </b></li>
+                                <li className="content">Use code NEW50 to avail this offer</li>
+                                <li className="edit">
                                     <a href="#"> Apply </a> 
                                 </li>
                             </ul>
                         </div>
+                    </div>
+                </div>
+            </Modal>
+            <Modal
+                show={orderMsgModal}
+                onHide={()=>{orderMsgModalFunc(false)}}
+                backdrop="static"
+                keyboard={false}
+                className="modal-gray"
+                centered
+            >
+                <div className="order_Confirmed">
+                    <div className="order_Confirmed_contant bg-white p-5">
+                        {/* <i className="fal fa-times-circle"></i> */}
+                        <i className="fas fa-check-circle"></i>
+                        <h5>Your Order has been placed </h5>
+                        <p>Order No: 2222222222</p>
+                        <Link href="/order-detail?orderId=2222222222">
+                            <a className="btn cus_btn custom01 mb-3"> Order Details</a>
+                        </Link>
+                        <Link href="/">
+                            <a className="btn cus_btn custom01 mb-3"> Home </a>
+                        </Link>
                     </div>
                 </div>
             </Modal>

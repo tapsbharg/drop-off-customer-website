@@ -4337,9 +4337,9 @@ input.form-check-input:checked {
 .checkout .summer_outer table tr td {
   padding: 5px 0;
 }
-.checkout .summer_outer table tr td:nth-child(2) {
+/* .checkout .summer_outer table tr td:nth-child(2) {
   text-align: right;
-}
+} */
 .checkout .summer_outer a.cus_btn {
   width: 100%;
   color: #fff;
@@ -4372,9 +4372,7 @@ input.form-check-input:checked {
 /*=============================================================
                     apply_coupon                    
 ============================================================= */
-.apply_coupon {
-  height: 100vh;
-}
+
 .apply_coupon .apply_coupon_contant {
   box-shadow: 0px 5px 6px #00000029;
 }
@@ -4467,14 +4465,10 @@ input.form-check-input:checked {
 /*=============================================================
                     cancel_popup                    
 ============================================================= */
-.cancel_popup {
-  height: 100vh;
-}
+
 .cancel_popup .cancel_popup_content {
   width: 100%;
-  max-width: 450px;
   position: relative;
-  box-shadow: 0px 5px 6px #00000029;
 }
 .cancel_popup .cancel_popup_content i.fa-times-circle {
   font-size: 30px;

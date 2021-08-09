@@ -1,6 +1,43 @@
+import axios from "axios";
+import { useFormik } from "formik";
 import Link from "next/link";
-
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import { reactLocalStorage } from "reactjs-localstorage";
+import * as Yup from "yup";
 export default function SignInPage(props) {
+    const history = useRouter();
+  const initialValues = {
+    email: "",
+    password: "",
+  };
+  const validationSchema = Yup.object({
+    email:Yup.string()
+        .email('Please enter valid email')
+        .required('Please enter email'),
+    password: Yup.string().required("Please enter password"),
+  });
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: (values) => {
+      console.log("submit", values);
+      login(values);
+    },
+  });
+  const login = (userData) => {
+    axios
+      .post(`${baseURL}/login`, userData)
+      .then((res) => {
+        reactLocalStorage.set("token", res.data.data.token);
+        toast.success(res.data.message);
+        history.push("/dashboard");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.response.data.message);
+      });
+  };
     return (
       <>
         <section className="sign_up_outer">
@@ -12,22 +49,28 @@ export default function SignInPage(props) {
                     </div>
                     <div className="col-sm-6"  data-aos="fade-up" data-aos-anchor-placement="top-bottom" data-aos-duration="1500" data-aos-delay="500">
                         <div className="sign_upform comman_from my-4">
-                            <form>
+                            <form onSubmit={formik.handleSubmit}>
                                 <h5> Sign In To Your Account </h5>
                                 <div className="mb-3">
                                     <label className="form-label">Email</label>
-                                    <input type="email" className="form-control" id="" placeholder="Enter Your Email"/>
+                                    <input type="email" {...formik.getFieldProps("email")} className="form-control" id="" placeholder="Enter Your Email"/>
+                                    {formik.touched.email && formik.errors.email ? (
+                                    <div className="errorMsg">{formik.errors.email}</div>
+                                    ) : null}
                                 </div>
                                 <div className="mb-3">
                                     <label className="form-label">Password</label>
-                                    <input type="password" className="form-control" id="" placeholder="Enter Your Password"/>
+                                    <input type="password" {...formik.getFieldProps("password")} className="form-control" id="" placeholder="Enter Your Password"/>
+                                    {formik.touched.password && formik.errors.password ? (
+                                    <div className="errorMsg">{formik.errors.password}</div>
+                                    ) : null}
                                 </div> 
                                 <span className="forgot_pass"> <Link href="/forgot-password"> Forgot Password? </Link> </span>
                                 <div className="submitbtn text-center">
                                     <button className="btn cus_btn custom01"> Sign In </button>
                                 </div>
                                 <div className="continu_social_icons my-3">
-                                    <label for=""> Continue with : </label>
+                                    <label> Continue with : </label>
                                     <ul className="d-flex align-items-center  justify-content-center my-2">
                                         <li><a href="#"> <i className="fab fa-facebook"></i> </a></li>
                                         <li><a href="#"> <i className="fab fa-google"></i> </a></li>

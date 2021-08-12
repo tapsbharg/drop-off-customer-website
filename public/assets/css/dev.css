@@ -259,5 +259,13 @@ form  .user_image input {
 .recomDedBWrp{
     background-color: #fff;
 }
-
+.loadingSren {
+    min-height: 300px;
+    padding: 10px 15px;
+    text-align: center;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+}
 

@@ -1,6 +1,9 @@
+import AuthLayout from "../components/authLayout";
+
 export default function OrderDetailPage(props) {
     return (
       <>
+      <AuthLayout props={props}>
         <div className="checkout py-4">
             <div className="container">
                 <div className="row">
@@ -127,6 +130,8 @@ export default function OrderDetailPage(props) {
                 </div> 
             </div>
         </div>
+
+        </AuthLayout>
       </>
     )
   }

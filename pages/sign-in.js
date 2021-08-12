@@ -2,11 +2,14 @@ import axios from "axios";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { reactLocalStorage } from "reactjs-localstorage";
+import ROOT_URL from "../services/api-url";
 import * as Yup from "yup";
+import "react-toastify/dist/ReactToastify.css";
 export default function SignInPage(props) {
-    const history = useRouter();
+  const baseURL=ROOT_URL;
+  const history = useRouter();
   const initialValues = {
     email: "",
     password: "",
@@ -29,17 +32,23 @@ export default function SignInPage(props) {
     axios
       .post(`${baseURL}/login`, userData)
       .then((res) => {
-        reactLocalStorage.set("token", res.data.data.token);
-        toast.success(res.data.message);
-        history.push("/dashboard");
+        if(res.data.data != undefined){
+          reactLocalStorage.set("token", res.data.data.token);
+          toast.success(res.data.message);
+          props.setlogin();
+          history.push("/profile");
+        }else{
+          toast.error(res.data.message);
+        }
       })
       .catch((error) => {
         console.log(error);
-        toast.error(error.response.data.message);
+        toast.error(error.message);
       });
   };
     return (
       <>
+      <ToastContainer />
         <section className="sign_up_outer">
             <div className="container">
             <div className="sign_up_inner my-5">
@@ -76,7 +85,7 @@ export default function SignInPage(props) {
                                         <li><a href="#"> <i className="fab fa-google"></i> </a></li>
                                     </ul>
                                 </div>
-                                <span> Already have an account ? <Link href="/sign-up"> Sign Up Now </Link> </span>
+                                <span>Already have an account ? <Link href="/sign-up"> Sign Up Now </Link> </span>
                             </form>
                         </div>
                     </div>

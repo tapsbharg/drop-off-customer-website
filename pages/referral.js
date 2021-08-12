@@ -1,16 +1,11 @@
 import Link from "next/link";
-import Sidebar from "../components/sidebar";
+import DashLayout from "../components/dashLayout";
 
 export default function ReferPage(props) {
     return (
       <>
-        <section className="referral_box_outer py-3 mb-5">
-            <div className="container">
-                <div className="customer_profile_outer d-flex flex-wrap ">
-                    <div className="opction_left">
-                        <Sidebar props={props} />
-                    </div>
-                    <div className="description_right">
+      <DashLayout props={props}>
+      <div className="description_right">
                         <div className="referral_outer"> 
 
                             <div className="referral_box01 d-flex flex-wrap justify-content-between align-items-center">
@@ -42,9 +37,8 @@ export default function ReferPage(props) {
 
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
+                
+      </DashLayout>
       </>
     )
   }

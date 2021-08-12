@@ -1,17 +1,12 @@
 import Link from "next/link";
 import { Tab, Tabs } from "react-bootstrap";
-import Sidebar from "../components/sidebar";
+import DashLayout from "../components/dashLayout";
 
 export default function MyOrdersPage(props) {
     return (
       <>
-        <section className="your-order py-5">
-            <div className="container">
-                <div className="customer_profile_outer d-flex flex-wrap ">
-                    <div className="opction_left">
-                        <Sidebar props={props} />
-                    </div>
-                    <div className="description_right">
+      <DashLayout props={props}>
+      <div className="description_right">
                         <div className="my_order_outer"> 
                             <div className="d-flex flex-wrap justify-content-between align-items-center mb-4">
                                 <h6>My Orders </h6>
@@ -152,9 +147,8 @@ export default function MyOrdersPage(props) {
 
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
+                
+      </DashLayout>
       </>
     )
   }

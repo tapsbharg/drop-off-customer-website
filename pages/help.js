@@ -1,17 +1,12 @@
 import Link from "next/link";
 import { Tab, Tabs } from "react-bootstrap";
-import Sidebar from "../components/sidebar";
+import DashLayout from "../components/dashLayout";
 
 export default function HelpPage(props) {
     return (
       <>
-        <section className="help_content_outer py-3 mb-5">
-            <div className="container">
-                <div className="customer_profile_outer d-flex flex-wrap ">
-                    <div className="opction_left">
-                        <Sidebar props={props} />
-                    </div>
-                    <div className="description_right">
+      <DashLayout props={props}>
+      <div className="description_right">
                     <div className="help_outer p-3 tabs03">
                         <div className="d-flex justify-content-between align-items-center">
                             <h6> Help </h6>
@@ -60,9 +55,7 @@ export default function HelpPage(props) {
                             
                         </div> 
                     </div>
-                </div>
-            </div>
-        </section>
+      </DashLayout>
       </>
     )
   }

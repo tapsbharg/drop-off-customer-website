@@ -18,6 +18,7 @@ Router.events.on('routeChangeError', () => NProgress.done());
 
 
 function App({ Component, pageProps }) {
+  let history=useRouter();
   useEffect(() => {
     AOS.init();
   }, []);
@@ -31,7 +32,12 @@ function App({ Component, pageProps }) {
     reactLocalStorage.clear();
     authDone(false);
   };
-
+  const setLogin = () => {
+    authDone(true);
+  };
+  const loginCheck = () => {
+    authDone(true);
+  };
 
 Router.events.on('routeChangeStart', () => {
     document.body.className = 'loading_page';
@@ -48,7 +54,7 @@ Router.events.on('routeChangeComplete', () => {
                 <link rel="stylesheet" href="/assets/css/custom.css"/>
                 <link rel="stylesheet" href="/assets/css/dev.css"/>
             </Head>
-            <Component  auth={isAuth} {...pageProps} />
+            <Component setlogin={()=>setLogin()} auth={isAuth} {...pageProps} />
         </Layout>
       );
 }

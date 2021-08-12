@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Modal } from "react-bootstrap";
-import Sidebar from "../components/sidebar";
+import DashLayout from "../components/dashLayout";
 
 export default function IdCardPage(props) {
     const [withdrawalModal,setWithdrawalModal]=useState(false);
@@ -9,13 +9,8 @@ export default function IdCardPage(props) {
     }
     return (
       <>
-        <section className="my-5">
-            <div className="container">
-                <div className="customer_profile_outer d-flex flex-wrap ">
-                    <div className="opction_left">
-                        <Sidebar props={props} />
-                    </div>
-                    <div className="description_right">
+      <DashLayout props={props}>
+      <div className="description_right">
                         <div className="id-outer"> 
                             <ul className="d-flex flex-wrap justify-content-between align-items-center">
                             <li><a href="#"> ID </a></li>
@@ -37,10 +32,7 @@ export default function IdCardPage(props) {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-        <Modal
+                    <Modal
                 show={withdrawalModal}
                 onHide={()=>{addCardModal(false)}}
                 backdrop="static"
@@ -64,6 +56,8 @@ export default function IdCardPage(props) {
                     </div>
                 </div>
             </Modal>
+      </DashLayout>
+        
       </>
     )
   }

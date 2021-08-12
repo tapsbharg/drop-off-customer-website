@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import AuthLayout from '../components/authLayout';
 
-export default function Notifiactions() {
+export default function Notifiactions(props) {
 
     return (
       <>
+      <AuthLayout props={props}>
          <section className="notification_outer py-5">
             <div className="container"> 
                 <h5> Notification </h5>  
@@ -58,7 +60,7 @@ export default function Notifiactions() {
                 </div>
             </div>
         </section>
-
+        </AuthLayout>
       </>
     )
   }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Modal } from "react-bootstrap"
 import Link from "next/link";
+import AuthLayout from "../components/authLayout";
 export default function OrderStatusPage(props) {
     const [orderModal,setOrderModal]=useState(false);
     const orderModalFunc = (type) =>{
@@ -8,6 +9,8 @@ export default function OrderStatusPage(props) {
     }
     return (
       <>
+      
+      <AuthLayout props={props}>
         <div className="checkout py-4">
             <div className="container">
                 <div className="row">
@@ -173,6 +176,7 @@ export default function OrderStatusPage(props) {
                     </div>
                 </div>
             </Modal>
+            </AuthLayout>
       </>
     )
   }

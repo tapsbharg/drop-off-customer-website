@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Modal } from "react-bootstrap"
 import Link from "next/link";
+import AuthLayout from "../components/authLayout";
 export default function CheckoutPage(props) {
     const [withdrawalModal,setWithdrawalModal]=useState(false);
     const [couponModal,setCouponModal]=useState(false);
@@ -16,6 +17,7 @@ export default function CheckoutPage(props) {
     }
     return (
       <>
+      <AuthLayout props={props}>
          <div className="checkout py-3">
             <div className="container">
                 <div className="row">
@@ -310,7 +312,7 @@ export default function CheckoutPage(props) {
                     </div>
                 </div>
             </Modal>
-
+            </AuthLayout>
       </>
     )
   }

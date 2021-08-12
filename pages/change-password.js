@@ -1,16 +1,10 @@
-import Sidebar from "../components/sidebar";
+import DashLayout from "../components/dashLayout";
 
 export default function ChangePasswordPage(props) {
     return (
       <>
-        <section className=" your-order py-3 mb-5">
-            <div className="container">
-                <div className="customer_profile_outer d-flex flex-wrap ">
-                    <div className="opction_left">
-                        <Sidebar props={props} />
-                    </div>
-
-                    <div className="description_right">
+      <DashLayout props={props}>
+      <div className="description_right">
                         <div className=" change_password_web">
                             <div className="form_middle">
                                 <div className="comman_from">
@@ -34,10 +28,8 @@ export default function ChangePasswordPage(props) {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-        </section>
+                
+      </DashLayout>
       </>
     )
   }

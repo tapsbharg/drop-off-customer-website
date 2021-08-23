@@ -4,7 +4,7 @@ function PrivateRoute ({components:Component, authed, ...rest}) {
       <Route
         {...rest}
         render={(props) => authed === true ? <Component  {...props} />
-        : (authed==false?<Redirect to={{pathname: '/login', state: {from: props.location}}} />:'')}
+        : (authed==false?<Redirect to={{pathname: '/sign-in', state: {from: props.location}}} />:'')}
       />
     )
 }

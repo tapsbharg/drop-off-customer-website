@@ -26,7 +26,7 @@ authAxios.interceptors.request.use((config) => {
     if (response.status >= 201 && response.status < 300) {
         reactLocalStorage.remove('token');
         reactLocalStorage.remove('user');
-        window.location='/login'  //  Subayan;s hisotry service 
+        window.location='/sign-in'  //  Subayan;s hisotry service 
         
     }else{
         return response;
@@ -45,7 +45,7 @@ authAxios.interceptors.response.use((response) => {
 authAxios.interceptors.response.use(undefined, function axiosRetryInterceptor(err){
     if(err.response.status === 401){
         reactLocalStorage.clear('token');
-        window.location='/login'
+        window.location='/sign-in'
     }
     return Promise.reject(err); 
 })

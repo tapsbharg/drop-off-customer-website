@@ -10,6 +10,13 @@ import ROOT_URL from "./api-url";
     console.log(2);
 } */
 const apiFunc = {
+  refreshToken: () =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/users/token/refresh`,
+    }).catch((err) => {
+      console.log(err);
+    }),
   getProfileData: () =>
     authAxios({
       method: "GET",
@@ -25,78 +32,13 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
-  getStoreType: () =>
-    authAxios({
-      method: "GET",
-      url: `${ROOT_URL}/vendorCategory/getAll`,
-    }).catch((err) => {
-      console.log(err);
-    }),
-  postProfileData: (data) =>
-    authAxios({
-      method: "POST",
-      url: `${ROOT_URL}/update/ownProfile`,
-      data: data,
-    }).catch((err) => {
-      console.log(err);
-    }),
-  postUploadCOE: (data) =>
-    authAxios({
-      method: "POST",
-      url: `${ROOT_URL}/update/coe`,
-      data: data,
-    }).catch((err) => {
-      console.log(err);
-    }),
-  postUploadLicense: (data) =>
-    authAxios({
-      method: "POST",
-      url: `${ROOT_URL}/update/license`,
-      data: data,
-    }).catch((err) => {
-      console.log(err);
-    }),
   postProfileImage: (data) =>
     authAxios({
       method: "POST",
-      url: `${ROOT_URL}/update/profileImage`,
+      url: `${ROOT_URL}/users/profileImage`,
       data: data,
     }).catch((err) => {
       console.log(err);
-    }),
-  postBannerImage: (data) =>
-    authAxios({
-      method: "POST",
-      url: `${ROOT_URL}/update/coverImage`,
-      data: data,
-    }).catch((err) => {
-      console.log(err);
-    }),
-  postProfileWebPasswordChange: (postData) =>
-    authAxios({
-      method: "POST",
-      url: `${ROOT_URL}/change_password`,
-      data: postData,
-    }).catch((err) => {
-      Promise.reject(err);
-      console.log(err);
-    }),
-
-  postAvailableStatus: (postData) =>
-    authAxios({
-      method: "POST",
-      url: `${ROOT_URL}/update/available`,
-      data: postData,
-    }).catch((err) => Promise.reject(err)),
-
-  postProfileAppPasswordChange: (postData) =>
-    authAxios({
-      method: "POST",
-      url: `${ROOT_URL}/change_app_password`,
-      data: postData,
-    }).catch((error) => {
-      console.log(error);
-      return Promise.reject(error);
     }),
 };
 

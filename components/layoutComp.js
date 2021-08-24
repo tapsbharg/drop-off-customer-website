@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import apiFunc from "../services/api";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { useEffect } from "react";
+import Cart from "./cartComp";
 export default function Layout(props) {
 function refreshtoken(){
   apiFunc.refreshToken().then((res) => {
@@ -39,6 +40,7 @@ useEffect(() => {
                 {props.children}
             </div>
         <Footer />
+        <Cart props={props} />
         </div>
       </>
     )

@@ -2,14 +2,31 @@ import Link from "next/link";
 import {useFormik } from "formik";
 import * as Yup from 'yup';
 import { useRouter } from 'next/router'
+import { useState, useEffect } from "react";
+import apiFunc from "../services/api";
 
 export default function HomePage(props) {
+    const [dashdata, setDashData]=useState([]);
+    const [cateData, setCateData]=useState([]);
     const router = useRouter()
+    
+    function getCategory(){
+        apiFunc.getDashboardData().then((res)=>{
+            setDashData(res.data.data)
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    useEffect(()=>{
+        getCategory()
+    },[])
     const initialValues={
         search:'',
+        category:'',
     }
     const validationSchema = Yup.object({
         search:Yup.string().required('Please enter keyword'),
+        category:Yup.string(),
     })
     const formik = useFormik({
         initialValues,
@@ -23,44 +40,27 @@ export default function HomePage(props) {
         },
         
     })
+    function setCategory(id){
+        setCateData(id);
+        formik.setFieldValue('category', id)
+    }
   return (
     <>
       <div className="pageInsieWRp">
       <div className="slider d-flex align-items-center justify-content-center">
           <div className="container">
               <ul className="d-flex flex-wra align-items-center justify-content-center" >
-                  <li data-aos="fade-up" data-aos-duration="1000">
-                      <Link href="/search?category=Liquor Stores">
-                            <a>
-                                <img src="/assets/images/liquor (2).svg" alt=""/>    
-                                <span>Liquor Stores</span>
-                            </a>
-                        </Link>
-                  </li>
-                  <li  data-aos="fade-up" data-aos-duration="1500">
-                      <Link href="/search?category=Mom & Pop Stores">
-                            <a>
-                                <img src="/assets/images/shops (1).svg" alt=""/>
-                                <span>Mom & Pop Stores</span>
-                            </a>
-                        </Link>
-                  </li>
-                  <li  data-aos="fade-up" data-aos-duration="2000">
-                      <Link href="/search?category=Dispensaries">
-                            <a>
-                                <img src="/assets/images/pharmacy (2).svg" alt=""/>
-                                <span>Dispensaries</span>
-                            </a>
-                        </Link>
-                  </li>
-                  <li  data-aos="fade-up" data-aos-duration="3000">
-                        <Link href="/search?category=Pharmacies">
+              {dashdata.map((data, index)=>(
+                    <li key={index}  data-aos="fade-up" data-aos-duration="3000" >
+                        <div onClick={()=> setCategory(data._id)} className={cateData == data._id?'active':''}>
                             <a>
                                 <img src="/assets/images/drugs (2).svg" alt=""/>
-                                <span>Pharmacies</span>
+                                <span>{data.name}</span>
                             </a>
-                        </Link>
-                  </li>
+                        </div>
+                    </li>
+                    
+                ))}
               </ul>
               <div className="search text-center mt-3 pt-5"  data-aos="zoom-in" data-aos-duration="3500" data-aos-delay="1500">
                   <h1>Da DropOff</h1>

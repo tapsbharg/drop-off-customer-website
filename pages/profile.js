@@ -148,7 +148,7 @@ export default function ProfilePage(props) {
                 </div>
                 <form onSubmit={profileFormik.handleSubmit}>
                     <div className="profile_img d-flex flex-wrap align-items-center justify-content-center bg-light01 p-5 rounded-3">
-                        <div className="profilIm"
+                        <div className="profilIm">
                         {!profileData && (
                             <img src="assets/images/web/earning.png" alt=""/>
                         )}
@@ -161,6 +161,7 @@ export default function ProfilePage(props) {
                                 <i className="far fa-camera"></i>
                             </label>
                         </div>
+                    </div>
                     </div>
                 </form>
                 <div className="comman_from">

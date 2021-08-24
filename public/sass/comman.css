@@ -3631,7 +3631,6 @@ input.form-check-input:checked {
 .product_informaction .product_content {
   width: calc(100% - 120px);
   display: flex;
-  flex-direction: column;
 }
 .product_informaction .product_content .price h6 {
   color: #d20400;

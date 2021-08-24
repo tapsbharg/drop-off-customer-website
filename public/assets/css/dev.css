@@ -268,4 +268,113 @@ form  .user_image input {
     align-items: center;
     justify-content: center;
 }
+.producliscont {
+    width: calc(100% - 120px);
+    padding-right: 15px;
+}
+
+.prolislbtn {
+    width: 120px;
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.quntityPls {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.product_informaction .product_content .prolislbtn  a.add_product {
+    margin: 0;
+}
+
+.quntityPls input.qty {
+    width: 50px;
+    text-align: center;
+    font-size: 12px;
+    padding: 5px 0;
+    border: 1px solid #d20400;
+}
+
+.quntityPls input.qty-minus, .quntityPls input.qty-plus {
+    font-size: 12px;
+    background: #d20400;
+    border: 1px solid #d20400;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+}
+.cartMainWrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #d20400;
+    padding: 10px 0;
+    z-index: 99;
+}
+
+.cartiNsiWRp {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+}
+
+.cartDetals {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    color: #fff;
+    width: 50%;
+    justify-content: flex-end;
+}
+
+.cartNwlmrp h4 {
+    font-size: 15px;
+    line-height: 37px;
+    color: #fff;
+    margin: 0;
+}
+
+.cartinsrp {
+    font-size: 14px;
+}
+
+.cartinsrp span {
+    padding: 0 10px;
+}
+
+.cartBntnsp a {
+    padding: 10px 15px;
+    background: #fff;
+    width: 160px;
+    display: block;
+    text-align: center;
+    color: #000;
+    font-weight: 600;
+}
+
+.cartNwlmrp {
+    width: 50%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

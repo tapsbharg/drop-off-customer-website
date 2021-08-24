@@ -40,6 +40,43 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+  getDashboardData: () =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/dashboard?lat=36.19040274808616&lng=-101.19938638888843`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+  searchProductData: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/searchProducts?lat=36.19940274808616&lng=-101.19988638888843`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
+  vendorProductData: (vendorId) =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/vendorProductListing/${vendorId}`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    addTocart: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/user/addToCart/${data.vendorId}`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
+  cartListData: () =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/user/cartlist`,
+    }).catch((err) => {
+      console.log(err);
+    }),
 };
 
 export default apiFunc;

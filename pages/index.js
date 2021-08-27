@@ -52,7 +52,7 @@ export default function HomePage(props) {
               <ul className="d-flex flex-wra align-items-center justify-content-center" >
               {dashdata.map((data, index)=>(
                     <li key={index}  data-aos="fade-up" data-aos-duration="3000" >
-                        <div onClick={()=> setCategory(data._id)} className={cateData == data._id?'active':''}>
+                        <div onClick={()=> setCategory(data.name)} className={cateData == data.name?'active':''}>
                             <a>
                                 <img src="/assets/images/drugs (2).svg" alt=""/>
                                 <span>{data.name}</span>

@@ -7,7 +7,9 @@ import { useFormik } from "formik";
 
 export default function SearchPage(props) {
     const [dashdata, setDashData]=useState([]);
+    const [prodData, setProdData]=useState([]);
     const [productList, setProductList]=useState([]);
+    const [cartStatusList, setCartStatusList]=useState([]);
     // const [cartData,SetCartData]=useState();
     const router = useRouter()
     const params = router.query || '';
@@ -23,7 +25,7 @@ export default function SearchPage(props) {
     }
     function searchProduct(data){
         apiFunc.searchProductData(data).then((res)=>{
-            setProductList(res.data.data)
+            setProdData(res.data.data)
         }).catch((error)=>{
             console.log(error);
         })
@@ -41,7 +43,11 @@ export default function SearchPage(props) {
         })
     }
     function removeToCart(_id){
-        apiFunc.deleteCartData(_id).then((res)=>{
+        const cartDataDelete={
+            "vendorId": _id,
+            "quantity": -1
+        }
+        apiFunc.addTocart(cartDataDelete).then((res)=>{
             // setProductList(res.data.data)
             props.getCart()
         }).catch((error)=>{
@@ -49,21 +55,49 @@ export default function SearchPage(props) {
         })
     }
     const checkCartValue = (propsData) => {
-        let datas=[];
         if(propsData.cartData){
-            
+            var cartDataList=[]
             for (var i=0; i < propsData.cartData.cart.length; i++) {
-                const keyNme=propsData.cartData.cart[i].productId._id;
-                let list={
-                        "cartStatus":true, 
-                        "qty":propsData.cartData.cart[i].productId._id.quantity
-                    }
-                // keyNme = Object.create( {} )
-                // keyNme.push(list);
-                console.log(keyNme)
+                var dataByList = {};
+                let listId =propsData.cartData.cart[i].productId._id
+                let qty=propsData.cartData.cart[i].quantity;
+                dataByList =  {"id": listId,"qty": qty};
+                // datas.push(dataByList);
+                cartDataList.push(dataByList)
             } 
+            setCartStatusList(cartDataList);
         }
+        
     }
+    function checkCartIs(datas, cartlist){
+        var prodlIddata={};
+        for (var i=0; i < cartlist.length; i++) {
+            if(datas._id == cartlist[i].id){
+                prodlIddata={
+                    ...datas,
+                    cartStatus:true,
+                    cartQty:cartlist[i].qty
+                }
+            }
+        }
+        if(!prodlIddata.cartStatus){
+            prodlIddata={
+                ...datas,
+                cartStatus:false,
+            }
+        }
+        return prodlIddata;
+    }
+    function setAfterData(datas, cartlist){
+        var updatPRdList=[]
+        if(datas){
+            for (var i=0; i < datas.length; i++) {
+                updatPRdList.push(checkCartIs(datas[i], cartlist));
+            }
+        }
+        setProductList(updatPRdList)
+    }
+
     useEffect(()=>{
         getCategory()
         const searchData={
@@ -78,10 +112,14 @@ export default function SearchPage(props) {
         formik.setFieldValue('category',category);
 
         // SetCartData(props)
-        
         checkCartValue(props);
     },[search, props]) 
-    
+
+    useEffect(()=>{
+        setAfterData(prodData, cartStatusList, props);
+
+    },[prodData,cartStatusList,props]) 
+
     function categoryChange(cate){
         formik.setFieldValue('category', cate);
         formik.handleSubmit()
@@ -106,7 +144,19 @@ export default function SearchPage(props) {
         },
         
     })
-    
+   /* const cartSTatus=(datas,id)=>{
+        let statusData={};
+        for (var i=0; i < datas.length; i++) {
+            if(datas[i].id == id){
+                statusData= {
+                    status:datas[i].id == id,
+                    qty:datas[i].qty
+                };
+            }
+        }
+        return statusData;
+    }
+    */
     return (
       <>
         <div className="search_outer ">
@@ -129,13 +179,15 @@ export default function SearchPage(props) {
                     <nav className="mb-4">
                         <div className="nav nav-tabs" id="nav-tab" role="tablist">
                         {dashdata.map((data, index)=>(
-                            <button key={index} className={`nav-link ${category==data._id?'active':''}`} onClick={()=>categoryChange(data._id)}> {data.name}</button>
+                            <button key={index} className={`nav-link ${category==data.name?'active':''}`} onClick={()=>categoryChange(data.name)}> {data.name}</button>
                         ))}
                         </div>
                     </nav>
                     <div className="searcCosngpp">
                         {productList.map((data, index)=>(
-                            <div className="product_grpup" key={index}>
+                            <div  key={index}>
+                                {data.category.name == category && (
+                            <div className="product_grpup">
                                 <div className="product_informaction d-flex flex-wrap align-items-center bg-white mb-3">
                                     <div className="product_img">
                                         {data.defaultImage && (
@@ -145,21 +197,27 @@ export default function SearchPage(props) {
                                     </div>
                                     <div className="product_content px-3">
                                         <div className="producliscont">
-                                            {data._id}
                                             <h6><b>{data.name}</b></h6>
                                             <div className="price"><h6> ${data.price} </h6></div>
                                             <Link href={`/store-view?id=${data.vendorId._id}`}><span> {data.vendorId.storeName} </span></Link>
                                         </div>
-                                        <div className={`prolislbtn `}>
-                                            <div className={`quntityPls`}>
-                                                <button type="button" onClick={()=>removeToCart(data._id)} className="qty-minus">-</button>
-                                                <input type="number" readOnly className="qty" defaultValue="1"/>
-                                                <button type="button" onClick={()=>addToCart(data._id)} className="qty-plus">+</button>
-                                            </div>
-                                            <a className="add_product" onClick={()=>addToCart(data._id)}> add  <i className="far fa-plus"> </i> </a>
-                                        </div>
+                                       <div className={`prolislbtn ${data.cartStatus?'active':'deactive'}`}>
+                                            {data.cartStatus && (
+                                                <div className={`quntityPls`}>
+                                                    <button type="button" onClick={()=>removeToCart(data._id)} className="qty-minus">-</button>
+                                                    <input type="number" readOnly className="qty" defaultValue={data.cartQty} value={data.cartQty} />
+                                                    <button type="button" onClick={()=>addToCart(data._id)} className="qty-plus">+</button>
+                                                </div>
+                                            )}
+                                            {!data.cartStatus && (
+                                                <a className="add_product" onClick={()=>addToCart(data._id)}> add  <i className="far fa-plus"> </i> </a>
+                                            )}
+                                        </div> 
+                                        
                                     </div>
                                 </div>
+                            </div>
+                            )}
                             </div>
                         ))}
                         

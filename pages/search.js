@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 export default function SearchPage(props) {
     const [dashdata, setDashData]=useState([]);
     const [productList, setProductList]=useState([]);
-    const [cartData,SetCartData]=useState();
+    // const [cartData,SetCartData]=useState();
     const router = useRouter()
     const params = router.query || '';
     const search = params.search || '';
@@ -35,11 +35,35 @@ export default function SearchPage(props) {
         }
         apiFunc.addTocart(cartData).then((res)=>{
             // setProductList(res.data.data)
+            props.getCart()
         }).catch((error)=>{
             console.log(error);
         })
     }
-    
+    function removeToCart(_id){
+        apiFunc.deleteCartData(_id).then((res)=>{
+            // setProductList(res.data.data)
+            props.getCart()
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    const checkCartValue = (propsData) => {
+        let datas=[];
+        if(propsData.cartData){
+            
+            for (var i=0; i < propsData.cartData.cart.length; i++) {
+                const keyNme=propsData.cartData.cart[i].productId._id;
+                let list={
+                        "cartStatus":true, 
+                        "qty":propsData.cartData.cart[i].productId._id.quantity
+                    }
+                // keyNme = Object.create( {} )
+                // keyNme.push(list);
+                console.log(keyNme)
+            } 
+        }
+    }
     useEffect(()=>{
         getCategory()
         const searchData={
@@ -53,9 +77,10 @@ export default function SearchPage(props) {
         formik.setFieldValue('search',search);
         formik.setFieldValue('category',category);
 
-        SetCartData(props)
+        // SetCartData(props)
         
-    },[search]) 
+        checkCartValue(props);
+    },[search, props]) 
     
     function categoryChange(cate){
         formik.setFieldValue('category', cate);
@@ -81,7 +106,7 @@ export default function SearchPage(props) {
         },
         
     })
-    console.log(cartData)
+    
     return (
       <>
         <div className="search_outer ">
@@ -120,15 +145,16 @@ export default function SearchPage(props) {
                                     </div>
                                     <div className="product_content px-3">
                                         <div className="producliscont">
+                                            {data._id}
                                             <h6><b>{data.name}</b></h6>
                                             <div className="price"><h6> ${data.price} </h6></div>
                                             <Link href={`/store-view?id=${data.vendorId._id}`}><span> {data.vendorId.storeName} </span></Link>
                                         </div>
                                         <div className={`prolislbtn `}>
-                                            <div className="quntityPls">
-                                                <input type="button" className="qty-minus"/>
-                                                <input type="number" className="qty" defaultValue="1"/>
-                                                <input type="button" className="qty-plus"/>
+                                            <div className={`quntityPls`}>
+                                                <button type="button" onClick={()=>removeToCart(data._id)} className="qty-minus">-</button>
+                                                <input type="number" readOnly className="qty" defaultValue="1"/>
+                                                <button type="button" onClick={()=>addToCart(data._id)} className="qty-plus">+</button>
                                             </div>
                                             <a className="add_product" onClick={()=>addToCart(data._id)}> add  <i className="far fa-plus"> </i> </a>
                                         </div>

@@ -17,10 +17,14 @@ function refreshtoken(){
 }
 useEffect(() => {
   var token=reactLocalStorage.get("token");
+  if(token){
+    props.getCart()
+  }
   const intrVal = setInterval(() => {
     refreshtoken()
   }, 2000);
   if(!token){
+    console.log(token)
     clearInterval(intrVal);
   }
 },[])

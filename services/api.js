@@ -77,6 +77,13 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    deleteCartData: (id) =>
+    authAxios({
+      method: "DELETE",
+      url: `${ROOT_URL}/user/deleteCart/${id}`,
+    }).catch((err) => {
+      console.log(err);
+    }),
 };
 
 export default apiFunc;

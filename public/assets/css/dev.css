@@ -302,7 +302,7 @@ form  .user_image input {
     border: 1px solid #d20400;
 }
 
-.quntityPls input.qty-minus, .quntityPls input.qty-plus {
+.quntityPls .qty-minus, .quntityPls .qty-plus {
     font-size: 12px;
     background: #d20400;
     border: 1px solid #d20400;
@@ -363,7 +363,16 @@ form  .user_image input {
 .cartNwlmrp {
     width: 50%;
 }
+.prolislbtn.active .quntityPls {
+    display: -moz-box;
+    display: flex;
+    display: -webkit-flex;
+    -moz-box-pack: center;
+}
 
+.prolislbtn.active .add_product {
+    display: none;
+}
 
 
 

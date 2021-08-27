@@ -48,9 +48,7 @@ function App({ Component, pageProps }) {
         console.log(error);
     })
   };
-  useEffect(()=>{
-    cartListShow()
-  },[])
+
 Router.events.on('routeChangeStart', () => {
     document.body.className = 'loading_page';
 });

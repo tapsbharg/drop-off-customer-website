@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import api from "../services/api";
 
 export default function Header(appProps) {

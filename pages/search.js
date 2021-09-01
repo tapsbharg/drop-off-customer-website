@@ -1,15 +1,20 @@
 import { useRouter } from "next/dist/client/router"
+import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 import { useEffect, useState } from "react"
 import apiFunc from "../services/api";
 import * as Yup from 'yup';
 import { useFormik } from "formik";
+import { reactLocalStorage } from "reactjs-localstorage";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function SearchPage(props) {
     const [dashdata, setDashData]=useState([]);
     const [prodData, setProdData]=useState([]);
     const [productList, setProductList]=useState([]);
     const [cartStatusList, setCartStatusList]=useState([]);
+    const [tokenStatus, setTokenStatus]=useState(false);
+    const [guestId, setGuestId] = useState(null);
     // const [cartData,SetCartData]=useState();
     const router = useRouter()
     const params = router.query || '';
@@ -31,37 +36,78 @@ export default function SearchPage(props) {
         })
     }
     function addToCart(_id){
-        const cartData={
-            "vendorId": _id,
-            "quantity": 1
+        if(!guestId){
+            const cartData={
+                "vendorId": _id,
+                "quantity": 1
+            }
+            apiFunc.addTocart(cartData).then((res)=>{
+                // setProductList(res.data.data)
+                // toast.error(error.message);
+                console.log(res)
+                props.getCart()
+            }).catch((error)=>{
+                toast.error(error.message);
+                console.log(error);
+            })
         }
-        apiFunc.addTocart(cartData).then((res)=>{
-            // setProductList(res.data.data)
-            props.getCart()
-        }).catch((error)=>{
-            console.log(error);
-        })
+        else{
+            const cartData={
+                "guestId":guestId,
+                "vendorId": _id,
+                "quantity": 1
+            }
+            apiFunc.addTocartGuest(cartData).then((res)=>{
+                // setProductList(res.data.data)
+                props.getCart()
+                // toast.success(res.data.message);
+            }).catch((error)=>{
+                toast.error(error.message);
+                console.log(error.message);
+            })
+        }
+
     }
     function removeToCart(_id){
-        const cartDataDelete={
-            "vendorId": _id,
-            "quantity": -1
+        if(!guestId){
+            const cartDataDelete={
+                "vendorId": _id,
+                "quantity": -1
+            }
+            apiFunc.addTocart(cartDataDelete).then((res)=>{
+                // setProductList(res.data.data)
+                props.getCart()
+            }).catch((error)=>{
+                console.log(error);
+            })
         }
-        apiFunc.addTocart(cartDataDelete).then((res)=>{
-            // setProductList(res.data.data)
-            props.getCart()
-        }).catch((error)=>{
-            console.log(error);
-        })
+        else{
+            const cartDataDelete={
+                "guestId":guestId,
+                "vendorId": _id,
+                "quantity": -1
+            }
+            apiFunc.addTocartGuest(cartDataDelete).then((res)=>{
+                // setProductList(res.data.data)
+                props.getCart()
+            }).catch((error)=>{
+                console.log(error);
+            })
+        }
     }
+ 
     const checkCartValue = (propsData) => {
-        if(propsData.cartData){
+        if(propsData.cartData ){
             var cartDataList=[]
             for (var i=0; i < propsData.cartData.cart.length; i++) {
-                var dataByList = {};
-                let listId =propsData.cartData.cart[i].productId._id
-                let qty=propsData.cartData.cart[i].quantity;
-                dataByList =  {"id": listId,"qty": qty};
+                console.log(propsData.cartData.cart[i])
+                if(propsData.cartData.cart[i].productId){
+                    var dataByList = {};
+                    let listId =propsData.cartData.cart[i].productId._id
+                    let qty=propsData.cartData.cart[i].quantity;
+                    dataByList =  {"id": listId,"qty": qty};
+                }
+                
                 // datas.push(dataByList);
                 cartDataList.push(dataByList)
             } 
@@ -72,10 +118,11 @@ export default function SearchPage(props) {
     function checkCartIs(datas, cartlist){
         var prodlIddata={};
         for (var i=0; i < cartlist.length; i++) {
+            console.log(cartlist[i].id, cartlist[i].qty)
             if(datas._id == cartlist[i].id){
                 prodlIddata={
                     ...datas,
-                    cartStatus:true,
+                    cartStatus:cartlist[i].qty > 0?true:false,
                     cartQty:cartlist[i].qty
                 }
             }
@@ -88,7 +135,8 @@ export default function SearchPage(props) {
         }
         return prodlIddata;
     }
-    function setAfterData(datas, cartlist){
+    function setAfterData(datas, list){
+        var cartlist= cartStatusList;
         var updatPRdList=[]
         if(datas){
             for (var i=0; i < datas.length; i++) {
@@ -97,8 +145,13 @@ export default function SearchPage(props) {
         }
         setProductList(updatPRdList)
     }
+    function setToken(token){
+        setTokenStatus(token)
+    }
 
     useEffect(()=>{
+        var token = reactLocalStorage.get("token");
+        setToken(token)
         getCategory()
         const searchData={
             searchString:search,
@@ -114,11 +167,26 @@ export default function SearchPage(props) {
         // SetCartData(props)
         checkCartValue(props);
     },[search, props]) 
-
+    function getGuestId(){
+        apiFunc.guestid().then((res)=>{
+            reactLocalStorage.set("guestid",res.data.guestId);
+            setGuestId(res.data.guestId);
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
     useEffect(()=>{
         setAfterData(prodData, cartStatusList, props);
+        var token = reactLocalStorage.get("token");
+        var guestid = reactLocalStorage.get("guestid");
+        console.log(token)
+        if(token){
+            setGuestId(guestid);
+        }else{
+            getGuestId();
+        }
 
-    },[prodData,cartStatusList,props]) 
+    },[props, cartStatusList, prodData]) 
 
     function categoryChange(cate){
         formik.setFieldValue('category', cate);
@@ -157,8 +225,10 @@ export default function SearchPage(props) {
         return statusData;
     }
     */
+//    console.log(productList)
     return (
       <>
+      <ToastContainer />
         <div className="search_outer ">
             <div className="container">
                 <div className="search_inner my-5">
@@ -211,6 +281,7 @@ export default function SearchPage(props) {
                                             )}
                                             {!data.cartStatus && (
                                                 <a className="add_product" onClick={()=>addToCart(data._id)}> add  <i className="far fa-plus"> </i> </a>
+                                                    
                                             )}
                                         </div> 
                                         

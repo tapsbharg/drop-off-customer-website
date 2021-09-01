@@ -290,6 +290,10 @@ form  .user_image input {
     display: none;
 }
 
+.quntityPls.show {
+    display: flex;
+    display: -webkit-flex;
+}
 .product_informaction .product_content .prolislbtn  a.add_product {
     margin: 0;
 }
@@ -300,6 +304,7 @@ form  .user_image input {
     font-size: 12px;
     padding: 5px 0;
     border: 1px solid #d20400;
+    height: 30px;
 }
 
 .quntityPls .qty-minus, .quntityPls .qty-plus {
@@ -373,9 +378,52 @@ form  .user_image input {
 .prolislbtn.active .add_product {
     display: none;
 }
+.vegtype {
+    width: 17px;
+    height: 17px;
+    border: 1px solid #e1e1e1;
+    padding: 3px;
+    position: relative;
+}
 
 
+.vegtype:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #dfdfdf;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
 
+.vegtype.veg {
+    border-color: #8bc34a;
+}
+.vegtype.veg:before {
+    background: #8bc34a;
+}
+.vegtype.non-veg {
+    border-color: #f44336;
+}
+.vegtype.non-veg:before {
+    background: #f44336;
+}
+.StripeElement {
+    display: block;
+    margin: 10px 0 20px 0;
+    max-width: 500px;
+    padding: 10px 14px;
+    font-size: 1em;
+    font-family: "Source Code Pro", monospace;
+    box-shadow: rgb(50 50 93 / 15%) 0px 1px 3px, rgb(0 0 0 / 2%) 0px 1px 0px;
+    border: 0;
+    outline: 0;
+    border-radius: 4px;
+    background: white;
+}
 
 
 

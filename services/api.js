@@ -84,6 +84,42 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    guestid: () =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/guest/guestid`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    addTocartGuest: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/guest/addToCart/${data.vendorId}`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    cartListGuest: (id) =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/guest/cartlist/${id}`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    userCartMerge: (id) =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/user/mergeCart/${id}`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    getAllCard: () =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/viewAllCards`,
+    }).catch((err) => {
+      console.log(err);
+    }),
 };
 
 export default apiFunc;

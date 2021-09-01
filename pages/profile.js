@@ -102,7 +102,6 @@ export default function ProfilePage(props) {
       const handleFileChangeBanner = (e) => {
         var getfile=e.target.files[0];
         if(getfile != undefined || getfile != null){
-            console.log()
             setImgStateBanner(e.target.files[0]);
             profileFormik.setFieldValue('profileImage',e.target.files[0]);
             var reader = new FileReader();
@@ -119,11 +118,9 @@ export default function ProfilePage(props) {
         const formData = new FormData();
         formData.append("coverImage", postData.profileImage);
         apiFunc.postUpload(formData).then(response => {
-            console.log(response.data)
             const resData={
                 profileImage:response.data.data._id
             }
-            console.log(resData)
             apiFunc.postProfileImage(resData).then(res => {
                 toast.success(res.data.message)
     
@@ -137,7 +134,6 @@ export default function ProfilePage(props) {
             console.log(error)
         });
     }
-    console.log(profileFormik.getFieldProps('profileImage'))
     return (
       <>
       <DashLayout props={props}>

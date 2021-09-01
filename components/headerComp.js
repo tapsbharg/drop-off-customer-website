@@ -143,12 +143,16 @@ export default function Header(appProps) {
                   <span>
                     <Dropdown>
                       <Dropdown.Toggle variant="thm" id="dropdown-basic">
-                        <i className={"fa fa-user"}></i>
-                        {profile.name ? (
-                        <span>{profile.name} </span>
-                          ) : (
-                            <span>Loading </span>
-                          )}
+                        <Link href="/profile">
+                          <span>
+                            <i className={"fa fa-user"}></i> 
+                            {profile.name ? (
+                            <span> {profile.name} </span>
+                              ) : (
+                                <span> Loading </span>
+                              )}
+                          </span>
+                        </Link>
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>

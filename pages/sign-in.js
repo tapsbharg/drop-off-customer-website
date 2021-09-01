@@ -7,6 +7,7 @@ import { reactLocalStorage } from "reactjs-localstorage";
 import ROOT_URL from "../services/api-url";
 import * as Yup from "yup";
 import "react-toastify/dist/ReactToastify.css";
+import apiFunc from "../services/api";
 export default function SignInPage(props) {
   const baseURL=ROOT_URL;
   const history = useRouter();
@@ -28,6 +29,16 @@ export default function SignInPage(props) {
       login(values);
     },
   });
+  function mergeCart(id){
+    apiFunc.userCartMerge(id).then((res)=>{
+      console.log(res)
+      reactLocalStorage.remove("guestid");
+      props.setlogin();
+      history.push("/profile");
+    }).catch((error)=>{
+        console.log(error);
+    })
+  }
   const login = (userData) => {
     axios
       .post(`${baseURL}/login`, userData)
@@ -35,8 +46,15 @@ export default function SignInPage(props) {
         if(res.data.data != undefined){
           reactLocalStorage.set("token", res.data.data.token);
           toast.success(res.data.message);
-          props.setlogin();
-          history.push("/profile");
+          const getId=reactLocalStorage.get("guestid");
+          if(getId){
+            mergeCart(getId)
+          }else{
+            props.setlogin();
+            history.push("/profile");
+          }
+          
+          
         }else{
           toast.error(res.data.message);
         }

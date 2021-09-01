@@ -1,11 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap"
 import Link from "next/link";
 import AuthLayout from "../components/authLayout";
+import apiFunc from "../services/api";
+import { toast } from "react-toastify";
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+import SplitForm from "../components/cardsComp";
+const stripePromise = loadStripe("pk_test_6pRNASCoBOKtIshFeQd4XMUh");
+
 export default function CheckoutPage(props) {
     const [withdrawalModal,setWithdrawalModal]=useState(false);
     const [couponModal,setCouponModal]=useState(false);
     const [orderMsgModal,setOrderMsgModal]=useState(false);
+    const [cardList,setCardList]=useState([]);
     const addCardModal = (type) =>{
         setWithdrawalModal(type)
     }
@@ -15,6 +23,48 @@ export default function CheckoutPage(props) {
     const orderMsgModalFunc = (type) =>{
         setOrderMsgModal(type)
     }
+
+
+    function addToCart(_id){
+        const cartData={
+            "vendorId": _id,
+            "quantity": 1
+        }
+        apiFunc.addTocart(cartData).then((res)=>{
+            props.getCart();
+        }).catch((error)=>{
+            toast.error(error.message);
+            console.log(error);
+        })
+
+    }
+    function removeToCart(_id){
+        const cartDataDelete={
+            "vendorId": _id,
+            "quantity": -1
+        }
+        apiFunc.addTocart(cartDataDelete).then((res)=>{
+            props.getCart()
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+
+    /*card list*/
+    
+    function cardListingFunc(){
+        apiFunc.getAllCard().then((res)=>{
+            setCardList(res.data.cardListing)
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+
+    useEffect(()=>{
+        cardListingFunc();
+    },[])
+   /*card list*/
+   
     return (
       <>
       <AuthLayout props={props}>
@@ -36,34 +86,27 @@ export default function CheckoutPage(props) {
                                             <td className="address" colSpan="2"> The Austin Store <span><i className="fas fa-map-marker-alt"></i> Austin, Texas</span> </td>
                                             <td colSpan="2" align="right"> Upload Your Identity/ Prescriptions </td>
                                         </tr>
-                                        <tr>
-                                            <td className="on-off"> 
-                                                <div className="  form-check form-switch">
-                                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" />
-                                                </div>
-                                            </td>
-                                            <td className="content">Glenfiddich Excellence</td>
-                                            <td className="quntity">  
-                                                <input type="button" defaultValue="-" className="qty-minus"/>
-                                                <input type="number" defaultValue="1" className="qty"/>
-                                                <input type="button" defaultValue="+" className="qty-plus"/> 
-                                            </td>
-                                            <td className="price" > $50 </td>
-                                        </tr>
-                                        <tr>
-                                            <td className="on-off"> 
-                                                <div className="  form-check form-switch">
-                                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" />
-                                                </div>
-                                            </td>
-                                            <td className="content">Glenfiddich Excellence</td>
-                                            <td  className="quntity">  
-                                                <input type="button" defaultValue="-" className="qty-minus"/>
-                                                <input type="number" defaultValue="1" className="qty"/>
-                                                <input type="button" defaultValue="+" className="qty-plus"/> 
-                                            </td>
-                                            <td className="price"> $50 </td>
-                                        </tr>
+                                        {props.cartData && (
+                                            props.cartData.cart.map((data, index)=>(
+                                                data.productId && (
+                                                    <tr key={index}>
+                                                    <td className="on-off"> 
+                                                        <div className={`vegtype ${data.productId.isNonVeg?'non-veg':'veg'}`}></div>
+                                                    </td>
+                                                    <td className="content">{data.productId.name}</td>
+                                                    <td>  
+                                                        <div className={`quntityPls show`}>
+                                                            <button type="button" onClick={()=>removeToCart(data.productId._id)} className="qty-minus">-</button>
+                                                            <input type="number" readOnly className="qty" value={data.quantity} />
+                                                            <button type="button" onClick={()=>addToCart(data.productId._id)} className="qty-plus">+</button>
+                                                        </div>
+                                                    </td>
+                                                    <td className="price" > ${data.quantity * data.productId.price} </td>
+                                                </tr> 
+                                                )
+                                                    
+                                            ))
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -179,69 +222,16 @@ export default function CheckoutPage(props) {
                             </div>
                             <a className="but03" href="#"> <i className="fas fa-plus"></i> Add New Address </a>
                         </div>
+                        <Elements stripe={stripePromise}>
+                            <SplitForm />
+                        </Elements>
 
-
-                        <div className="delivery-address bg-white rounded-3 p-3 mb-3">
-                            <h6> Select Card </h6> 
-                            <hr/>
-                            <div className="address_group d-flex justify-content-between my-3">
-                                <div className="location_img">
-                                    <p> <b> 4545-xxxx-xxxx-1512 </b></p>
-                                </div>
-                                <div className="location_content">
-                                    <a className="but03" href="#"> Pay Now </a>        
-                                </div>
-                            </div>
-                            <hr/>
-                            <div className="address_group d-flex justify-content-between my-3">
-                                <div className="location_img">
-                                    <p> <b> 4545-xxxx-xxxx-1512 </b></p>
-                                </div>
-                                <div className="location_content">
-                                    <a className="but03" href="#"> Pay Now </a>        
-                                </div>
-                            </div>
-                            
-                            <a className="but03" onClick={()=>addCardModal(true)}> <i className="fas fa-plus"></i>  Add New Card </a>
-                        </div>
-
+                        {/* <PaymentCards/> */}
                     </div>
                 </div>
             </div>
         </div>
-
-
-        <Modal
-                show={withdrawalModal}
-                onHide={()=>{addCardModal(false)}}
-                backdrop="static"
-                keyboard={false}
-                className="modal-gray"
-                centered
-            >
-                <div className="add_new_card">
-                    <div className="add_new_card_contant bg-white p-5 rounded-3">
-                        <i className="fal fa-times-circle" onClick={()=>addCardModal(false)}></i>
-                        <h5> Add New Card </h5>
-                        <form className=" " action="">
-                            <div className="row bg-black p-4 rounded-3 mb-3">
-                                <div className="col-sm-12 mb-3">
-                                    <input type="text" placeholder="Enter Card Number"/>
-                                </div>
-                                <div className="col-sm-7  mb-3">
-                                    <input type="text" placeholder="Card Holder's Name"/>
-                                </div>
-                                <div className="col-sm-5  mb-3">
-                                    <input type="text" placeholder="Expiry Date"/>
-                                </div>
-                            </div>
-                            <button className="btn cus_btn custom01" onClick={()=>addCardModal(false)}> Continue </button>
-                        </form>
-                        
-                    </div>
-                </div>
-            </Modal>
-        <Modal
+<Modal
                 show={couponModal}
                 onHide={()=>{couponModalFunc(false)}}
                 backdrop="static"

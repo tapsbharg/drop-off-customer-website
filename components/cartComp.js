@@ -18,7 +18,8 @@ export default function Cart(appProps) {
             var crtotl=0;
             for (var i = 0; i < icart; i++) {
                 if(appProps.props.cartData.cart[i].productId){
-                    crtotl +=appProps.props.cartData.cart[i].productId.price || 0
+                    let quantity=appProps.props.cartData.cart[i].quantity || 0
+                    crtotl +=(appProps.props.cartData.cart[i].productId.price || 0 )*quantity
                     SetCartTotal(crtotl);
                 }
             }
@@ -28,6 +29,7 @@ export default function Cart(appProps) {
     return (
       <>
       {appProps.props.cartData && (
+          appProps.props.cartData.cart.length>0 && (
           <div className="cartMainWrapper">
           <div className="container">
               <div className="cartiNsiWRp">
@@ -40,13 +42,13 @@ export default function Cart(appProps) {
                           <span>${cartTotal}</span>
                       </div>
                       <div className="cartBntnsp">
-                          <a href="#" className="thm-1 btn-sm">Continue</a>
+                          <Link href="/checkout"><a className="thm-1 btn-sm">Continue</a></Link>
                       </div>
                   </div>
               </div>
           </div>
       </div>
-    
+    )
       )}
         
       </>

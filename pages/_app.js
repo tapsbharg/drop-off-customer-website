@@ -25,12 +25,28 @@ function App({ Component, pageProps }) {
   }, []);
   const [isAuth, authDone] = useState(null);
   const [cartData, setCartData] = useState(null);
+  const [guestid, setGuestid] = useState(null);
+
   
-  useEffect(() => {
-    var tokenAccess = reactLocalStorage.get("token");
-    var authType = tokenAccess !== undefined ? true : false;
+  function setTokenGuestid(){
+    var token = reactLocalStorage.get("token");
+    var guestid = reactLocalStorage.get("guestid");
+    var authType = token !== undefined ? true : false;
     authDone(authType);
-  }, []);
+    setGuestid(guestid)
+  }
+  useEffect(() => {
+    setTokenGuestid()
+    cartListShow();
+    
+    /* var token = reactLocalStorage.get("token");
+    var guestid = reactLocalStorage.get("guestid");
+    if(token != undefined && guestid != undefined){
+      console.log(token, guestid)
+      mergeCart(guestid);
+    } */
+    
+  }, [isAuth, guestid]);
   const logOut = () => {
     reactLocalStorage.clear();
     authDone(false);
@@ -42,11 +58,31 @@ function App({ Component, pageProps }) {
     authDone(true);
   };
   const cartListShow = () => {
-    apiFunc.cartListData().then((res)=>{
-      setCartData(res.data.data)
-    }).catch((error)=>{
-        console.log(error);
-    })
+    if(isAuth || guestid){
+      if(!guestid && isAuth){
+        apiFunc.cartListData().then((res)=>{
+          setCartData(res.data.data)
+        }).catch((error)=>{
+            console.log(error);
+        })
+      }else{
+        apiFunc.cartListGuest(guestid).then((res)=>{
+          const resData=res.data.data != undefined ?res.data.data:{
+            cart:[],
+            vendor:[]
+          };
+          setCartData(resData)
+        }).catch((error)=>{
+            console.log(error);
+        })
+      }
+    }else{
+      const resData={
+        cart:[],
+        vendor:[]
+      }
+      setCartData(resData)
+    }
   };
 
 Router.events.on('routeChangeStart', () => {
@@ -54,6 +90,7 @@ Router.events.on('routeChangeStart', () => {
 });
 Router.events.on('routeChangeComplete', () => {
     document.body.className = document.body.className.replace("loading_page","");
+    
 });
   return (
         <Layout 

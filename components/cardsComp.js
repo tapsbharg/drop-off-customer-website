@@ -1,78 +1,177 @@
-import React, { useMemo } from "react";
-import {
-  useStripe,
-  useElements,
-  CardNumberElement,
-  CardCvcElement,
-  CardExpiryElement
-} from "@stripe/react-stripe-js";
-
-
-const useOptions = () => {
-  const options = useMemo(
-    () => ({
-      style: {
-        base: {
-            backgroundColor:"#fff",
-            color: "#000",
-            letterSpacing: "0.025em",
-            fontFamily: "Source Code Pro, monospace",
-            "::placeholder": {
-                color: "#252525"
-            },
-        },
-        invalid: {
-            color: "#f00",
-            "::placeholder": {
-                color: "#f00"
-            }
-        }
-      }
-    }),
-    []
-  );
-
-  return options;
-};
+import { useFormik } from "formik";
+import React, { useMemo,useEffect, useState } from "react";
+import { Modal } from "react-bootstrap"
+import apiFunc from "../services/api";
+import * as Yup from "yup";
+import { usePaymentInputs } from 'react-payment-inputs';
+import { toast, ToastContainer } from "react-toastify";
 
 const SplitForm = () => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const options = useOptions();
-
-  const handleSubmit = async event => {
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable
-      // form submission until Stripe.js has loaded.
-      return;
+    const [withdrawalModal,setWithdrawalModal]=useState(false);
+    const [cardList,setCardList]=useState([]);
+    const { meta, getCardNumberProps, getExpiryDateProps, getCVCProps } = usePaymentInputs();
+    const addCardModal = (type) =>{
+        setWithdrawalModal(type)
+    }
+    /*card list*/
+    function cardListingFunc(){
+        apiFunc.getAllCard().then((res)=>{
+            setCardList(res.data.cardListing)
+        }).catch((error)=>{
+            console.log(error);
+        })
     }
 
-    const payload = await stripe.createPaymentMethod({
-      type: "card",
-      card: elements.getElement(CardNumberElement)
+    useEffect(()=>{
+        cardListingFunc();
+    },[])
+    /*card list*/
+    const testNumber=(e)=>{
+        const re = /^[0-9\b]+$/;
+        if (re.test(e)) {
+           return true
+        }else{
+            return false
+        }
+    }
+    const initialValues = {
+        cardName: "",
+        cardNumber: "",
+        cardExpMonth: "",
+        cardExpYear: "",
+        cardCVC: "",
+      };
+      const validationSchema = Yup.object({
+        cardName:Yup.string().required('Please enter card name'),
+        cardNumber:Yup
+        .mixed()
+        .required("Please enter card number"),
+        cardExpMonth:Yup
+        .mixed()
+        .required("Please enter exp. date"),
+        cardExpYear:Yup
+        .mixed()
+        .required("Please enter exp. date"),
+        cardCVC:Yup
+        .mixed()
+        .required("Please enter card CVC"),
+      });
+      const formik = useFormik({
+        initialValues,
+        validationSchema,
+        onSubmit: (values) => {
+          console.log("submit", values);
+          if(
+                meta.erroredInputs.cardNumber != 'undefined' && 
+                meta.erroredInputs.expiryDate != 'undefined' && 
+                meta.erroredInputs.cvc != 'undefined'
+            ){
+                formik.resetForm()
+            addCard(values)
+          }else{
+              console.log(meta.error)
+            toast.error(meta.error);
+          }
+        },
     });
-    console.log("[PaymentMethod]", payload);
-  };
 
+    function addCard(options){
+        apiFunc.addNewCard(options).then((res)=>{
+            toast.success(res.data.message);
+            setWithdrawalModal(false);
+            cardListingFunc();
+        }).catch((error)=>{
+            toast.error('Invalid card details');
+            console.log(error);
+        })
+    }
+    function handleChangeCardNumber(e){
+        formik.setFieldValue('cardNumber',e.target.value)
+    }
+    function handleChangeExpiryDate(e){
+        var date=e.target.value;
+         date=date.split(' / ');
+        var dateMonth=date[0];
+        var dateYear=date[1];
+        formik.setFieldValue('cardExpMonth',dateMonth)
+        formik.setFieldValue('cardExpYear',dateYear)
+    }
+    function handleChangeCVC(e){
+        formik.setFieldValue('cardCVC',e.target.value)
+    }
   return (
-    <form onSubmit={handleSubmit}>
-        <div className="row bg-black p-4 rounded-3 mb-3">
-            <div className="col-sm-12 mb-3">
-                <CardNumberElement  options={options} placeholder="Enter Card Number" />
-            </div>
-            <div className="col-sm-6  mb-3">
-                <CardExpiryElement options={options}  placeholder="Card Holder's Name" />
-            </div>
-            <div className="col-sm-6  mb-3">
-                <CardCvcElement options={options} placeholder="Expiry Date" />
-            </div>
-        </div>
-        <button type="submit" className="btn cus_btn custom01" disabled={!stripe}>
-            Pay
-        </button>
-    </form>
+    <>
+    <ToastContainer />
+    <div className="delivery-address bg-white rounded-3 p-3 mb-3">
+          <h6> Select Card </h6> 
+          
+          <hr/>
+          {cardList.map((data, index)=>(
+              <div key={index}>
+                  <div className="address_group d-flex justify-content-between my-3">
+                      <div className="location_img">
+                          <p> <b> 4545-xxxx-xxxx-1512 </b></p>
+                      </div>
+                      <div className="location_content">
+                          <a className="but03" href="#"> Pay Now </a>        
+                      </div>
+                  </div>
+                  <hr/>
+              </div>
+          ))}
+          <a className="but03" onClick={()=>addCardModal(true)}> <i className="fas fa-plus"></i>  Add New Card </a>
+      </div>
+
+
+  <Modal
+          show={withdrawalModal}
+          onHide={()=>{addCardModal(false)}}
+          backdrop="static"
+          keyboard={false}
+          className="modal-gray"
+          centered
+      >
+          <div className="add_new_card">
+              <div className="add_new_card_contant bg-white p-5 rounded-3">
+                  <i className="fal fa-times-circle" onClick={()=>addCardModal(false)}></i>
+                  <h5> Add New Card </h5>
+                  <form  onSubmit={formik.handleSubmit}>
+                    {meta.isTouched && meta.error && <div className="errorMsg text-center mb-1">Error: {meta.error}</div>}
+                            <div className="row bg-black p-4 rounded-3 mb-3">
+                                <div className="col-sm-12  mb-3">
+                                    <input type="text" {...formik.getFieldProps("cardName")} placeholder="Card Holder's Name"/>
+                                    {formik.touched.cardName && formik.errors.cardName ? (
+                                    <div className="errorMsg">{formik.errors.cardName}</div>
+                                    ) : null}
+                                </div>
+                                <div className="col-sm-12 mb-3">
+                                    <input type="text"  {...getCardNumberProps({ onChange: handleChangeCardNumber })} placeholder="Enter Card Number"/>
+                                    {formik.touched.cardNumber && formik.errors.cardNumber ? (
+                                    <div className="errorMsg">{formik.errors.cardNumber}</div>
+                                    ) : null}
+                                </div>
+                                <div className="col-sm-5  mb-3">
+                                    <input type="text" {...getExpiryDateProps({ onChange: handleChangeExpiryDate })} placeholder="Month"/>
+                                    {formik.touched.cardExpMonth && formik.errors.cardExpMonth ? (
+                                    <div className="errorMsg">{formik.errors.cardExpMonth}</div>
+                                    ) : null}
+                                </div>
+                                <div className="col-sm-4  mb-3">
+                                </div>
+                                <div className="col-sm-3  mb-3">
+                                    <input type="text" {...getCVCProps({ onChange: handleChangeCVC })} placeholder="CVC"/>
+                                    {formik.touched.cardCVC && formik.errors.cardCVC ? (
+                                        <div className="errorMsg">{formik.errors.cardCVC}</div>
+                                    ) : null}
+                                </div>
+                            </div>
+                            <button className="btn cus_btn custom01"> Continue </button>
+                        </form>
+              </div>
+          </div>
+      </Modal>
+</>
+    
   );
 };
 

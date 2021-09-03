@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "aos/dist/aos.css";
 import "../public/assets/css/all.css";
 import "../public/favicon.ico";
+import "react-toastify/dist/ReactToastify.css";
 import "../public/sass/comman.css";
 import "../public/assets/css/dev.css";
 import { reactLocalStorage } from "reactjs-localstorage";

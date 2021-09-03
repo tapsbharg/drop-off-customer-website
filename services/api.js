@@ -120,6 +120,15 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    addNewCard: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/addNewCard`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    
 };
 
 export default apiFunc;

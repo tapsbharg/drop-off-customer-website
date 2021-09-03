@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap"
 import Link from "next/link";
 import AuthLayout from "../components/authLayout";
 import apiFunc from "../services/api";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import SplitForm from "../components/cardsComp";
@@ -67,6 +67,7 @@ export default function CheckoutPage(props) {
    
     return (
       <>
+      <ToastContainer />
       <AuthLayout props={props}>
          <div className="checkout py-3">
             <div className="container">

@@ -1,5 +1,4 @@
 import { useRouter } from "next/dist/client/router"
-import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 import { useEffect, useState } from "react"
 import apiFunc from "../services/api";

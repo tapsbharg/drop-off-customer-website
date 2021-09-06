@@ -99,7 +99,6 @@ export default function SearchPage(props) {
         if(propsData.cartData ){
             var cartDataList=[]
             for (var i=0; i < propsData.cartData.cart.length; i++) {
-                console.log(propsData.cartData.cart[i])
                 if(propsData.cartData.cart[i].productId){
                     var dataByList = {};
                     let listId =propsData.cartData.cart[i].productId._id
@@ -117,7 +116,6 @@ export default function SearchPage(props) {
     function checkCartIs(datas, cartlist){
         var prodlIddata={};
         for (var i=0; i < cartlist.length; i++) {
-            console.log(cartlist[i].id, cartlist[i].qty)
             if(datas._id == cartlist[i].id){
                 prodlIddata={
                     ...datas,
@@ -176,13 +174,12 @@ export default function SearchPage(props) {
     }
     useEffect(()=>{
         setAfterData(prodData, cartStatusList, props);
-        var token = reactLocalStorage.get("token");
+        var  token= reactLocalStorage.get("token");
         var guestid = reactLocalStorage.get("guestid");
-        console.log(token)
-        if(token){
-            setGuestId(guestid);
-        }else{
+        if(!token && !guestid){
             getGuestId();
+        }else{
+            setGuestId(guestid);
         }
 
     },[props, cartStatusList, prodData]) 

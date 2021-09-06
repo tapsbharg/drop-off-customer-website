@@ -128,7 +128,20 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
-    
+    setDefaultCard: (id) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/setDefaultCard/${id}`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    placeOrder: () =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/charge`,
+    }).catch((err) => {
+      console.log(err);
+    }),
 };
 
 export default apiFunc;

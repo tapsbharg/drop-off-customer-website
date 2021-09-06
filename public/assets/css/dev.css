@@ -428,8 +428,16 @@ form  .user_image input {
     color: #fff;
     padding: 11px 0;
 }
-
-
+footer.footer_outer {
+    margin-top: 40px;
+}
+.carticonwt {
+    min-height: 400px;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+}
 
 
 

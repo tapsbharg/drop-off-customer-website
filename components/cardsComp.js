@@ -9,6 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 const SplitForm = () => {
     const [withdrawalModal,setWithdrawalModal]=useState(false);
     const [cardList,setCardList]=useState([]);
+    const [defaultCardItem,setDefaultCardItem]=useState([]);
     const { meta, getCardNumberProps, getExpiryDateProps, getCVCProps } = usePaymentInputs();
     const addCardModal = (type) =>{
         setWithdrawalModal(type)
@@ -85,6 +86,16 @@ const SplitForm = () => {
             console.log(error);
         })
     }
+    function setDefaultCard(data){
+        apiFunc.setDefaultCard(data.cardId).then((res)=>{
+            toast.success(res.data.message);
+            setDefaultCardItem(data);
+            cardListingFunc();
+        }).catch((error)=>{
+            toast.error('Invalid card details');
+            console.log(error);
+        })
+    }
     function handleChangeCardNumber(e){
         formik.setFieldValue('cardNumber',e.target.value)
     }
@@ -99,6 +110,7 @@ const SplitForm = () => {
     function handleChangeCVC(e){
         formik.setFieldValue('cardCVC',e.target.value)
     }
+    
   return (
     <>
     <ToastContainer />
@@ -110,10 +122,10 @@ const SplitForm = () => {
               <div key={index}>
                   <div className="address_group d-flex justify-content-between my-3">
                       <div className="location_img">
-                          <p> <b> 4545-xxxx-xxxx-1512 </b></p>
+                          <p> <b> xxxx-xxxx-xxxx-{data.cardLast4} </b></p>
                       </div>
                       <div className="location_content">
-                          <a className="but03" href="#"> Pay Now </a>        
+                          <a className="but03" onClick={()=>setDefaultCard(data)}> Select </a>        
                       </div>
                   </div>
                   <hr/>

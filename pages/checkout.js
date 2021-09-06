@@ -14,6 +14,11 @@ export default function CheckoutPage(props) {
     const [couponModal,setCouponModal]=useState(false);
     const [orderMsgModal,setOrderMsgModal]=useState(false);
     const [cardList,setCardList]=useState([]);
+    const [totalAmt,setTotalAmt]=useState(0);
+    const [referralAmt,setReferralAmt]=useState(0);
+    const [couponAmt,setCouponAmt]=useState(0);
+    const [serviceAmt,setServiceAmt]=useState(0);
+    const [orderData,setOrderData]=useState('');
     const addCardModal = (type) =>{
         setWithdrawalModal(type)
     }
@@ -59,16 +64,48 @@ export default function CheckoutPage(props) {
             console.log(error);
         })
     }
-
+    function placeOrder(){
+        apiFunc.placeOrder().then((res)=>{
+            setOrderData(res.data)
+            props.getCart();
+            orderMsgModalFunc(true)
+            // toast.success(res);
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    function cartTotalAmout(data){
+        var total=0;
+        if(data){
+            for (var i=0; i < data.cart.length; i++) {
+                if(data.cart[i].productId){
+                    total += data.cart[i].quantity * data.cart[i].productId.price
+                }
+            }
+        }
+        setTotalAmt(total);
+    }
     useEffect(()=>{
         cardListingFunc();
-    },[])
+        cartTotalAmout(props.cartData)
+    },[props.cartData])
    /*card list*/
-   
+   console.log(orderData)
     return (
       <>
       <ToastContainer />
       <AuthLayout props={props}>
+
+            {!props.cartData && (
+                <div className="emptyCart">
+                    <div className="carticonwt">
+                        Empty Cart
+                    </div>
+                </div>
+            )}
+          {props.cartData && (
+              props.cartData.cart.length > 0 && (
+              <div>
          <div className="checkout py-3">
             <div className="container">
                 <div className="row">
@@ -146,25 +183,25 @@ export default function CheckoutPage(props) {
                                     <tbody>   
                                         <tr>   
                                             <td> Payable Amount </td>
-                                            <td>$100</td>
+                                            <td>${totalAmt}</td>
                                         </tr>
                                         <tr>
                                             <td> Referral </td>
-                                            <td>-$5</td>
+                                            <td>-${referralAmt}</td>
                                         </tr>
                                         <tr>
                                             <td>Coupon (Store) </td>
-                                            <td>-$10</td>
+                                            <td>-${couponAmt}</td>
                                         </tr>
                                         <tr>
                                             <td>Service Fee </td>
-                                            <td>$17</td>
+                                            <td>${serviceAmt}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
 
-                            <a className="btn cus_btn custom01" onClick={()=>orderMsgModalFunc(true)}> Place Order </a>
+                            <a className="btn cus_btn custom01" onClick={()=>placeOrder()}> Place Order </a>
                             
                             
 
@@ -223,16 +260,16 @@ export default function CheckoutPage(props) {
                             </div>
                             <a className="but03" href="#"> <i className="fas fa-plus"></i> Add New Address </a>
                         </div>
-                        <Elements stripe={stripePromise}>
-                            <SplitForm />
-                        </Elements>
+                        <SplitForm />
 
                         {/* <PaymentCards/> */}
                     </div>
                 </div>
             </div>
         </div>
-<Modal
+           </div>
+          ))}
+           <Modal
                 show={couponModal}
                 onHide={()=>{couponModalFunc(false)}}
                 backdrop="static"
@@ -292,17 +329,22 @@ export default function CheckoutPage(props) {
                     <div className="order_Confirmed_contant bg-white p-5">
                         {/* <i className="fal fa-times-circle"></i> */}
                         <i className="fas fa-check-circle"></i>
-                        <h5>Your Order has been placed </h5>
-                        <p>Order No: 2222222222</p>
-                        <Link href="/order-detail?orderId=2222222222">
-                            <a className="btn cus_btn custom01 mb-3"> Order Details</a>
-                        </Link>
+                        {orderData && (
+                            <div>
+                                <h5>{orderData.message} </h5>
+                                <p>Order No : {orderData.data.orderNumber}</p>
+                                <Link href={`/order-detail?orderId=${orderData.data.orderNumber}`}>
+                                    <a className="btn cus_btn custom01 mb-3"> Order Details</a>
+                                </Link>
+                            </div>
+                        )}
                         <Link href="/">
                             <a className="btn cus_btn custom01 mb-3"> Home </a>
                         </Link>
                     </div>
                 </div>
             </Modal>
+            
             </AuthLayout>
       </>
     )

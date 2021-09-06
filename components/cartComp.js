@@ -42,7 +42,13 @@ export default function Cart(appProps) {
                           <span>${cartTotal}</span>
                       </div>
                       <div className="cartBntnsp">
-                          <Link href="/checkout"><a className="thm-1 btn-sm">Continue</a></Link>
+                          {appProps.props.auth &&(
+                              <Link href="/checkout"><a className="thm-1 btn-sm">Continue</a></Link>
+                          )}
+                          {!appProps.props.auth &&(
+                              <Link href="/sign-in"><a className="thm-1 btn-sm">Continue</a></Link>
+                          )}
+                          
                       </div>
                   </div>
               </div>

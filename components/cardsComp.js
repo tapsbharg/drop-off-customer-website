@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { usePaymentInputs } from 'react-payment-inputs';
 import { toast, ToastContainer } from "react-toastify";
 
-const SplitForm = () => {
+const SplitForm = (props) => {
     const [withdrawalModal,setWithdrawalModal]=useState(false);
     const [cardList,setCardList]=useState([]);
     const [defaultCardItem,setDefaultCardItem]=useState([]);
@@ -55,7 +55,7 @@ const SplitForm = () => {
         .required("Please enter exp. date"),
         cardCVC:Yup
         .mixed()
-        .required("Please enter card CVC"),
+        .required("Please enter card CVV"),
       });
       const formik = useFormik({
         initialValues,
@@ -81,6 +81,7 @@ const SplitForm = () => {
             toast.success(res.data.message);
             setWithdrawalModal(false);
             cardListingFunc();
+            props.reload();
         }).catch((error)=>{
             toast.error('Invalid card details');
             console.log(error);
@@ -114,6 +115,10 @@ const SplitForm = () => {
   return (
     <>
     <ToastContainer />
+    {props.page && (
+        <a  className="btn custom01" onClick={()=>addCardModal(true)}> <i className="fas fa-plus"></i>  Add New Card </a>
+    )}
+    {(!props.page || props.page=='checkout') && (
     <div className="delivery-address bg-white rounded-3 p-3 mb-3">
           <h6> Select Card </h6> 
           
@@ -133,7 +138,7 @@ const SplitForm = () => {
           ))}
           <a className="but03" onClick={()=>addCardModal(true)}> <i className="fas fa-plus"></i>  Add New Card </a>
       </div>
-
+    )}
 
   <Modal
           show={withdrawalModal}
@@ -171,7 +176,7 @@ const SplitForm = () => {
                                 <div className="col-sm-4  mb-3">
                                 </div>
                                 <div className="col-sm-3  mb-3">
-                                    <input type="text" {...getCVCProps({ onChange: handleChangeCVC })} placeholder="CVC"/>
+                                    <input type="text" {...getCVCProps({ onChange: handleChangeCVC })} placeholder="CVV"/>
                                     {formik.touched.cardCVC && formik.errors.cardCVC ? (
                                         <div className="errorMsg">{formik.errors.cardCVC}</div>
                                     ) : null}

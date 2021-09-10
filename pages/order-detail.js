@@ -1,11 +1,36 @@
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import AuthLayout from "../components/authLayout";
+import apiFunc from "../services/api";
 
 export default function OrderDetailPage(props) {
+    const [orderData, setOrderData] = useState({
+        vendorId:{storeName:'',address:''},
+        products:[]
+});
+    const router = useRouter()
+    const params = router.query || '';
+    const orderId = params.orderId || '';
+    function getOrderById(data){
+        apiFunc.getOrderById(data).then((res)=>{
+            setOrderData(res.data.data);
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    useEffect(()=>{
+        if(orderId){
+            getOrderById(orderId);
+        }
+        
+    },[orderId])
+    console.log(orderData)
     return (
       <>
       <AuthLayout props={props}>
         <div className="checkout py-4">
             <div className="container">
+                {orderData &&(
                 <div className="row">
                     <div className="col-sm-6">
                         <div className="summer_outer">
@@ -19,33 +44,23 @@ export default function OrderDetailPage(props) {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td className="address" colSpan="2"> The Austin Store <span><i className="fas fa-map-marker-alt"></i> Austin, Texas</span> </td>
+                                            <td className="address" colSpan="2"> 
+                                                {orderData.vendorId.storeName} 
+                                                <span><i className="fas fa-map-marker-alt"></i> {orderData.vendorId.address}</span> 
+                                            </td>
                                         </tr>
-                                        <tr>
-                                            <td className="on-off"> 
-                                                <div className="  form-check form-switch">
-                                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked=""/>
-                                                </div>
-                                            </td>
-                                            <td className="content">Glenfiddich Excellence</td>
-                                            <td className="quntity">  
-                                                        x1
-                                            </td>
-                                            <td className="price" > $50 </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td className="on-off"> 
-                                                <div className="  form-check form-switch">
-                                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked=""/>
-                                                </div>
-                                            </td>
-                                            <td className="content">Glenfiddich Excellence</td>
-                                            <td  className="quntity">  
-                                                        x1
-                                            </td>
-                                            <td className="price"> $50 </td>
-                                        </tr>
+                                        {orderData.products.map((data,index)=>(
+                                            <tr key={index}>
+                                                <td className="on-off"> 
+                                                    <div className={`vegtype ${data.isNonVeg?'non-veg':'veg'}`}></div>
+                                                </td>
+                                                <td className="content">{data.productName}</td>
+                                                <td className="quntity">  
+                                                            x{data.quantity}
+                                                </td>
+                                                <td className="price" > ${data.price} </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -60,20 +75,28 @@ export default function OrderDetailPage(props) {
                                     </thead>
                                     <tbody>   
                                         <tr>   
-                                            <td> Payable Amount </td>
-                                            <td>$100</td>
-                                        </tr>
-                                        <tr>
-                                            <td> Referral </td>
-                                            <td>-$5</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Coupon (Store) </td>
-                                            <td>-$10</td>
+                                            <td> Grand Total </td>
+                                            <td>${orderData.grandTotal}</td>
                                         </tr>
                                         <tr>
                                             <td>Service Fee </td>
-                                            <td>$17</td>
+                                            <td>${orderData.serviceFee}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Delevery Charges </td>
+                                            <td>${orderData.deliveryAmount}</td>
+                                        </tr>
+                                        <tr>
+                                            <td> Referral </td>
+                                            <td>-${orderData.referralDeduction}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Coupon (Store) </td>
+                                            <td>-${orderData.couponDeduction}</td>
+                                        </tr>
+                                        <tr>   
+                                            <td> Payable Amount </td>
+                                            <td>${orderData.payableAmount}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -128,6 +151,8 @@ export default function OrderDetailPage(props) {
                     
                     </div>
                 </div> 
+                )}
+
             </div>
         </div>
 

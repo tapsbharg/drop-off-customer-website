@@ -1,12 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
+import SplitForm from "../components/cardsComp";
 import DashLayout from "../components/dashLayout";
+import apiFunc from "../services/api";
 
 export default function CardPage(props) {
     const [withdrawalModal,setWithdrawalModal]=useState(false);
+    const [cardList,setCardList]=useState([]);
     const addCardModal = (type) =>{
         setWithdrawalModal(type)
     }
+
+    /*card list*/
+    
+    function cardListingFunc(){
+        apiFunc.getAllCard().then((res)=>{
+            setCardList(res.data.cardListing)
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    function DeleteCard(id){
+        apiFunc.deleteCard(id).then((res)=>{
+            cardListingFunc()
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    useEffect(()=>{
+        cardListingFunc();
+    },[props])
+   /*card list*/
+
+console.log(cardList)
+
+
+
+
+
     return (
       <>
       <DashLayout props={props}>
@@ -14,21 +45,29 @@ export default function CardPage(props) {
             <div className="id-outer"> 
                 <ul className="d-flex flex-wrap justify-content-between align-items-center mb-4">
                 <li><a href="#"> Card </a></li>
-                <li><a className="btn custom01" onClick={()=>addCardModal(true)}> Add New </a></li>
+                <li><SplitForm page="card" reload={()=>cardListingFunc()} /></li>
                 </ul>
                 <div className="row">
-                    <div className="col-sm-6">
-                        <div className="id_photo">
-                            <img src="assets/images/web/card01.svg" alt=""/>
-                            <a href="#"> Delete</a>
+                    {cardList.map((data,index)=>(
+                        <div className="col-sm-6" key={index}>
+                            <div className="id_photo">
+                                <div className="cardboxRps">
+                                    <h3>XXXXX-XXXX-XXXX-{data.cardLast4}</h3>
+                                    <div className="carditpsbx">
+                                        <div className="cardHldrName">
+                                            <h4>Card Holder's Name</h4>
+                                            <p>{data.cardName}</p>
+                                        </div>
+                                        <div className="cardCvvsrn">
+                                            <h4>Expiry Date</h4>
+                                            <p>{data.cardExpDetails}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a onClick={()=>DeleteCard(data.cardId)}> Delete</a>
+                            </div>
                         </div>
-                    </div>
-                    <div className="col-sm-6">
-                        <div className="id_photo">
-                            <img src="assets/images/web/card01.svg" alt=""/>
-                            <a href="#"> Delete</a>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>

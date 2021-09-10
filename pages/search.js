@@ -34,13 +34,14 @@ export default function SearchPage(props) {
             console.log(error);
         })
     }
-    function addToCart(_id){
+    function addToCart(prodId,vendId){
         if(!guestId){
             const cartData={
-                "vendorId": _id,
+                "vendorId": vendId,
                 "quantity": 1
             }
-            apiFunc.addTocart(cartData).then((res)=>{
+            console.log(cartData,prodId)
+            apiFunc.addTocart(cartData,prodId).then((res)=>{
                 // setProductList(res.data.data)
                 // toast.error(error.message);
                 console.log(res)
@@ -53,10 +54,10 @@ export default function SearchPage(props) {
         else{
             const cartData={
                 "guestId":guestId,
-                "vendorId": _id,
+                "vendorId": vendId,
                 "quantity": 1
             }
-            apiFunc.addTocartGuest(cartData).then((res)=>{
+            apiFunc.addTocartGuest(cartData,prodId).then((res)=>{
                 // setProductList(res.data.data)
                 props.getCart()
                 // toast.success(res.data.message);
@@ -67,13 +68,13 @@ export default function SearchPage(props) {
         }
 
     }
-    function removeToCart(_id){
+    function removeToCart(prodId,vendId){
         if(!guestId){
             const cartDataDelete={
-                "vendorId": _id,
+                "vendorId": vendId,
                 "quantity": -1
             }
-            apiFunc.addTocart(cartDataDelete).then((res)=>{
+            apiFunc.addTocart(cartDataDelete,prodId).then((res)=>{
                 // setProductList(res.data.data)
                 props.getCart()
             }).catch((error)=>{
@@ -83,10 +84,10 @@ export default function SearchPage(props) {
         else{
             const cartDataDelete={
                 "guestId":guestId,
-                "vendorId": _id,
+                "vendorId": vendId,
                 "quantity": -1
             }
-            apiFunc.addTocartGuest(cartDataDelete).then((res)=>{
+            apiFunc.addTocartGuest(cartDataDelete,prodId).then((res)=>{
                 // setProductList(res.data.data)
                 props.getCart()
             }).catch((error)=>{
@@ -94,7 +95,20 @@ export default function SearchPage(props) {
             })
         }
     }
- 
+    function EmptyCartAll(id){
+        console.log(id)
+        apiFunc.deleteCartData(id).then((res)=>{
+            // setProductList(res.data.data)
+            // toast.error(error.message);
+            console.log(res)
+            props.getCart()
+        }).catch((error)=>{
+            toast.error(error.message);
+            console.log(error);
+        })
+    }
+    
+    // EmptyCartAll("6136e9b1da28413d28bd7759")
     const checkCartValue = (propsData) => {
         if(propsData.cartData ){
             var cartDataList=[]
@@ -221,7 +235,7 @@ export default function SearchPage(props) {
         return statusData;
     }
     */
-//    console.log(productList)
+//    console.log(productList, props)
     return (
       <>
       <ToastContainer />
@@ -270,13 +284,13 @@ export default function SearchPage(props) {
                                        <div className={`prolislbtn ${data.cartStatus?'active':'deactive'}`}>
                                             {data.cartStatus && (
                                                 <div className={`quntityPls`}>
-                                                    <button type="button" onClick={()=>removeToCart(data._id)} className="qty-minus">-</button>
-                                                    <input type="number" readOnly className="qty" defaultValue={data.cartQty} value={data.cartQty} />
-                                                    <button type="button" onClick={()=>addToCart(data._id)} className="qty-plus">+</button>
+                                                    <button type="button" onClick={()=>removeToCart(data._id,data.vendorId._id)} className="qty-minus">-</button>
+                                                    <input type="number" readOnly className="qty" value={data.cartQty} />
+                                                    <button type="button" onClick={()=>addToCart(data._id,data.vendorId._id)} className="qty-plus">+</button>
                                                 </div>
                                             )}
                                             {!data.cartStatus && (
-                                                <a className="add_product" onClick={()=>addToCart(data._id)}> add  <i className="far fa-plus"> </i> </a>
+                                                <a className="add_product" onClick={()=>addToCart(data._id,data.vendorId._id)}> add  <i className="far fa-plus"> </i> </a>
                                                     
                                             )}
                                         </div> 

@@ -62,10 +62,10 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
-    addTocart: (data) =>
+    addTocart: (data, prodId) =>
     authAxios({
       method: "POST",
-      url: `${ROOT_URL}/user/addToCart/${data.vendorId}`,
+      url: `${ROOT_URL}/user/addToCart/${prodId}`,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -91,10 +91,10 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
-    addTocartGuest: (data) =>
+    addTocartGuest: (data,prodId) =>
     authAxios({
       method: "POST",
-      url: `${ROOT_URL}/guest/addToCart/${data.vendorId}`,
+      url: `${ROOT_URL}/guest/addToCart/${prodId}`,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -135,10 +135,46 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    deleteCard: (id) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/deleteCard/${id}`,
+    }).catch((err) => {
+      console.log(err);
+    }),
     placeOrder: () =>
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/charge`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    getOrdersAll: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/order/products`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    getOrderById: (id) =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/order/product/${id}`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    getFaqs: (d) =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/faqs`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    getTerms: (d) =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/terms-and-conditions/getAll`,
     }).catch((err) => {
       console.log(err);
     }),

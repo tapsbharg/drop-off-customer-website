@@ -62,6 +62,7 @@ function App({ Component, pageProps }) {
     if(isAuth || guestid){
       if(!guestid && isAuth){
         apiFunc.cartListData().then((res)=>{
+          console.log('cart',res)
           setCartData(res.data.data)
         }).catch((error)=>{
             console.log(error);

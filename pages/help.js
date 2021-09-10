@@ -11,7 +11,6 @@ export default function HelpPage(props) {
                         <div className="d-flex justify-content-between align-items-center">
                             <h6> Help </h6>
                             <Link href="/get-help"><span className="btn cus_btn custom01"> Get Help </span></Link>
-                            
                         </div> 
                         <Tabs defaultActiveKey="tab1" id="nav-tab" className="nav nav-tabs my-4">
                                 <Tab eventKey="tab1" title="Active">

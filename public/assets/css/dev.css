@@ -438,9 +438,65 @@ footer.footer_outer {
     align-items: center;
     justify-content: center;
 }
+.my_order_img {
+    width: 70px;
+}
 
+.vendrodewrp {
+    width: calc(100% - 100px);
+}
 
+.vendrStats {
+    width: 100px;
+    text-align: right;
+}
 
+.my_order_content {
+    width: calc(100% - 70px);
+}
+
+.my_order .my_order01 .my_order_content span {
+    line-height: normal;
+}
+.cardboxRps {
+    background: #000;
+    border-radius: 15px;
+    color: #fff;
+    padding: 50px 20px 30px;
+}
+
+.cardboxRps h3 {
+    font-size: 20px;
+    margin-bottom: 60px;
+}
+
+.carditpsbx {
+    display: flex;
+    display: -webkit-flex;
+}
+
+.cardHldrName {
+    width: calc(100% - 50px);
+}
+
+.cardCvvsrn {
+    width: 100px;
+}
+
+.carditpsbx h4 {
+    font-weight: normal;
+    color: #969696;
+    font-size: 13px;
+}
+
+.carditpsbx p {
+    color: #fff;
+    font-size: 16px;
+    margin: 0;
+}
+.id_photo {
+    margin-bottom: 25px;
+}
 
 
 

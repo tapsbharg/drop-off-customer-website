@@ -30,12 +30,12 @@ export default function CheckoutPage(props) {
     }
 
 
-    function addToCart(_id){
+    function addToCart(prodId,vendId){
         const cartData={
-            "vendorId": _id,
+            "vendorId": vendId,
             "quantity": 1
         }
-        apiFunc.addTocart(cartData).then((res)=>{
+        apiFunc.addTocart(cartData,prodId).then((res)=>{
             props.getCart();
         }).catch((error)=>{
             toast.error(error.message);
@@ -43,12 +43,12 @@ export default function CheckoutPage(props) {
         })
 
     }
-    function removeToCart(_id){
+    function removeToCart(prodId,vendId){
         const cartDataDelete={
-            "vendorId": _id,
+            "vendorId": vendId,
             "quantity": -1
         }
-        apiFunc.addTocart(cartDataDelete).then((res)=>{
+        apiFunc.addTocart(cartDataDelete,prodId).then((res)=>{
             props.getCart()
         }).catch((error)=>{
             console.log(error);
@@ -90,7 +90,7 @@ export default function CheckoutPage(props) {
         cartTotalAmout(props.cartData)
     },[props.cartData])
    /*card list*/
-   console.log(orderData)
+   console.log(props.cartData)
     return (
       <>
       <ToastContainer />
@@ -120,10 +120,15 @@ export default function CheckoutPage(props) {
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    {props.cartData && (
                                         <tr>
-                                            <td className="address" colSpan="2"> The Austin Store <span><i className="fas fa-map-marker-alt"></i> Austin, Texas</span> </td>
+                                            <td className="address" colSpan="2"> 
+                                                {props.cartData.vendor.storeName} 
+                                                <span><i className="fas fa-map-marker-alt"></i> {props.cartData.vendor.address}</span> 
+                                            </td>
                                             <td colSpan="2" align="right"> Upload Your Identity/ Prescriptions </td>
                                         </tr>
+                                    )}
                                         {props.cartData && (
                                             props.cartData.cart.map((data, index)=>(
                                                 data.productId && (
@@ -134,9 +139,9 @@ export default function CheckoutPage(props) {
                                                     <td className="content">{data.productId.name}</td>
                                                     <td>  
                                                         <div className={`quntityPls show`}>
-                                                            <button type="button" onClick={()=>removeToCart(data.productId._id)} className="qty-minus">-</button>
+                                                            <button type="button" onClick={()=>removeToCart(data.productId._id,data.vendorId._id)} className="qty-minus">-</button>
                                                             <input type="number" readOnly className="qty" value={data.quantity} />
-                                                            <button type="button" onClick={()=>addToCart(data.productId._id)} className="qty-plus">+</button>
+                                                            <button type="button" onClick={()=>addToCart(data.productId._id,data.vendorId._id)} className="qty-plus">+</button>
                                                         </div>
                                                     </td>
                                                     <td className="price" > ${data.quantity * data.productId.price} </td>

@@ -338,7 +338,7 @@ export default function CheckoutPage(props) {
                             <div>
                                 <h5>{orderData.message} </h5>
                                 <p>Order No : {orderData.data.orderNumber}</p>
-                                <Link href={`/order-detail?orderId=${orderData.data.orderNumber}`}>
+                                <Link href={`/order-detail?orderId=${orderData.data._id}`}>
                                     <a className="btn cus_btn custom01 mb-3"> Order Details</a>
                                 </Link>
                             </div>

@@ -6,7 +6,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { reactLocalStorage } from "reactjs-localstorage";
 import ROOT_URL from "../services/api-url";
 import * as Yup from "yup";
-import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
 export default function VerifyOtpPage(props) {
     const[email, setEmail]=useState(null)

@@ -6,7 +6,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { reactLocalStorage } from "reactjs-localstorage";
 import ROOT_URL from "../services/api-url";
 import * as Yup from "yup";
-import "react-toastify/dist/ReactToastify.css";
 import apiFunc from "../services/api";
 export default function SignInPage(props) {
   const baseURL=ROOT_URL;

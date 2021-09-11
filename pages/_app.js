@@ -6,6 +6,7 @@ import "../public/assets/css/all.css";
 import "../public/favicon.ico";
 import "react-toastify/dist/ReactToastify.css";
 import "../public/sass/comman.css";
+import "../public/assets/css/custom.css";
 import "../public/assets/css/dev.css";
 import { reactLocalStorage } from "reactjs-localstorage";
 import Layout from "../components/layoutComp";
@@ -102,10 +103,6 @@ Router.events.on('routeChangeComplete', () => {
         cartData={cartData}>
             <Head>
                 <link rel="stylesheet" href="/favicon.ico"/>
-                <link rel="stylesheet" href="/assets/css/all.css"/>
-                <link rel="stylesheet" href="/sass/comman.css"/>
-                <link rel="stylesheet" href="/assets/css/custom.css"/>
-                <link rel="stylesheet" href="/assets/css/dev.css"/>
             </Head>
             <Component 
             setlogin={()=>setLogin()} 

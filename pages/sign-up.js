@@ -6,7 +6,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { reactLocalStorage } from "reactjs-localstorage";
 import ROOT_URL from "../services/api-url";
 import * as Yup from "yup";
-import "react-toastify/dist/ReactToastify.css";
 export default function SignUpPage(props) {
     const baseURL=ROOT_URL;
     const history = useRouter();

@@ -497,7 +497,9 @@ footer.footer_outer {
 .id_photo {
     margin-bottom: 25px;
 }
-
+form input, form input.form-control[type="file"]{
+    padding: 17px 20px;
+}
 
 
 

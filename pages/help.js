@@ -1,8 +1,51 @@
 import Link from "next/link";
 import { Tab, Tabs } from "react-bootstrap";
 import DashLayout from "../components/dashLayout";
-
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import apiFunc from "../services/api";
+import PageModule from "../components/Pagination";
 export default function HelpPage(props) {
+    const router = useRouter()
+    const params = router.query || '';
+    const page = params.page || '';
+    const [orderData, setOrderData] = useState({
+        list: [],
+        activePage: parseInt(page) || 1,
+        itemsCountPerPage: 10,
+      });
+    const [FilterData,setFilterData]=useState({
+        "page": parseInt(page) || 1,
+        "perPage": 10
+    })
+    function getHelpdesk(data){
+        apiFunc.getHelpdeskClose(data).then((res)=>{
+            setOrderData({ ...orderData, list: res.data.result });
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    useEffect(()=>{
+        getHelpdesk(FilterData);
+    },[])
+
+  //   pagehaschagned start
+  function pageHasChanged(pageNumber) {
+    if (pageNumber !== orderData.activePage) {
+      setOrderData({
+        ...orderData,
+        activePage: pageNumber,
+        list: [],
+      });
+
+      router.push({
+        pathname: '/my-orders',
+       query: values,
+    }) 
+    }
+  }
+  //   pagehaschagned end
+// console.log(orderData)
     return (
       <>
       <DashLayout props={props}>
@@ -51,7 +94,21 @@ export default function HelpPage(props) {
                                     </div> 
                                 </Tab>
                             </Tabs>
-                            
+                            <div className="table_botm_paging">
+                            <div className="table_border">
+                                {/* <div className="release"> */}
+                                <PageModule
+                                totalItems={orderData.totalItemsCount}
+                                itemsPerPage={orderData.itemsCountPerPage}
+                                currentPage={orderData.activePage}
+                                range={3}
+                                pageChange={(page) => {
+                                    pageHasChanged(page);
+                                }}
+                                />
+                                {/* </div> */}
+                            </div>
+                        </div>
                         </div> 
                     </div>
       </DashLayout>

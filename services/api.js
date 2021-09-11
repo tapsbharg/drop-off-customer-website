@@ -24,6 +24,15 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    
+    postChangePassword: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/users/change_password`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
   postUpload: (data) =>
     authAxios({
       method: "POST",
@@ -164,20 +173,59 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
-    getFaqs: (d) =>
+    getFaqs: () =>
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/faqs`,
     }).catch((err) => {
       console.log(err);
     }),
-    getTerms: (d) =>
+    getTerms: () =>
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/terms-and-conditions/getAll`,
     }).catch((err) => {
       console.log(err);
     }),
+    getPrivacy: () =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/privacy-policy/getAll`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    getCancellationPolicy: () =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/cancellation-policy/getAll`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    helpdesk: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/helpdesk/insert`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    getHelpdeskActive: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/helpdesk/active/pagin`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    getHelpdeskClose: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/helpdesk/closed/pagin`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    
 };
 
 export default apiFunc;

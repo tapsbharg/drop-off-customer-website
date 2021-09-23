@@ -109,7 +109,7 @@ export default function SearchPage(props) {
     }
     
     // EmptyCartAll("6136e9b1da28413d28bd7759")
-    const checkCartValue = (propsData) => {
+    function checkCartValue(propsData) {
         if(propsData.cartData ){
             var cartDataList=[]
             for (var i=0; i < propsData.cartData.cart.length; i++) {
@@ -163,6 +163,7 @@ export default function SearchPage(props) {
     useEffect(()=>{
         var token = reactLocalStorage.get("token");
         setToken(token)
+        checkCartValue(props);
         getCategory()
         const searchData={
             searchString:search,
@@ -176,15 +177,16 @@ export default function SearchPage(props) {
         formik.setFieldValue('category',category);
 
         // SetCartData(props)
-        checkCartValue(props);
     },[search, props]) 
     function getGuestId(){
-        apiFunc.guestid().then((res)=>{
+        var guestid = reactLocalStorage.get("guestid");
+        setGuestid(guestid);
+        /* apiFunc.guestid().then((res)=>{
             reactLocalStorage.set("guestid",res.data.guestId);
             setGuestId(res.data.guestId);
         }).catch((error)=>{
             console.log(error);
-        })
+        }) */
     }
     useEffect(()=>{
         setAfterData(prodData, cartStatusList, props);
@@ -235,7 +237,7 @@ export default function SearchPage(props) {
         return statusData;
     }
     */
-//    console.log(productList, props)
+//    console.log(productList)
     return (
       <>
       <ToastContainer />

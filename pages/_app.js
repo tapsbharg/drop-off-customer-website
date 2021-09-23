@@ -30,15 +30,26 @@ function App({ Component, pageProps }) {
   const [guestid, setGuestid] = useState(null);
 
   
-  function setTokenGuestid(){
+  async function setTokenGuestid(){
     var token = reactLocalStorage.get("token");
-    var guestid = reactLocalStorage.get("guestid");
+    var guest = reactLocalStorage.get("guestid");
+    if(!token && !guest){
+      apiFunc.guestid().then((res)=>{
+          reactLocalStorage.set("guestid",res.data.guestId);
+          setGuestid(res.data.guestId);
+      }).catch((error)=>{
+          console.log(error);
+      })
+    }else if(token){
+      reactLocalStorage.remove("guestid");
+    }else{
+      setGuestid(guest);
+    }
     var authType = token !== undefined ? true : false;
     authDone(authType);
-    setGuestid(guestid)
   }
   useEffect(() => {
-    setTokenGuestid()
+    setTokenGuestid();
     cartListShow();
     
     /* var token = reactLocalStorage.get("token");
@@ -48,7 +59,7 @@ function App({ Component, pageProps }) {
       mergeCart(guestid);
     } */
     
-  }, [isAuth, guestid]);
+  }, [isAuth]);
   const logOut = () => {
     reactLocalStorage.clear();
     authDone(false);
@@ -63,13 +74,14 @@ function App({ Component, pageProps }) {
     if(isAuth || guestid){
       if(!guestid && isAuth){
         apiFunc.cartListData().then((res)=>{
-          console.log('cart',res)
+          // console.log('cart',res)
           setCartData(res.data.data)
         }).catch((error)=>{
             console.log(error);
         })
       }else{
         apiFunc.cartListGuest(guestid).then((res)=>{
+          // console.log(res)
           const resData=res.data.data != undefined ?res.data.data:{
             cart:[],
             vendor:[]

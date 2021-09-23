@@ -1,14 +1,28 @@
-import { useRouter } from "next/router";
-import { useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
+import { useRouter } from "next/dist/client/router"
+import Link from "next/link";
+import { useEffect, useState } from "react"
+import apiFunc from "../services/api";
+import * as Yup from 'yup';
+import { useFormik } from "formik";
+import { reactLocalStorage } from "reactjs-localstorage";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function StoreViewPage(props) {
+    const [dashdata, setDashData]=useState([]);
+    const [prodData, setProdData]=useState([]);
+    const [productList, setProductList]=useState([]);
+    const [cartStatusList, setCartStatusList]=useState([]);
+    const [tokenStatus, setTokenStatus]=useState(false);
+
+
     const router = useRouter()
     const params = router.query || '';
-    const storeId = params.id || ''
+    const vendorId = params.id || ''
+    const search = params.search || ''
     const subcategory = params.subcategory || ''
 
-    function SubCategoryChange(subcat){
+    /* function SubCategoryChange(subcat){
         var values = {
           id:storeId,
           subcategory:subcat
@@ -17,7 +31,53 @@ export default function StoreViewPage(props) {
             pathname: '/store-view',
             query: values,
         }) 
+    } */
+    function vendorProductData(vendorId){
+        apiFunc.vendorProductData(vendorId).then((res)=>{
+            setProdData(res.data.data)
+        }).catch((error)=>{
+            console.log(error);
+        })
     }
+
+    useEffect(()=>{
+        if(vendorId){
+            vendorProductData(vendorId)
+        }
+        
+        formik.setFieldValue('vendorId',vendorId);
+        formik.setFieldValue('search',search);
+        formik.setFieldValue('subcategory',subcategory);
+
+    },[search, props]) 
+
+    function categoryChange(cate){
+        formik.setFieldValue('subcategory', cate);
+        formik.handleSubmit()
+    }
+    const initialValues={
+        vendorId:'',
+        search:'',
+        subcategory:'',
+    }
+    const validationSchema = Yup.object({
+        vendorId:Yup.string(),
+        search:Yup.string().required('Please enter keyword'),
+        subcategory:Yup.string(),
+    })
+    const formik = useFormik({
+        initialValues,
+        validationSchema,
+        onSubmit : values => {
+            console.log('submit',values)
+            router.push({
+                pathname: '/store-view',
+               query: values,
+            }) 
+        },
+        
+    })
+    // console.log(prodData)
     return (
       <>
         <div className="liquor_store">

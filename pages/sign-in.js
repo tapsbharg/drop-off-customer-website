@@ -46,7 +46,7 @@ export default function SignInPage(props) {
           reactLocalStorage.set("token", res.data.data.token);
           toast.success(res.data.message);
           const getId=reactLocalStorage.get("guestid");
-          if(getId){
+          if(getId && props.cartData.cart.length > 0){
             mergeCart(getId)
           }else{
             props.setlogin();

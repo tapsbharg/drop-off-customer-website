@@ -15,7 +15,7 @@ export default function Sidebar(props) {
           <ul>
               <li className={ActiveClass('/profile')}><Link href="/profile">Profile</Link></li>
               <li className={ActiveClass('/my-orders')}><Link href="/my-orders">My Orders</Link></li>
-              <li className={ActiveClass('/my-addresses')}><Link href="/my-addresses">My Addresses</Link></li>
+              <li className={ActiveClass('/addresses')}><Link href="/addresses">My Addresses</Link></li>
               <li className={ActiveClass('/card')}><Link href="/card">Card</Link></li>
               <li className={ActiveClass('/id-card')}><Link href="/id-card">ID</Link></li>
               <li className={ActiveClass('/referral')}><Link href="/referral">Refer & Earn</Link></li>

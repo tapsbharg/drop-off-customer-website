@@ -33,24 +33,29 @@ function App({ Component, pageProps }) {
   async function setTokenGuestid(){
     var token = reactLocalStorage.get("token");
     var guest = reactLocalStorage.get("guestid");
-    if(!token && !guest){
-      apiFunc.guestid().then((res)=>{
-          reactLocalStorage.set("guestid",res.data.guestId);
-          setGuestid(res.data.guestId);
-      }).catch((error)=>{
-          console.log(error);
-      })
-    }else if(token){
-      reactLocalStorage.remove("guestid");
-    }else{
-      setGuestid(guest);
+    let ifstate=()=>{
+      if(!token && !guest){
+        apiFunc.guestid().then((res)=>{
+            reactLocalStorage.set("guestid",res.data.guestId);
+            setGuestid(res.data.guestId);
+        }).catch((error)=>{
+            console.log(error);
+        })
+      }else if(token){
+        reactLocalStorage.remove("guestid");
+        setGuestid(null);
+      }else{
+        setGuestid(guest);
+      }
     }
     var authType = token !== undefined ? true : false;
     authDone(authType);
+    await ifstate();
   }
   useEffect(() => {
     setTokenGuestid();
     cartListShow();
+    
     
     /* var token = reactLocalStorage.get("token");
     var guestid = reactLocalStorage.get("guestid");
@@ -59,7 +64,7 @@ function App({ Component, pageProps }) {
       mergeCart(guestid);
     } */
     
-  }, [isAuth]);
+  }, [isAuth, guestid]);
   const logOut = () => {
     reactLocalStorage.clear();
     authDone(false);
@@ -74,14 +79,16 @@ function App({ Component, pageProps }) {
     if(isAuth || guestid){
       if(!guestid && isAuth){
         apiFunc.cartListData().then((res)=>{
-          // console.log('cart',res)
-          setCartData(res.data.data)
+          const resData=res.data.data != undefined ?res.data.data:{
+            cart:[],
+            vendor:[]
+          };
+          setCartData(resData)
         }).catch((error)=>{
             console.log(error);
         })
       }else{
         apiFunc.cartListGuest(guestid).then((res)=>{
-          // console.log(res)
           const resData=res.data.data != undefined ?res.data.data:{
             cart:[],
             vendor:[]

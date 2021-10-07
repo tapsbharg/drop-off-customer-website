@@ -40,11 +40,7 @@ export default function SearchPage(props) {
                 "vendorId": vendId,
                 "quantity": 1
             }
-            console.log(cartData,prodId)
             apiFunc.addTocart(cartData,prodId).then((res)=>{
-                // setProductList(res.data.data)
-                // toast.error(error.message);
-                console.log(res)
                 props.getCart()
             }).catch((error)=>{
                 toast.error(error.message);

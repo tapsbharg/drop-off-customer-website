@@ -47,10 +47,17 @@ export default function ProfilePage(props) {
         validationSchema,
         onSubmit: (values) => {
           console.log("submit", values);
-        //   login(values);
+          updateProfile(values);
         },
       });
-      
+      function updateProfile(postData){
+        apiFunc.postProfileUpdate(postData).then(res => {
+            toast.success(res.data.message)
+        }).catch((error) => {
+            toast.success(error)
+            console.log(error)
+        });
+    }
       const profileFormik = useFormik({
          initialValues : {
             profileImage: {},
@@ -137,6 +144,7 @@ export default function ProfilePage(props) {
     return (
       <>
       <DashLayout props={props}>
+          <ToastContainer/>
         <div className="description_right">
             <div className="profile_outer"> 
                 <div className="d-flex flex-wrap justify-content-between align-items-center mb-4">

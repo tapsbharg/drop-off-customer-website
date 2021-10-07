@@ -49,6 +49,14 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    postProfileUpdate: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/users/profileUpdate`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
   getDashboardData: () =>
     authAxios({
       method: "GET",
@@ -225,7 +233,14 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
-    
+    addNewAddress: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/users/address`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
 };
 
 export default apiFunc;

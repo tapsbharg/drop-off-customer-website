@@ -7,6 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import SplitForm from "../components/cardsComp";
+import AddressComp from "../components/addressComp";
 const stripePromise = loadStripe("pk_test_6pRNASCoBOKtIshFeQd4XMUh");
 
 export default function CheckoutPage(props) {
@@ -14,10 +15,23 @@ export default function CheckoutPage(props) {
     const [couponModal,setCouponModal]=useState(false);
     const [orderMsgModal,setOrderMsgModal]=useState(false);
     const [cardList,setCardList]=useState([]);
-    const [totalAmt,setTotalAmt]=useState(0);
-    const [referralAmt,setReferralAmt]=useState(0);
-    const [couponAmt,setCouponAmt]=useState(0);
-    const [serviceAmt,setServiceAmt]=useState(0);
+    const [cardStatus,setCardStatus]=useState(false);
+    const [addressStatus,setAddressStatus]=useState(false);
+    // const [totalAmt,setTotalAmt]=useState(0); 
+    const [orderTotal,setOrderTotal]=useState({
+        totalAmt:0.00,
+        referralAmt:0.00,
+        couponAmt:0.00,
+        serviceCharge:20,
+        serviceAmt:0.00,
+        deliverBasicCharge:10.00,
+        per_mile_charge:5.00,
+        totalMiles:5,
+        deliverAmt:0.00,
+        grandTotal:0.00
+    });
+
+    
     const [orderData,setOrderData]=useState('');
     const addCardModal = (type) =>{
         setWithdrawalModal(type)
@@ -65,14 +79,23 @@ export default function CheckoutPage(props) {
         })
     }
     function placeOrder(){
-        apiFunc.placeOrder().then((res)=>{
-            setOrderData(res.data)
-            props.getCart();
-            orderMsgModalFunc(true)
-            // toast.success(res);
-        }).catch((error)=>{
-            console.log(error);
-        })
+        if(addressStatus == true){
+            if(cardStatus == true){
+                apiFunc.placeOrder().then((res)=>{
+                    setOrderData(res.data)
+                    props.getCart();
+                    orderMsgModalFunc(true)
+                    // toast.success(res);
+                }).catch((error)=>{
+                    console.log(error);
+                })
+            }else{
+                toast.error("Please select card before submit");
+            }
+        }else{
+            toast.error("Please choose an address");
+        }
+        /*  */
     }
     function cartTotalAmout(data){
         var total=0;
@@ -83,14 +106,25 @@ export default function CheckoutPage(props) {
                 }
             }
         }
-        setTotalAmt(total);
+        let totalAmt = total.toFixed(2);
+        let serviceAmt = ((total * orderTotal.serviceCharge) / 100).toFixed(2);
+        let deliverAmt = ((orderTotal.per_mile_charge * orderTotal.totalMiles) + orderTotal.deliverBasicCharge).toFixed(2);
+        let grandTotal = (parseFloat(total) + parseFloat(serviceAmt) + parseFloat(deliverAmt)).toFixed(2);
+        setOrderTotal({
+            ...orderTotal,
+            totalAmt:[totalAmt],
+            serviceAmt:[serviceAmt],
+            deliverAmt:[deliverAmt],
+            grandTotal:[grandTotal],
+        });
     }
+
+  
     useEffect(()=>{
         cardListingFunc();
         cartTotalAmout(props.cartData)
     },[props.cartData])
    /*card list*/
-   console.log(props.cartData)
     return (
       <>
       <ToastContainer />
@@ -187,85 +221,47 @@ export default function CheckoutPage(props) {
                                     </thead>
                                     <tbody>   
                                         <tr>   
-                                            <td> Payable Amount </td>
-                                            <td>${totalAmt}</td>
-                                        </tr>
-                                        <tr>
-                                            <td> Referral </td>
-                                            <td>-${referralAmt}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Coupon (Store) </td>
-                                            <td>-${couponAmt}</td>
+                                            <td> Sub Total </td>
+                                            <td>${orderTotal.totalAmt}</td>
                                         </tr>
                                         <tr>
                                             <td>Service Fee </td>
-                                            <td>${serviceAmt}</td>
+                                            <td>${orderTotal.serviceAmt}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Delivery Charge </td>
+                                            <td>${orderTotal.deliverAmt}</td>
+                                        </tr>
+                                        <tr>
+                                            <td> Referral </td>
+                                            <td>- ${orderTotal.referralAmt}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Coupon (Store) </td>
+                                            <td>- ${orderTotal.couponAmt}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Grand Total </td>
+                                            <td>${orderTotal.grandTotal}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-
-                            <a className="btn cus_btn custom01" onClick={()=>placeOrder()}> Place Order </a>
-                            
-                            
-
-                            
+                            {(addressStatus && cardStatus) && (
+                                <a className="btn cus_btn custom01" onClick={()=>placeOrder()}> Place Order </a>
+                            )}
+                            {(!addressStatus || !cardStatus) && (
+                                <a className="btn cus_btn custom01 disabled"> Place Order </a>
+                            )}
 
                         </div>
                     </div>
                     <div className="col-sm-6">
                         <h3> Checkout </h3>   
 
-                        <div className="delivery-address bg-white rounded-3 p-3 mb-3">
-                            <h6> Choose A Delivery Address </h6> 
-                            <hr/>
-                            <div className="address_group d-flex my-3">
-                                <div className="location_img">
-                                    <i className="fas fa-map-marker-alt"></i>
-                                </div>
-                                <div className="location_content">
-                                    <h6> <b>Home</b></h6>
-                                    <span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, 
-                                        sed diam nonumy eirmod tempor invidunt 
-                                        ut labore et dolore magna 30 Mins </span>
-                                    <div className="d-flex">
-                                        <a href="#"> Edit </a> 
-                                        <a href="#"> Delete </a> 
-                                    </div>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div className="address_group d-flex my-3">
-                                <div className="location_img">
-                                    <i className="fas fa-map-marker-alt"></i>
-                                </div>
-                                <div className="location_content">
-                                    <h6> <b>Home</b></h6>
-                                    <span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr,  </span>
-                                    <div className="d-flex">
-                                        <a href="#"> Edit </a> 
-                                        <a href="#"> Delete </a> 
-                                    </div>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div className="address_group d-flex my-3">
-                                <div className="location_img">
-                                    <i className="fas fa-map-marker-alt"></i>
-                                </div>
-                                <div className="location_content">
-                                    <h6> <b>Home</b></h6>
-                                    <span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr,  </span>
-                                    <div className="d-flex">
-                                        <a href="#"> Edit </a> 
-                                        <a href="#"> Delete </a> 
-                                    </div>
-                                </div>
-                            </div>
-                            <a className="but03" href="#"> <i className="fas fa-plus"></i> Add New Address </a>
-                        </div>
-                        <SplitForm />
+                        
+                        <AddressComp selectClass={addressStatus?'selected':''} addressSelct={(e)=>setAddressStatus(e)} />
+                        <SplitForm selectClass={cardStatus?'selected':''} cardSelct={(e)=>setCardStatus(e)} />
 
                         {/* <PaymentCards/> */}
                     </div>

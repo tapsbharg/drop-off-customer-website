@@ -7,15 +7,14 @@ import * as Yup from 'yup';
 import { useFormik } from "formik";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { toast, ToastContainer } from "react-toastify";
+import Head from "next/head";
 
-export default function StoreViewPage(props) {
+function StoreViewPage(props) {
     const [dashdata, setDashData]=useState([]);
     const [prodData, setProdData]=useState([]);
     const [productList, setProductList]=useState([]);
     const [cartStatusList, setCartStatusList]=useState([]);
     const [tokenStatus, setTokenStatus]=useState(false);
-
-
     const router = useRouter()
     const params = router.query || '';
     const vendorId = params.id || ''
@@ -77,7 +76,7 @@ export default function StoreViewPage(props) {
         },
         
     })
-    // console.log(prodData)
+    console.log(prodData)
     return (
       <>
         <div className="liquor_store">
@@ -220,4 +219,5 @@ export default function StoreViewPage(props) {
       </>
     )
   }
-  
+
+  export default StoreViewPage;

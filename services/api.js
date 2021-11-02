@@ -241,6 +241,13 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    defaultAddress: (id) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/users/setDefault/${id}`,
+    }).catch((err) => {
+      console.log(err);
+    }),
 };
 
 export default apiFunc;

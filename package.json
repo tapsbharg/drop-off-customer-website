@@ -17,6 +17,7 @@
     "google-map-react": "^2.1.10",
     "next": "^11.0.0",
     "nprogress": "^0.2.0",
+    "pm2": "^5.1.2",
     "react": "17.0.2",
     "react-bootstrap": "^2.0.0-beta.4",
     "react-confirm-alert": "^2.7.0",

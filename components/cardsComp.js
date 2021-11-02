@@ -18,11 +18,18 @@ const SplitForm = (props) => {
     function cardListingFunc(){
         apiFunc.getAllCard().then((res)=>{
             setCardList(res.data.cardListing)
+            checkStatus(res.data.cardListing)
         }).catch((error)=>{
             console.log(error);
         })
     }
-
+    function checkStatus(datas){
+        datas.map((data,i)=>{
+            if(data.defaultCard == true){
+                props.cardSelct(true);
+            }
+        })
+    }
     useEffect(()=>{
         cardListingFunc();
     },[])
@@ -83,7 +90,6 @@ const SplitForm = (props) => {
             cardListingFunc();
             props.reload();
         }).catch((error)=>{
-            toast.error('Invalid card details');
             console.log(error);
         })
     }
@@ -92,11 +98,12 @@ const SplitForm = (props) => {
             toast.success(res.data.message);
             setDefaultCardItem(data);
             cardListingFunc();
+            props.cardSelct(true)
         }).catch((error)=>{
-            toast.error('Invalid card details');
             console.log(error);
         })
     }
+    
     function handleChangeCardNumber(e){
         formik.setFieldValue('cardNumber',e.target.value)
     }
@@ -111,26 +118,30 @@ const SplitForm = (props) => {
     function handleChangeCVC(e){
         formik.setFieldValue('cardCVC',e.target.value)
     }
-    
   return (
     <>
-    <ToastContainer />
     {props.page && (
         <a  className="btn custom01" onClick={()=>addCardModal(true)}> <i className="fas fa-plus"></i>  Add New Card </a>
     )}
     {(!props.page || props.page=='checkout') && (
-    <div className="delivery-address bg-white rounded-3 p-3 mb-3">
+    <div className={`delivery-address bg-white rounded-3 p-3 mb-3 ${props.selectClass?props.selectClass:''}`}>
           <h6> Select Card </h6> 
           
           <hr/>
           {cardList.map((data, index)=>(
               <div key={index}>
-                  <div className="address_group d-flex justify-content-between my-3">
+                  <div className={`address_group d-flex justify-content-between my-3 ${data.defaultCard?' selectDefault':''}`}>
                       <div className="location_img">
                           <p> <b> xxxx-xxxx-xxxx-{data.cardLast4} </b></p>
                       </div>
                       <div className="location_content">
-                          <a className="but03" onClick={()=>setDefaultCard(data)}> Select </a>        
+                          {/* <a className="but03" onClick={()=>setDefaultCard(data)}> Select </a>  */}  
+                          {data.defaultCard && (
+                                <i className="setDefault"> Selected </i> 
+                            )}
+                            {!data.defaultCard && (
+                                <a onClick={()=>setDefaultCard(data)} className="setDefault"> Set As Default </a> 
+                            )}     
                       </div>
                   </div>
                   <hr/>

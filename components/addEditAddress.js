@@ -167,8 +167,7 @@ export default function AddEditAddress(props){
     // console.log( mapData)
     return(
         <>
-        <ToastContainer/>
-        <a className="btn custom01" href="#" onClick={()=>addCardModal(true)}> Add New </a> 
+        <a href="#" className={props.className} onClick={()=>addCardModal(true)}> Add New </a> 
         <Modal
     show={addressModal}
     onHide={()=>{addCardModal(false)}}

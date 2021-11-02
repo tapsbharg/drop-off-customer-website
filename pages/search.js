@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { useFormik } from "formik";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { toast, ToastContainer } from "react-toastify";
+import Head from "next/head";
 
 export default function SearchPage(props) {
     const [dashdata, setDashData]=useState([]);
@@ -233,7 +234,6 @@ export default function SearchPage(props) {
         return statusData;
     }
     */
-//    console.log(productList)
     return (
       <>
       <ToastContainer />
@@ -264,7 +264,7 @@ export default function SearchPage(props) {
                     <div className="searcCosngpp">
                         {productList.map((data, index)=>(
                             <div  key={index}>
-                                {data.category.name == category && (
+                                {data.category.description == category && (
                             <div className="product_grpup">
                                 <div className="product_informaction d-flex flex-wrap align-items-center bg-white mb-3">
                                     <div className="product_img">
@@ -307,4 +307,3 @@ export default function SearchPage(props) {
       </>
     )
   }
-  

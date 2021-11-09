@@ -29,8 +29,18 @@ export default function SearchPage(props) {
         })
     }
     function searchProduct(data){
+        let cart = props.cartData.cart
         apiFunc.searchProductData(data).then((res)=>{
-            setProdData(res.data.data)
+            // setProdData(res.data.data)
+            let  prods =res.data.data
+            prods.map(m=>{
+                let found=  cart.find(q=>{
+                    return q.productId._id == m._id
+                })
+                m.quantity= found? found.quantity: 0 
+            })
+            console.log(prods)
+            setProductList(prods)
         }).catch((error)=>{
             console.log(error);
         })
@@ -108,7 +118,7 @@ export default function SearchPage(props) {
     }
     
     // EmptyCartAll("6136e9b1da28413d28bd7759")
-    function checkCartValue(propsData) {
+/*     function checkCartValue(propsData) {
         if(propsData.cartData ){
             var cartDataList=[]
             for (var i=0; i < propsData.cartData.cart.length; i++) {
@@ -154,16 +164,22 @@ export default function SearchPage(props) {
             }
         }
         setProductList(updatPRdList)
-    }
+    } */
+    
+    
     function setToken(token){
         setTokenStatus(token)
     }
 
     useEffect(()=>{
         var token = reactLocalStorage.get("token");
+        var guestid = reactLocalStorage.get("guestid");
         setToken(token)
-        checkCartValue(props);
         getCategory()
+        setGuestId(guestid);
+    },[]) 
+
+    useEffect(()=>{
         const searchData={
             searchString:search,
             sortingBy:1
@@ -171,16 +187,12 @@ export default function SearchPage(props) {
         if(searchData.searchString){
             searchProduct(searchData)
         }
-        
         formik.setFieldValue('search',search);
         formik.setFieldValue('category',category);
-
-        // SetCartData(props)
     },[search, props]) 
-    useEffect(()=>{
-        
-    },[]) 
-    function getGuestId(){
+
+ 
+    /* function getGuestId(){
         var guestid = reactLocalStorage.get("guestid");
         setGuestid(guestid);
         /* apiFunc.guestid().then((res)=>{
@@ -188,19 +200,9 @@ export default function SearchPage(props) {
             setGuestId(res.data.guestId);
         }).catch((error)=>{
             console.log(error);
-        }) */
-    }
-    useEffect(()=>{
-        setAfterData(prodData, cartStatusList, props);
-        var  token= reactLocalStorage.get("token");
-        var guestid = reactLocalStorage.get("guestid");
-        if(!token && !guestid){
-            getGuestId();
-        }else{
-            setGuestId(guestid);
-        }
-
-    },[props, cartStatusList, prodData])  
+        }) *
+    } */
+   
 
     function categoryChange(cate){
         formik.setFieldValue('category', cate);
@@ -285,18 +287,16 @@ export default function SearchPage(props) {
                                             <div className="price"><h6> ${data.price} </h6></div>
                                             <Link href={`/store-view?id=${data.vendorId._id}`}><span> {data.vendorId.storeName} </span></Link>
                                         </div>
-                                       <div className={`prolislbtn ${data.cartStatus?'active':'deactive'}`}>
-                                            {data.cartStatus && (
-                                                <div className={`quntityPls`}>
-                                                    <button type="button" onClick={()=>removeToCart(data._id,data.vendorId._id)} className="qty-minus">-</button>
-                                                    <input type="number" readOnly className="qty" value={data.cartQty} />
-                                                    <button type="button" onClick={()=>addToCart(data._id,data.vendorId._id)} className="qty-plus">+</button>
-                                                </div>
-                                            )}
-                                            {!data.cartStatus && (
-                                                <a className="add_product" onClick={()=>addToCart(data._id,data.vendorId._id)}> add  <i className="far fa-plus"> </i> </a>
-                                                    
-                                            )}
+                                       <div className={`prolislbtn ${data.quantity>0?'active':'deactive'}`}>
+                                       {data.quantity>0?(
+                                            <div className={`quntityPls`}>
+                                                <button type="button" onClick={()=>removeToCart(data._id,data.vendorId._id)} className="qty-minus">-</button>
+                                                <input type="number" readOnly className="qty" value={data.quantity} />
+                                                <button type="button" onClick={()=>addToCart(data._id,data.vendorId._id)} className="qty-plus">+</button>
+                                            </div>
+                                        ):(
+                                            <a className="add_product" onClick={()=>addToCart(data._id,data.vendorId._id)}> add  <i className="far fa-plus"> </i> </a>
+                                        )}
                                         </div> 
                                         
                                     </div>

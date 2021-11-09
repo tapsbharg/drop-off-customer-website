@@ -68,6 +68,9 @@ function App({ Component, pageProps }) {
   const logOut = () => {
     reactLocalStorage.clear();
     authDone(false);
+    history.push({
+      pathname: '/sign-in',
+  }) 
   };
   const setLogin = () => {
     authDone(true);

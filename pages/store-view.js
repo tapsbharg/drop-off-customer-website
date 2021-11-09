@@ -9,14 +9,21 @@ import { reactLocalStorage } from "reactjs-localstorage";
 import { toast, ToastContainer } from "react-toastify";
 import Head from "next/head";
 import StarRating from '../components/starComp'
+import moment from 'moment';
+import NoFound from "../components/notFound";
+
+
 function StoreViewPage(props) {
     const [prodData, setProdData]=useState([]);
     const [venderInfo, setVenderInfo]=useState([]);
+    const [guestId, setGuestId] = useState(null);
+    const [storeOpenData, setStoreOpenData] = useState(false);
     const router = useRouter()
     const params = router.query || '';
     const vendorId = params.id || ''
     const search = params.search || ''
     const subcategory = params.subcategory || ''
+
 
     function SubCategoryChange(subcat){
         var values = {
@@ -38,7 +45,6 @@ function StoreViewPage(props) {
                    let found=  cart.find(q=>{
                         return q.productId._id == p._id
                     })
-                    console.log(found)
                     p.quantity= found? found.quantity: 0
                 })  
             })
@@ -49,7 +55,20 @@ function StoreViewPage(props) {
     }
     function getVendor(vendorId){
         apiFunc.getVendor(vendorId).then((res)=>{
-            setVenderInfo(res.data.data)
+            let timeData=res.data.data
+            const date = new Date();
+            const dayNumber = moment(date).day(); 
+            const day = moment(date).format('dddd'); 
+            const hour = moment(date).format('HH')*100; 
+            const minute = moment(date).format('mm'); 
+            const time = Math.floor(hour)+Math.floor(minute); 
+            let findOpenData = timeData.timings.find((p)=>{
+                return p.dayNumber == dayNumber
+            })
+            let vendorOpenData = findOpenData.openAt <= time && findOpenData.closeAt >= time ? true : false;
+            timeData.isOpen=vendorOpenData
+            console.log(timeData)
+            setVenderInfo(timeData)
         }).catch((error)=>{
             console.log(error);
         })
@@ -60,10 +79,10 @@ function StoreViewPage(props) {
             vendorProductData(vendorId)
         }
         
-    },[vendorId]);
-    
+    },[vendorId,props]);
+
+  
     useEffect(()=>{
-        
         formik.setFieldValue('vendorId',vendorId);
         formik.setFieldValue('search',search);
         formik.setFieldValue('subcategory',subcategory);
@@ -96,9 +115,75 @@ function StoreViewPage(props) {
         },
         
     })
+    function addToCart(prodId,vendId){
+        if(!guestId){
+            const cartData={
+                "vendorId": vendId,
+                "quantity": 1
+            }
+            apiFunc.addTocart(cartData,prodId).then((res)=>{
+                props.getCart()
+            }).catch((error)=>{
+                toast.error(error.message);
+                console.log(error);
+            })
+        }
+        else{
+            const cartData={
+                "guestId":guestId,
+                "vendorId": vendId,
+                "quantity": 1
+            }
+            apiFunc.addTocartGuest(cartData,prodId).then((res)=>{
+                // setProductList(res.data.data)
+                props.getCart()
+                // toast.success(res.data.message);
+            }).catch((error)=>{
+                toast.error(error.message);
+                console.log(error.message);
+            })
+        }
+
+    }
+    function removeToCart(prodId,vendId){
+        if(!guestId){
+            const cartDataDelete={
+                "vendorId": vendId,
+                "quantity": -1
+            }
+            apiFunc.addTocart(cartDataDelete,prodId).then((res)=>{
+                // setProductList(res.data.data)
+                props.getCart()
+            }).catch((error)=>{
+                console.log(error);
+            })
+        }
+        else{
+            const cartDataDelete={
+                "guestId":guestId,
+                "vendorId": vendId,
+                "quantity": -1
+            }
+            apiFunc.addTocartGuest(cartDataDelete,prodId).then((res)=>{
+                // setProductList(res.data.data)
+                props.getCart()
+            }).catch((error)=>{
+                console.log(error);
+            })
+        }
+    }
+    useEffect(()=>{
+        var  token= reactLocalStorage.get("token");
+        var guestid = reactLocalStorage.get("guestid");
+        setGuestId(guestid);
+
+    },[])  
     // console.log(prodData)
     return (
       <>
+      {vendorId =='' ? (
+          <NoFound />
+      ):(
         <div className="liquor_store">
           <div className="container">
               <div className="liquor_store_inner mt-3 mb-5"> 
@@ -106,7 +191,12 @@ function StoreViewPage(props) {
                   style={{
                         backgroundImage: venderInfo.coverImage?'url(' + venderInfo.coverImage.path + ')':''
                     }}>
-                      <a href="#"> open </a>
+                        {venderInfo.isOpen?(
+                            <a href="#"> open </a>
+                        ):(
+                            <a href="#" className="btn-danger"> close </a>
+                        )}
+                      
                   </div>
                   <div className="liquor_store_02 d-flex flex-wrap  align-items-center justify-content-between py-3">
                       <h3>{venderInfo.storeName} <span> <i className="fas fa-map-marker-alt"></i> {venderInfo.address} </span> </h3>
@@ -157,9 +247,16 @@ function StoreViewPage(props) {
                                                         <a className="price" href="#">${product.price}</a>
                                                         <p>{product.description}</p>
                                                     </div>
-                                                    <div className="recommended_item_add">
-                                                        {product.quantity>0?(<>other</>):( <a href="#" className="btn02"> Add <i className="far fa-plus"></i> </a>)}
-                                                       
+                                                    <div className={`recommended_item_add prolislbtn ${product.quantity>0?'active':'deactive'}`}>
+                                                        {product.quantity>0?(
+                                                        <div className={`quntityPls`}>
+                                                            <button type="button" onClick={()=>removeToCart(product._id,product.vendorId)} className="qty-minus">-</button>
+                                                            <input type="number" readOnly className="qty" value={product.quantity} />
+                                                            <button type="button" onClick={()=>addToCart(product._id,product.vendorId)} className="qty-plus">+</button>
+                                                        </div>
+                                                        ):( 
+                                                            <a className="add_product" onClick={()=>addToCart(product._id,product.vendorId)}> add  <i className="far fa-plus"> </i> </a>
+                                                        )}
                                                     </div>
                                                 </div>
                                                 )))}
@@ -188,7 +285,7 @@ function StoreViewPage(props) {
                               </div>
 
                           </Tab>
-                          <Tab eventKey="tab2" title="Top Reviews">
+                          <Tab eventKey="tab2" title="Top Reviews *">
                           <div className="all_reviews">
                                   <h6>All Reviews</h6>
                                   <div className="all_reviews_box d-flex flex-wrap justify-content-between mb-3"> 
@@ -244,6 +341,7 @@ function StoreViewPage(props) {
               </div>
           </div>
       </div>
+      )}
       </>
     )
   }

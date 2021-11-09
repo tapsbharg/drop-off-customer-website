@@ -23,7 +23,7 @@ export default function Header(appProps) {
   function logOut(){
     console.log(appProps.props)
     appProps.props.logout();
-    history.push("/sign-in");
+    // history.push("/sign-in");
   }
     return (
       <>
@@ -142,18 +142,19 @@ export default function Header(appProps) {
                 <li className="admin_login">
                   <span>
                     <Dropdown>
-                      <Dropdown.Toggle variant="thm" id="dropdown-basic">
+                      <span>
                         <Link href="/profile">
-                          <span>
-                            <i className={"fa fa-user"}></i> 
-                            {profile.name ? (
-                            <span> {profile.name} </span>
-                              ) : (
-                                <span> Loading </span>
-                              )}
-                          </span>
+                            <span>
+                              <i className={"fa fa-user"}></i> 
+                              {profile.name ? (
+                              <span> {profile.name} </span>
+                                ) : (
+                                  <span> Loading </span>
+                                )}
+                            </span>
                         </Link>
-                      </Dropdown.Toggle>
+                        <Dropdown.Toggle variant="thm" id="dropdown-basic"></Dropdown.Toggle>
+                      </span>
 
                       <Dropdown.Menu>
                         <Dropdown.Item>

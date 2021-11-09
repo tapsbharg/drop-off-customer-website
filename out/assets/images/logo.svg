@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="227" height="48.906" viewBox="0 0 227 48.906">
+  <defs>
+    <linearGradient id="linear-gradient" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0"/>
+      <stop offset="0.029" stop-color="#170000"/>
+      <stop offset="0.097" stop-color="#470100"/>
+      <stop offset="0.17" stop-color="#730200"/>
+      <stop offset="0.246" stop-color="#980300"/>
+      <stop offset="0.328" stop-color="#b80400"/>
+      <stop offset="0.417" stop-color="#d20400"/>
+      <stop offset="0.514" stop-color="#e60500"/>
+      <stop offset="0.625" stop-color="#f40500"/>
+      <stop offset="0.762" stop-color="#fc0500"/>
+      <stop offset="1" stop-color="#ff0601"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_32099" data-name="Group 32099" transform="translate(-130 -27)">
+    <g id="Group_32062" data-name="Group 32062" transform="translate(719.002 285.094)">
+      <path id="Path_1" data-name="Path 1" d="M198.61,181.859l1.511-6.083Q243.03,157,241.067,147.929q-1.573-7.267-31.971-8.3l.825-3.323q50.187-1.026,52.219,8.368Q264.564,155.869,198.61,181.859Z" transform="translate(-766.539 -394.301)" fill="url(#linear-gradient)"/>
+      <path id="Path_2" data-name="Path 2" d="M91.279,157.827,82.3,193.972q-10.059,4.4-22.584,9.337l11.311-45.551Q82.388,157.526,91.279,157.827Z" transform="translate(-648.722 -412.497)"/>
+    </g>
+    <text id="Da_DropOff" data-name="Da DropOff" transform="translate(229 62)" font-size="25" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">Da DropOff</tspan></text>
+  </g>
+</svg>

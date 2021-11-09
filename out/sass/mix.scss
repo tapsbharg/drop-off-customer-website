@@ -1,0 +1,438 @@
+@mixin com_text{
+    font-size: 16px;
+    line-height: 1.7em;
+    font-family: 'Spartan', sans-serif;
+}@mixin list01 {
+    @include com_text;
+}
+/*=============================================================
+                   input
+============================================================= */
+@mixin input{
+    height: 50px;
+    color: $black;
+    
+    border-radius: 0;
+    padding: 0 15px;
+    line-height: 1em;
+    font-size: 15px;
+    width: 100%;
+    display: block;
+    border-radius: 5px;
+    // box-shadow: 0px 3px 6px #00000029;
+    box-sizing: border-box;
+    background-color: $bg-light02;
+    border: 1px solid $bg-light02;
+    // background-clip: border-box; 
+
+    &:focus{
+        color: $primary;
+        background-color:$bg-light02;
+        border-color: $bg-light02;
+        outline: 0;
+        box-shadow: unset;
+    }
+    &::-webkit-input-placeholder { /* Edge */
+        color:#9d9d9e;
+    }
+    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color:#9d9d9e;
+    }
+    &::placeholder {
+        color: #9d9d9e;
+    }
+}
+/*=============================================================
+                   input
+============================================================= */
+@mixin input02{
+    height: 45px;
+    color: $black;
+    padding: 0 15px;
+    line-height: 1em;
+    font-size: 15px;
+    width: auto;
+    max-width: 150px;
+    margin: auto;
+    display: block;
+    border-radius: 2px;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: $bg-light02;
+    border: 1px solid $bg-light02;
+    &:focus{
+        color: $black;
+        background-color: $bg-light02;
+        border-color: $bg-light02;
+        outline: 0;
+        box-shadow: unset;
+    }
+    &::-webkit-input-placeholder { /* Edge */
+        color:$black;
+    }
+    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color:$black;
+    }
+    &::placeholder {
+        color: $black;
+    }
+}
+/*=============================================================
+                   select
+============================================================= */
+@mixin select{
+    height: 50px;
+    color: $black;
+    border-radius: 0;
+    padding: 0 15px;
+    line-height: 1em;
+    font-size: 15px;
+    width: 100%;
+    display: block;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-clip: border-box; 
+    background-color: $bg-light02;
+    border: 1px solid $bg-light02;
+    &:focus{
+        color: $primary;
+        background-color: $bg-light02;
+        border-color: $bg-light02;
+        outline: 0;
+        box-shadow: unset;
+    }
+    option{
+        font-size: 14px;
+        line-height: 27px;
+        padding: 8px;
+        background-color: #f2f2f2;
+    }
+}
+/*=============================================================
+                   select
+============================================================= */
+@mixin select02{
+    height: 45px;
+    color: $black; 
+    padding: 0 15px;
+    line-height: 1em;
+    font-size: 15px;
+    width: auto;
+    max-width: 150px;
+    margin: auto;
+    display: block;
+    border-radius: 2px;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: $bg-light02;
+    border: 1px solid $bg-light02;
+    &:focus{
+        color: $primary;
+        background-color: $bg-light02;
+        border: 1px solid $bg-light02;
+        outline: 0;
+        box-shadow: unset;
+    }
+    option{
+        font-size: 14px;
+        line-height: 27px;
+        padding: 8px;
+        background-color: #f2f2f2;
+    }
+}
+/*=============================================================
+                   textarea
+============================================================= */
+@mixin textarea{
+    height: 120px;
+    color: $black;
+   
+    border-radius: 0;
+    padding: 15px 15px;
+    line-height: 1em;
+    font-size: 16px;
+    width: 100%;
+    display: block;
+    border-radius: 5px;
+    background-color: $bg-light02;;
+    border: 1px solid $bg-light02;
+    // box-shadow: 0px 3px 6px #00000029;
+    box-sizing: border-box;
+    background-clip: border-box; 
+
+    &:focus{
+        color: $primary;
+        background-color: $bg-light02;
+        border-color: $bg-light02;
+        outline: 0;
+        box-shadow: unset;
+    }
+    &::-webkit-input-placeholder { /* Edge */
+        color:#9d9d9e;
+    }
+    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color:#9d9d9e;
+    }
+    &::placeholder {
+        color: #9d9d9e;
+    }
+}
+/*=============================================================
+                   h5 
+============================================================= */
+@mixin custom_h5{
+    h5{
+        text-align: center;
+        position: relative;
+        &::after{
+            display: block;
+            content: "";
+            width: 120px;
+            height: 5px;
+            border-radius: 20px;
+            margin: auto;
+            background-color: $acent;
+            margin: 15px auto 30px;    
+        }
+        
+    }
+    
+}
+
+/*=============================================================
+                   BACK GROUNG IMAGE
+============================================================= */
+@mixin bg_animaction{
+    background-image:url('../assets/images/wave-bg.png'); 
+    background-position: center; 
+    background-size: cover;
+    background-repeat: repeat;
+    border: 1px solid #fff;
+    animation: wave 140s linear infinite;
+    -webkit-animation: wave 140s linear infinite;
+    @keyframes wave{
+        from{background-position:0 0}
+        to{background-position:1920px 0}
+    }
+    @-webkit-keyframes wave{
+        from{background-position:0 0}
+        to{background-position:1920px 0}
+    }
+}
+@mixin bg_comman_img{
+    background-image:url('../assets/images/wave-bg.png'); 
+    background-position: center; 
+    background-size: cover;
+    background-repeat: repeat;
+    border: 1px solid #fff;
+}
+
+/* CUSTOM  BUTTON */
+@mixin cus_btn{
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-block;
+    position: relative;
+    z-index: 9;
+    text-transform: capitalize;
+    width: 250px;
+    padding: 10px;
+    box-sizing: border-box;
+    color: $white;
+    border-radius: 8px;
+    border: 1px solid $acent;
+    background-color: $acent;
+}
+@mixin cus_btn03{
+    font-size: 15px;
+    font-weight: 600;
+    display: inline-block;
+    position: relative;
+    z-index: 9;
+    text-transform: capitalize;
+    width: auto;
+    padding: 08px 25px;
+    box-sizing: border-box;
+    color: $acent;
+    border-radius: 4px;
+    border: 1px solid $acent;    
+    margin: 0 15px 0 0;
+    &:hover{
+        color: $white;
+        background: $acent;
+        border: 1px solid $acent;    
+        transition: all 0.5s ease-out;
+    }
+}
+/* CUSTOM  BUTTON */
+@mixin small_text{
+    font-size: 14px;
+    color: #898989;
+    line-height: 1.2em;
+    margin-bottom: 10px;
+}
+/*=============================================================
+                   Comman table
+============================================================= */
+@mixin comm_table{
+    width: 100%;
+    tr{
+        th{
+            text-transform: capitalize;
+            font-weight: 600;
+            font-size: 16px;
+            color: $white;
+            padding: 15px 15px;
+            background-color: $acent;
+
+        }
+        td{
+            color: $black;
+            text-transform: capitalize;
+            font-weight: 400;
+            font-size: 15px;
+            padding: 05px 15px;
+        }
+    }
+}
+/*=============================================================
+                   Comman pagination01
+============================================================= */
+@mixin pagination01{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+        li{
+            a{
+                font-size: 12px;
+                color: $secondary;
+                border: transparent;
+                font-weight: 600;
+                background-color: $white;
+                margin: 0px;
+            }
+            &:hover{
+                color: $acent;
+                background-color: transparent;
+            }
+        }
+        li.active{
+            a.page-link, a{
+                color: $acent;
+                background-color: transparent;
+            }
+        }
+
+}
+/*=============================================================
+                   Comman table02
+============================================================= */
+@mixin comm_table02{
+    width: 100%;
+    tbody{
+        tr:nth-child(even){
+            background: unset !important;
+            background-color: unset !important;
+        }
+        tr:nth-child(odd){
+            background: unset !important;
+            background-color: unset !important;
+        }
+    }
+    tr{
+        th{
+            text-transform: capitalize;
+            font-weight: 600;
+            font-size: 16px;
+            color: $white;
+            padding: 15px 15px;
+            background-color: $acent;
+        }
+        td{
+            color: $black;
+            text-transform: capitalize;
+            font-weight: 400;
+            font-size: 15px;
+            padding: 05px 15px;
+        }
+    }
+}
+
+
+/*=============================================================
+                   input[type="file"]
+============================================================= */
+// @mixin comm_table02{
+//     &[type="file"]{
+//         background: #ffffff;
+//         font-size: 0;
+//         line-height: 0;
+//         position: relative;
+//         width: 100%;
+//         height: 50px;
+//         border: 1px solid $secondary;
+//         &::after{
+//             content: " Attach Image";
+//             position: absolute;
+//             width: 100%;
+//             height: 100%;
+//             z-index: 999;
+//             color: $secondary;
+//             font-size: 16px;
+//             text-align: center;
+//             display: flex;
+//             align-items: center;
+//             left: 0;
+//             top: 0;
+//             background-color: $white;
+//             padding: 0 15px;
+//         } 
+//     }
+// }
+/*=============================================================
+                input[type="range"]
+============================================================= */
+@mixin input_range{
+
+
+// input[type='range'] {
+//     overflow: hidden;
+//     width: 100%;
+//     -webkit-appearance: none;
+//     background-color: #4120d4;
+//     height: 05px;
+//   }
+  
+//   input[type='range']::-webkit-slider-runnable-track {
+//     height: 05px;
+//     -webkit-appearance: none;
+//     color: #13bba4;
+//     margin-top: -1px;
+//   }
+  
+//   input[type='range']::-webkit-slider-thumb {
+//     width: 15px;
+//     height: 15px;
+//     -webkit-appearance: none;
+//     cursor: ew-resize;
+//     background: $acent;
+//     box-shadow: -80px 0 0 80px $acent;
+//   }
+
+ 
+    /** FF*/
+    // input[type="range"]::-moz-range-progress {
+    // background-color: #43e5f7; 
+    // }
+    // input[type="range"]::-moz-range-track {  
+    // background-color: #9a905d;
+    // }
+    /* IE*/
+    // input[type="range"]::-ms-fill-lower {
+    // background-color: #43e5f7; 
+    // }
+    // input[type="range"]::-ms-fill-upper {  
+    // background-color: #9a905d;
+    // }
+
+}

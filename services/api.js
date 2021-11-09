@@ -79,6 +79,13 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    getVendor: (vendorId) =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/vendor/${vendorId}`,
+    }).catch((err) => {
+      console.log(err);
+    }),
     addTocart: (data, prodId) =>
     authAxios({
       method: "POST",
@@ -245,6 +252,13 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/users/setDefault/${id}`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    preference: (id) =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/preference`,
     }).catch((err) => {
       console.log(err);
     }),

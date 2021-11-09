@@ -4,21 +4,35 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/router'
 import { useState, useEffect } from "react";
 import apiFunc from "../services/api";
+import { Tab, Tabs } from "react-bootstrap";
 
 export default function HomePage(props) {
     const [dashdata, setDashData]=useState([]);
+    const [storeData, setStoreData]=useState([]);
     const [cateData, setCateData]=useState([]);
+    const [storeCate, setStoreCate]=useState([]);
     const router = useRouter()
     
     function getCategory(){
+        apiFunc.preference().then((res)=>{
+            setDashData(res.data.data.vendorCategory)
+            console.log(res.data.data)
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    function getStoreData(){
         apiFunc.getDashboardData().then((res)=>{
-            setDashData(res.data.data)
+            setStoreData(res.data.data)
         }).catch((error)=>{
             console.log(error);
         })
     }
     useEffect(()=>{
         getCategory()
+    },[])
+    useEffect(()=>{
+        getStoreData()
     },[])
     const initialValues={
         search:'',
@@ -44,6 +58,9 @@ export default function HomePage(props) {
         setCateData(id);
         formik.setFieldValue('category', id)
     }
+    function storeCateChange(id){
+        setStoreCate(id);
+    }
   return (
     <>
       <div className="pageInsieWRp">
@@ -51,8 +68,8 @@ export default function HomePage(props) {
           <div className="container">
               <ul className="d-flex flex-wra align-items-center justify-content-center" >
               {dashdata.map((data, index)=>(
-                    <li key={index}  data-aos="fade-up" data-aos-duration="3000" >
-                        <div onClick={()=> setCategory(data.name)} className={cateData == data.name?'active':''}>
+                    <li key={index}  data-aos="fade-up" data-aos-duration="1000" >
+                        <div onClick={()=> setCategory(data._id)} className={cateData == data._id?'active':''}>
                             <a>
                                 <img src="/assets/images/drugs (2).svg" alt=""/>
                                 <span>{data.name}</span>
@@ -62,7 +79,7 @@ export default function HomePage(props) {
                     
                 ))}
               </ul>
-              <div className="search text-center mt-3 pt-5"  data-aos="zoom-in" data-aos-duration="3500" data-aos-delay="1500">
+              <div className="search text-center mt-3 pt-5"  data-aos="zoom-in" data-aos-duration="1000">
                   <h1>Da DropOff</h1>
                   <form  onSubmit={formik.handleSubmit}>
                       <div>
@@ -85,194 +102,49 @@ export default function HomePage(props) {
                   <h2>Stores</h2>
                   <p className="para">Lorem ipsum dolor sit amet, consetetur</p>
                   <nav className="mt-4" >
-                      <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                          <button className="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Liquor Stores</button>
-                          <button className="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Mom & Pop Stores</button>
-                          <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Dispensaries</button>
-                          <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Pharmacies</button>
-                      </div>
-                  </nav>
+                  <Tabs defaultActiveKey="tab1" id="nav-tab" className="nav nav-tabs my-4">
+                    {storeData.map((data, index)=>(
+                        <Tab eventKey={`tab${index}`} key={index} title={data.name}>
+                            <div className="d-flex flex-wrap align-items-center justify-content-between tabboxWrap my-5">
+                            {(data.vendors && (
+                                data.vendors.map((vendorStore, key)=>(
+                                    <Link href={`store-view?id=${vendorStore._id}`} key={key}>
+                                <div className="store_box bg-light02 d-flex flex-wrap Pointer">
+                                    <div className="store_box_img">
+                                        <img src={vendorStore.image.path} alt=""/>    
+                                    </div>
+                                    <div className="store_content">
+                                        <h5>{vendorStore.storeName}</h5>
+                                        <div className="start">
+                                            <i className="active fas fa-star"></i>
+                                            <i className="active fas fa-star"></i>
+                                            <i className="active fas fa-star"></i>
+                                            <i className="active fas fa-star"></i>
+                                            <i className=" fas fa-star"></i>
+                                            <sup>4.0</sup> ***
+                                        </div>
+                                        <div className="store_country">
+                                            {vendorStore.address}
+                                        </div>
+                                        <div className="store_discount">
+                                            30% Off | Average Price $10 ***
+                                        </div>
+                                    </div>
+                                </div>
+                                    </Link>
+                                ))
+                            ))}
+                            
+                                <div className="cativerrbbTn">
+                                    <a className="btn cus_btn custom01 "> View All </a>
+                                </div>
+                            </div>
+                        </Tab>
+                    ))}
+                   </Tabs>
+                </nav>
 
-                  <div className="tab-content my-5" id="nav-tabContent">
-                      <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                          <div className="d-flex flex-wrap align-items-center justify-content-between">
-                              
-                              <div className="store_box bg-light02 d-flex flex-wrap" data-aos="fade-up" data-aos-anchor-placement="top-bottom" data-aos-duration="1500" data-aos-delay="500">
-                                  <div className="store_box_img">
-                                      <img src="assets/images/store.png" alt=""/>    
-                                  </div>
-                                  <div className="store_content">
-                                      <h5>Mom & Pop Stores</h5>
-                                      <div className="start">
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className=" fas fa-star"></i>
-                                          <sup>4.0</sup>
-                                      </div>
-                                      <div className="store_country">
-                                          Texas, USA
-                                      </div>
-                                      <div className="store_discount">
-                                          30% Off | Average Price $10 
-                                      </div>
-                                  </div>
-                              </div>
-
-                              <div className="store_box bg-light02 d-flex"  data-aos="fade-up" data-aos-anchor-placement="top-bottom" data-aos-duration="1500" data-aos-delay="600">
-                                  <div className="store_box_img">
-                                      <img src="assets/images/store.png" alt=""/>    
-                                  </div>
-                                  <div className="store_content">
-                                      <h5>Mom & Pop Stores</h5>
-                                      <div className="start">
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className=" fas fa-star"></i>
-                                          <sup>4.0</sup>
-                                      </div>
-                                      <div className="store_country">
-                                          Texas, USA
-                                      </div>
-                                      <div className="store_discount">
-                                          30% Off | Average Price $10 
-                                      </div>
-                                  </div>
-                              </div>
-
-                              <div className="store_box bg-light02 d-flex"  data-aos="fade-up" data-aos-anchor-placement="top-bottom" data-aos-duration="1500" data-aos-delay="700">
-                                  <div className="store_box_img">
-                                      <img src="assets/images/store.png" alt=""/>    
-                                  </div>
-                                  <div className="store_content">
-                                      <h5>Mom & Pop Stores</h5>
-                                      <div className="start">
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className=" fas fa-star"></i>
-                                          <sup>4.0</sup>
-                                      </div>
-                                      <div className="store_country">
-                                          Texas, USA
-                                      </div>
-                                      <div className="store_discount">
-                                          30% Off | Average Price $10 
-                                      </div>
-                                  </div>
-                              </div>
-
-                              <div className="store_box bg-light02 d-flex"  data-aos="fade-up" data-aos-anchor-placement="top-bottom" data-aos-duration="1500" data-aos-delay="800">
-                                  <div className="store_box_img">
-                                      <img src="assets/images/store.png" alt=""/>    
-                                  </div>
-                                  <div className="store_content">
-                                      <h5>Mom & Pop Stores</h5>
-                                      <div className="start">
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className=" fas fa-star"></i>
-                                          <sup>4.0</sup>
-                                      </div>
-                                      <div className="store_country">
-                                          Texas, USA
-                                      </div>
-                                      <div className="store_discount">
-                                          30% Off | Average Price $10 
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-
-
-                      <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                          <div className="d-flex flex-wrap align-items-center justify-content-between">
-                              <div className="store_box bg-light02 d-flex flex-wrap" data-aos="fade-up" data-aos-anchor-placement="top-bottom" data-aos-duration="1500" data-aos-delay="500">
-                                  <div className="store_box_img">
-                                      <img src="assets/images/store.png" alt=""/>    
-                                  </div>
-                                  <div className="store_content">
-                                      <h5>Mom & Pop Stores</h5>
-                                      <div className="start">
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className=" fas fa-star"></i>
-                                          <sup>4.0</sup>
-                                      </div>
-                                      <div className="store_country">
-                                          Texas, USA
-                                      </div>
-                                      <div className="store_discount">
-                                          30% Off | Average Price $10 
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                      <div className="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                          <div className="d-flex flex-wrap align-items-center justify-content-between">
-                              <div className="store_box bg-light02 d-flex flex-wrap " data-aos="fade-up" data-aos-anchor-placement="top-bottom" data-aos-duration="1500" data-aos-delay="500">
-                                  <div className="store_box_img">
-                                      <img src="assets/images/store.png" alt=""/>    
-                                  </div>
-                                  <div className="store_content">
-                                      <h5>Mom & Pop Stores</h5>
-                                      <div className="start">
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className=" fas fa-star"></i>
-                                          <sup>4.0</sup>
-                                      </div>
-                                      <div className="store_country">
-                                          Texas, USA
-                                      </div>
-                                      <div className="store_discount">
-                                          30% Off | Average Price $10 
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                      <div className="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                          <div className="d-flex flex-wrap align-items-center justify-content-between">
-                              <div className="store_box bg-light02 d-flex flex-wrap " data-aos="fade-up" data-aos-anchor-placement="top-bottom" data-aos-duration="1500" data-aos-delay="500">
-                                  <div className="store_box_img">
-                                      <img src="assets/images/store.png" alt=""/>    
-                                  </div>
-                                  <div className="store_content">
-                                      <h5>Mom & Pop Stores</h5>
-                                      <div className="start">
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className="active fas fa-star"></i>
-                                          <i className=" fas fa-star"></i>
-                                          <sup>4.0</sup>
-                                      </div>
-                                      <div className="store_country">
-                                          Texas, USA
-                                      </div>
-                                      <div className="store_discount">
-                                          30% Off | Average Price $10 
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-
-                  <a className="btn cus_btn custom01 "> View All </a>
+                  
               </div>
           </div>
       </section>

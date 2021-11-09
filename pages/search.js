@@ -22,8 +22,8 @@ export default function SearchPage(props) {
     const category = params.category || '';
 
     function getCategory(){
-        apiFunc.getDashboardData().then((res)=>{
-            setDashData(res.data.data)
+        apiFunc.preference().then((res)=>{
+            setDashData(res.data.data.vendorCategory)
         }).catch((error)=>{
             console.log(error);
         })
@@ -35,6 +35,8 @@ export default function SearchPage(props) {
             console.log(error);
         })
     }
+    
+    
     function addToCart(prodId,vendId){
         if(!guestId){
             const cartData={
@@ -175,6 +177,9 @@ export default function SearchPage(props) {
 
         // SetCartData(props)
     },[search, props]) 
+    useEffect(()=>{
+        
+    },[]) 
     function getGuestId(){
         var guestid = reactLocalStorage.get("guestid");
         setGuestid(guestid);
@@ -195,7 +200,7 @@ export default function SearchPage(props) {
             setGuestId(guestid);
         }
 
-    },[props, cartStatusList, prodData]) 
+    },[props, cartStatusList, prodData])  
 
     function categoryChange(cate){
         formik.setFieldValue('category', cate);
@@ -257,14 +262,15 @@ export default function SearchPage(props) {
                     <nav className="mb-4">
                         <div className="nav nav-tabs" id="nav-tab" role="tablist">
                         {dashdata.map((data, index)=>(
-                            <button key={index} className={`nav-link ${category==data.name?'active':''}`} onClick={()=>categoryChange(data.name)}> {data.name}</button>
+                            <button key={index} className={`nav-link ${category==data._id?'active':''}`} onClick={()=>categoryChange(data._id)}> {data.name}</button>
                         ))}
                         </div>
                     </nav>
                     <div className="searcCosngpp">
                         {productList.map((data, index)=>(
                             <div  key={index}>
-                                {data.category.description == category && (
+                                {/* { data.category.name.replaceAll(' ','') == category.replaceAll(' ','')} */}
+                                {data.vendorId.storeType == category  && (
                             <div className="product_grpup">
                                 <div className="product_informaction d-flex flex-wrap align-items-center bg-white mb-3">
                                     <div className="product_img">

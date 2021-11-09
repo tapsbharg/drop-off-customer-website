@@ -1,6 +1,9 @@
 a{
     cursor:pointer !important;
 }
+.Pointer{
+    cursor:pointer !important;
+}
 .product_management table tr td.content ul li.heading a {
     color: #d20400;
 }
@@ -579,12 +582,26 @@ form input, form input.form-control[type="file"]{
 .address_group:hover .location_content a.setDefault {
     display: inline-block;
 }
+.slider ul li .active a span {
+    color: #ff4642;
+}
+.cativerrbbTn {
+    text-align: center;
+    width: 100%;
+}
+.liquor_store .liquor_store_01 {
+    background-size: cover;
+}
+.recommended_item_img img {
+    width: 100px;
+}
 
-
-
-
-
-
+.recommended_content {
+    display: none;
+}
+.recommended_content.active {
+    display: block;
+}
 
 
 

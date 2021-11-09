@@ -8,41 +8,61 @@ import { useFormik } from "formik";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { toast, ToastContainer } from "react-toastify";
 import Head from "next/head";
-
+import StarRating from '../components/starComp'
 function StoreViewPage(props) {
-    const [dashdata, setDashData]=useState([]);
     const [prodData, setProdData]=useState([]);
-    const [productList, setProductList]=useState([]);
-    const [cartStatusList, setCartStatusList]=useState([]);
-    const [tokenStatus, setTokenStatus]=useState(false);
+    const [venderInfo, setVenderInfo]=useState([]);
     const router = useRouter()
     const params = router.query || '';
     const vendorId = params.id || ''
     const search = params.search || ''
     const subcategory = params.subcategory || ''
 
-    /* function SubCategoryChange(subcat){
+    function SubCategoryChange(subcat){
         var values = {
-          id:storeId,
+          id:vendorId,
           subcategory:subcat
         }
         router.push({
             pathname: '/store-view',
             query: values,
         }) 
-    } */
+    }
     function vendorProductData(vendorId){
+        console.log(props)
+        let cart = props.cartData.cart
         apiFunc.vendorProductData(vendorId).then((res)=>{
-            setProdData(res.data.data)
+            let  prods =res.data.data
+            prods.menu.map(m=>{
+                m.products.map(p=>{
+                   let found=  cart.find(q=>{
+                        return q.productId._id == p._id
+                    })
+                    console.log(found)
+                    p.quantity= found? found.quantity: 0
+                })  
+            })
+            setProdData(prods)
         }).catch((error)=>{
             console.log(error);
         })
     }
-
+    function getVendor(vendorId){
+        apiFunc.getVendor(vendorId).then((res)=>{
+            setVenderInfo(res.data.data)
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
     useEffect(()=>{
         if(vendorId){
+            getVendor(vendorId)
             vendorProductData(vendorId)
         }
+        
+    },[vendorId]);
+    
+    useEffect(()=>{
         
         formik.setFieldValue('vendorId',vendorId);
         formik.setFieldValue('search',search);
@@ -76,24 +96,23 @@ function StoreViewPage(props) {
         },
         
     })
-    console.log(prodData)
+    // console.log(prodData)
     return (
       <>
         <div className="liquor_store">
           <div className="container">
               <div className="liquor_store_inner mt-3 mb-5"> 
-                  <div className="liquor_store_01">
+                  <div className="liquor_store_01" 
+                  style={{
+                        backgroundImage: venderInfo.coverImage?'url(' + venderInfo.coverImage.path + ')':''
+                    }}>
                       <a href="#"> open </a>
                   </div>
                   <div className="liquor_store_02 d-flex flex-wrap  align-items-center justify-content-between py-3">
-                      <h3>The Austin Store <span> <i className="fas fa-map-marker-alt"></i> Austin, Texas </span> </h3>
+                      <h3>{venderInfo.storeName} <span> <i className="fas fa-map-marker-alt"></i> {venderInfo.address} </span> </h3>
                       <div className="stars">
-                          <i className="active fas fa-star"> </i>
-                          <i className="active fas fa-star"> </i>
-                          <i className="active fas fa-star"> </i>
-                          <i className="fas fa-star"> </i>
-                          <i className="fas fa-star"> </i>
-                          <sup>4.0</sup>
+                          <StarRating rate={venderInfo.rating} />
+                          <sup>{venderInfo.rating}</sup>
                       </div>
                   </div>
                   <div className="liquor_store_03">
@@ -111,17 +130,44 @@ function StoreViewPage(props) {
                       </div>
                       <Tabs defaultActiveKey="tab1" id="nav-tab" className="browse_our_menu nav nav-tabs">
                           <Tab eventKey="tab1" title="Browse Our Menu">
-                          <div className="recommended_outer d-flex flex-wrap justify-content-between ">
+                            <div className="recommended_outer d-flex flex-wrap justify-content-between ">
                                   <nav className="recommended_menu ">
                                       <div className="nav nav-tabs bg-white" id="nav-tab" role="tablist">
-                                          <button className="nav-link"> Recommended (2) </button>
-                                        <button className={`nav-link ${subcategory=='Wiskey'?'active':''}`} onClick={()=>SubCategoryChange('Wiskey')}> Wiskey (2)</button>
-                                        <button className={`nav-link ${subcategory=='Wine'?'active':''}`} onClick={()=>SubCategoryChange('Wine')}> Wine (2)</button>
+                                        {prodData.menu && (prodData.menu.map((subCat, index) => ( 
+                                            <button key={index} className={`nav-link ${
+                                                subcategory==subCat._id?'active':(!subcategory && index == 0?'active':'')}
+                                            `} onClick={()=>SubCategoryChange(subCat._id)}>{subCat.name} ({subCat.products.length})</button>
+                                        )))}
                                       </div>
                                   </nav>
                                   <div className="tab-content02 recomDedBWrp" >
-                                      
-                                          <div className="recommended_content ">
+                                        {prodData.menu && (prodData.menu.map((subCat, index) => ( 
+                                            <div key={index} className={`recommended_content ${
+                                                subcategory==subCat._id?'active':(!subcategory && index == 0?'active':'')}
+                                            `}>
+                                                <h6>{subCat.name} ({subCat.products.length})</h6>
+                                                {subCat.products && (subCat.products.map((product, key) => ( 
+                                                <div key={key} className="recommended_item d-flex flex-wrap align-items-center mb-3">
+                                                {/* {console.log(product)} */}
+                                                    <div className="recommended_item_img">
+                                                        <img src={product.defaultImage.path} alt=""/>
+                                                    </div>
+                                                    <div className="recommended_item_content px-3">
+                                                        <h6>{product.name}</h6>
+                                                        <a className="price" href="#">${product.price}</a>
+                                                        <p>{product.description}</p>
+                                                    </div>
+                                                    <div className="recommended_item_add">
+                                                        {product.quantity>0?(<>other</>):( <a href="#" className="btn02"> Add <i className="far fa-plus"></i> </a>)}
+                                                       
+                                                    </div>
+                                                </div>
+                                                )))}
+                                            </div>
+                                        )))}
+
+
+                                          {/* <div className="recommended_content">
                                               <h6>wiskey (2)</h6>
                                               <div className="recommended_item d-flex flex-wrap align-items-center mb-3">
                                                   <div className="recommended_item_img">
@@ -136,25 +182,7 @@ function StoreViewPage(props) {
                                                       <a href="#" className="btn02"> Add <i className="far fa-plus"></i> </a>
                                                   </div>
                                               </div>
-                                          </div>
-                                       
-                                      
-                                          <div className="recommended_content ">
-                                              <h6>wine (2)</h6>
-                                              <div className="recommended_item d-flex flex-wrap align-items-center mb-3">
-                                                  <div className="recommended_item_img">
-                                                      <img src="assets/images/web/store01.jpg" alt=""/>
-                                                  </div>
-                                                  <div className="recommended_item_content px-3">
-                                                      <h6>Multigrain Chips</h6>
-                                                      <a className="price" href="#">$29</a>
-                                                      <p>Steak with potato salad with tomatoes and tangerine sauce</p>
-                                                  </div>
-                                                  <div className="recommended_item_add">
-                                                      <a href="#" className="btn02"> Add <i className="far fa-plus"></i> </a>
-                                                  </div>
-                                              </div>
-                                          </div>
+                                          </div> */}
                                       
                                   </div>
                               </div>

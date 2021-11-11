@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import apiFunc from "../services/api";
 import AddEditAddress from "./addEditAddress";
 
@@ -7,6 +8,10 @@ export default function AddressComp(props){
     const [addressData,setAddressData]=useState([]);
     function getAllAddress(){
         apiFunc.getProfileData().then((res)=>{
+            let resArr=res.data.data.address.map((data)=>{
+                let resObj = data.isDefault == true
+                resObj == true ? props.getLatLong(data.location.coordinates) : null
+            })
             setAddressData(res.data.data.address)
             checkStatus(res.data.data.address)
         }).catch((error)=>{
@@ -23,7 +28,7 @@ export default function AddressComp(props){
     useEffect(()=>{
         getAllAddress();
         
-    },[props])
+    },[])
 
     function addressEdit(id){
         console.log(id, 'edit');

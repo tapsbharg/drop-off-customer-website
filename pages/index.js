@@ -16,7 +16,6 @@ export default function HomePage(props) {
     function getCategory(){
         apiFunc.preference().then((res)=>{
             setDashData(res.data.data.vendorCategory)
-            console.log(res.data.data)
         }).catch((error)=>{
             console.log(error);
         })

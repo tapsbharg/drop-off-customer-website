@@ -4,11 +4,12 @@ import Link from "next/link";
 import AuthLayout from "../components/authLayout";
 import apiFunc from "../services/api";
 import { toast, ToastContainer } from "react-toastify";
-import {Elements} from '@stripe/react-stripe-js';
-import {loadStripe} from '@stripe/stripe-js';
+// import {Elements} from '@stripe/react-stripe-js';
+// import {loadStripe} from '@stripe/stripe-js';
 import SplitForm from "../components/cardsComp";
 import AddressComp from "../components/addressComp";
-const stripePromise = loadStripe("pk_test_6pRNASCoBOKtIshFeQd4XMUh");
+import EmptyCart from "../components/emptyCart";
+// const stripePromise = loadStripe("pk_test_6pRNASCoBOKtIshFeQd4XMUh");
 
 export default function CheckoutPage(props) {
     const [withdrawalModal,setWithdrawalModal]=useState(false);
@@ -17,22 +18,24 @@ export default function CheckoutPage(props) {
     const [cardList,setCardList]=useState([]);
     const [cardStatus,setCardStatus]=useState(false);
     const [addressStatus,setAddressStatus]=useState(false);
+    const [defaultLatlong,setDefaultLetLong]=useState([]);
+    const [totalMiles,setTotalMiles]=useState(0);
     // const [totalAmt,setTotalAmt]=useState(0); 
     const [orderTotal,setOrderTotal]=useState({
-        totalAmt:0.00,
-        referralAmt:0.00,
-        couponAmt:0.00,
-        serviceCharge:20,
+        subTotal :0.00,
+        referralDeduction:0.00,
+        couponDeduction:0.00,
         serviceAmt:0.00,
-        deliverBasicCharge:10.00,
-        per_mile_charge:5.00,
-        totalMiles:5,
         deliverAmt:0.00,
-        grandTotal:0.00
+        grandTotal:0.00,
+        serviceFeePercent:0.00,
+        deliveryBasePrice:0.00,
+        deliveryPerMileCharge:0.00,
+        deliveryDistanceInMiles:0,
+        coupon:{},
     });
+    const [orderData,setOrderData]=useState(null);
 
-    
-    const [orderData,setOrderData]=useState('');
     const addCardModal = (type) =>{
         setWithdrawalModal(type)
     }
@@ -42,8 +45,12 @@ export default function CheckoutPage(props) {
     const orderMsgModalFunc = (type) =>{
         setOrderMsgModal(type)
     }
-
-
+    
+    const cardStatusFuc = (e) =>{
+        setCardStatus(e)
+    }
+    
+    
     function addToCart(prodId,vendId){
         const cartData={
             "vendorId": vendId,
@@ -81,7 +88,7 @@ export default function CheckoutPage(props) {
     function placeOrder(){
         if(addressStatus == true){
             if(cardStatus == true){
-                apiFunc.placeOrder().then((res)=>{
+                apiFunc.placeOrder(orderTotal).then((res)=>{
                     setOrderData(res.data)
                     props.getCart();
                     orderMsgModalFunc(true)
@@ -97,6 +104,56 @@ export default function CheckoutPage(props) {
         }
         /*  */
     }
+    function getMiles(i) {
+        return (i*0.000621371192).toFixed(1);
+    }
+    function setLatlongfc(data){
+        setDefaultLetLong(data)
+    }
+    function orderCharges(){
+        apiFunc.orderCharges().then((res)=>{
+            let orderChrg={
+                ...orderTotal,
+                deliveryPerMileCharge:res.data.data.per_mile_charge,
+                deliveryBasePrice:res.data.data.driver_base_charge,
+                serviceFeePercent:res.data.data.service_charge_percentage,
+            }
+            setOrderTotal(orderChrg);
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    useEffect(()=>{
+        orderCharges();
+    },[])
+    function getDistance(data){
+        if(data != null){
+            let venderDetail=data.vendor
+            if(venderDetail.location && defaultLatlong[1]){
+                let postData={
+                    originLat: defaultLatlong[1],
+                    originLong: defaultLatlong[0],
+                    destinationLat: venderDetail.location.coordinates[1],
+                    destinationLong: venderDetail.location.coordinates[0],
+                    units: "imperial"
+                }
+                apiFunc.distanceCalculate(postData).then((res)=>{
+                    let resData = res.data.data.rows[0].elements[0].distance;
+                    let miles = getMiles(resData?resData.value:0);
+                    setTotalMiles(parseFloat(miles));
+                }).catch((error)=>{
+                    console.log(error);
+                })
+            }
+        }
+        
+    }
+
+    useEffect(()=>{
+        getDistance(props.cartData)
+    },[props.cartData, defaultLatlong])
+
+
     function cartTotalAmout(data){
         var total=0;
         if(data){
@@ -106,170 +163,168 @@ export default function CheckoutPage(props) {
                 }
             }
         }
-        let totalAmt = total.toFixed(2);
-        let serviceAmt = ((total * orderTotal.serviceCharge) / 100).toFixed(2);
-        let deliverAmt = ((orderTotal.per_mile_charge * orderTotal.totalMiles) + orderTotal.deliverBasicCharge).toFixed(2);
-        let grandTotal = (parseFloat(total) + parseFloat(serviceAmt) + parseFloat(deliverAmt)).toFixed(2);
+        let subTotal  = parseFloat(total.toFixed(2));
+        let serviceAmt = parseFloat(((total * orderTotal.serviceFeePercent) / 100).toFixed(2));
+        let deliverAmt = parseFloat(((orderTotal.deliveryPerMileCharge * totalMiles) + orderTotal.deliveryBasePrice).toFixed(2));
+        let grandTotal = parseFloat((parseFloat(total) + parseFloat(serviceAmt) + parseFloat(deliverAmt)).toFixed(2));
         setOrderTotal({
             ...orderTotal,
-            totalAmt:[totalAmt],
-            serviceAmt:[serviceAmt],
-            deliverAmt:[deliverAmt],
-            grandTotal:[grandTotal],
+            subTotal :subTotal ,
+            serviceAmt:serviceAmt,
+            deliverAmt:deliverAmt,
+            grandTotal:grandTotal,
         });
     }
-
+    
   
     useEffect(()=>{
         cardListingFunc();
-        cartTotalAmout(props.cartData)
-    },[props.cartData])
+    },[])
+    
+    
+    useEffect(()=>{
+        cartTotalAmout(props.cartData);
+    },[props.cartData,totalMiles])
    /*card list*/
     return (
       <>
       <ToastContainer />
       <AuthLayout props={props}>
-
-            {!props.cartData && (
-                <div className="emptyCart">
-                    <div className="carticonwt">
-                        Empty Cart
-                    </div>
-                </div>
-            )}
           {props.cartData && (
-              props.cartData.cart.length > 0 && (
+              props.cartData.cart.length > 0 ? (
               <div>
-         <div className="checkout py-3">
-            <div className="container">
-                <div className="row">
-                    <div className="col-sm-6">
-                        <div className="summer_outer mb-5">
-                            <h3> Summary </h3>   
-                            <div className="summer_box00 bg-light02 rounded-3 p-3 mb-3">
-                                <table className="order_from">
-                                    <thead>
-                                        <tr>
-                                            <th colSpan="4"> Order From </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    {props.cartData && (
-                                        <tr>
-                                            <td className="address" colSpan="2"> 
-                                                {props.cartData.vendor.storeName} 
-                                                <span><i className="fas fa-map-marker-alt"></i> {props.cartData.vendor.address}</span> 
-                                            </td>
-                                            <td colSpan="2" align="right"> Upload Your Identity/ Prescriptions </td>
-                                        </tr>
+                <div className="checkout py-3">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="summer_outer mb-5">
+                                    <h3> Summary </h3>   
+                                    <div className="summer_box00 bg-light02 rounded-3 p-3 mb-3">
+                                        <table className="order_from">
+                                            <thead>
+                                                <tr>
+                                                    <th colSpan="4"> Order From </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {props.cartData && (
+                                                <tr>
+                                                    <td className="address" colSpan="2"> 
+                                                        {props.cartData.vendor.storeName} 
+                                                        <span><i className="fas fa-map-marker-alt"></i> {props.cartData.vendor.address}</span> 
+                                                    </td>
+                                                    <td colSpan="2" align="right"> Upload Your Identity/ Prescriptions </td>
+                                                </tr>
+                                            )}
+                                                {props.cartData && (
+                                                    props.cartData.cart.map((data, index)=>(
+                                                        data.productId && (
+                                                            <tr key={index}>
+                                                            <td className="on-off"> 
+                                                                <div className={`vegtype ${data.productId.isNonVeg?'non-veg':'veg'}`}></div>
+                                                            </td>
+                                                            <td className="content">{data.productId.name}</td>
+                                                            <td>  
+                                                                <div className={`quntityPls show`}>
+                                                                    <button type="button" onClick={()=>removeToCart(data.productId._id,data.vendorId._id)} className="qty-minus">-</button>
+                                                                    <input type="number" readOnly className="qty" value={data.quantity} />
+                                                                    <button type="button" onClick={()=>addToCart(data.productId._id,data.vendorId._id)} className="qty-plus">+</button>
+                                                                </div>
+                                                            </td>
+                                                            <td className="price" > ${data.quantity * data.productId.price} </td>
+                                                        </tr> 
+                                                        )
+                                                            
+                                                    ))
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <div className="summer_box01 bg-light02 rounded-3 p-3 mb-3">
+                                        <ul className="d-flex justify-content-between">
+                                            <li> Select Coupon Code </li>
+                                            <li> <a  onClick={()=>{couponModalFunc(true)}}> View Coupons </a> </li>
+                                        </ul>
+                                    </div>
+                                    <div className="summer_box02 bg-light02 rounded-3 p-3 mb-3">
+                                        <ul className="d-flex justify-content-between">
+                                            <li> Upload Your ID Card </li>
+                                            <li> <a href="#"> Upload </a> </li>
+                                        </ul>
+                                        <hr/>
+                                        <ul className="d-flex justify-content-between">
+                                            <li> Upload Your Prescriptions </li>
+                                            <li> <a href="#"> Upload </a> </li>
+                                        </ul>
+                                    </div>
+                                    <div className="summer_box03 bg-light02 rounded-3 p-3 mb-3">
+                                        <ul className="d-flex justify-content-between">
+                                            <li> Schedule Order </li>
+                                            <li> <a href="#"> Select Date & Time </a> </li>
+                                        </ul>
+                                    </div>
+
+                                    <div className="summer_box04 bg-light02 rounded-3 p-3 mb-3">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th colSpan="2">Billing Summary</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>   
+                                                <tr>   
+                                                    <td> Sub Total </td>
+                                                    <td>${orderTotal.subTotal }</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Service Fee </td>
+                                                    <td>${orderTotal.serviceAmt}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Delivery Charge </td>
+                                                    <td>${orderTotal.deliverAmt}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td> Referral </td>
+                                                    <td>- ${orderTotal.referralDeduction}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Coupon (Store) </td>
+                                                    <td>- ${orderTotal.couponDeduction}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Grand Total </td>
+                                                    <td>${orderTotal.grandTotal}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {(addressStatus && cardStatus) && (
+                                        <a className="btn cus_btn custom01" onClick={()=>placeOrder()}> Place Order </a>
                                     )}
-                                        {props.cartData && (
-                                            props.cartData.cart.map((data, index)=>(
-                                                data.productId && (
-                                                    <tr key={index}>
-                                                    <td className="on-off"> 
-                                                        <div className={`vegtype ${data.productId.isNonVeg?'non-veg':'veg'}`}></div>
-                                                    </td>
-                                                    <td className="content">{data.productId.name}</td>
-                                                    <td>  
-                                                        <div className={`quntityPls show`}>
-                                                            <button type="button" onClick={()=>removeToCart(data.productId._id,data.vendorId._id)} className="qty-minus">-</button>
-                                                            <input type="number" readOnly className="qty" value={data.quantity} />
-                                                            <button type="button" onClick={()=>addToCart(data.productId._id,data.vendorId._id)} className="qty-plus">+</button>
-                                                        </div>
-                                                    </td>
-                                                    <td className="price" > ${data.quantity * data.productId.price} </td>
-                                                </tr> 
-                                                )
-                                                    
-                                            ))
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div className="summer_box01 bg-light02 rounded-3 p-3 mb-3">
-                                <ul className="d-flex justify-content-between">
-                                    <li> Select Coupon Code </li>
-                                    <li> <a  onClick={()=>{couponModalFunc(true)}}> View Coupons </a> </li>
-                                </ul>
-                            </div>
-                            <div className="summer_box02 bg-light02 rounded-3 p-3 mb-3">
-                                <ul className="d-flex justify-content-between">
-                                    <li> Upload Your ID Card </li>
-                                    <li> <a href="#"> Upload </a> </li>
-                                </ul>
-                                <hr/>
-                                <ul className="d-flex justify-content-between">
-                                    <li> Upload Your Prescriptions </li>
-                                    <li> <a href="#"> Upload </a> </li>
-                                </ul>
-                            </div>
-                            <div className="summer_box03 bg-light02 rounded-3 p-3 mb-3">
-                                <ul className="d-flex justify-content-between">
-                                    <li> Schedule Order </li>
-                                    <li> <a href="#"> Select Date & Time </a> </li>
-                                </ul>
-                            </div>
+                                    {(!addressStatus || !cardStatus) && (
+                                        <a className="btn cus_btn custom01 disabled"> Place Order </a>
+                                    )}
 
-                            <div className="summer_box04 bg-light02 rounded-3 p-3 mb-3">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th colSpan="2">Billing Summary</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>   
-                                        <tr>   
-                                            <td> Sub Total </td>
-                                            <td>${orderTotal.totalAmt}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Service Fee </td>
-                                            <td>${orderTotal.serviceAmt}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Delivery Charge </td>
-                                            <td>${orderTotal.deliverAmt}</td>
-                                        </tr>
-                                        <tr>
-                                            <td> Referral </td>
-                                            <td>- ${orderTotal.referralAmt}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Coupon (Store) </td>
-                                            <td>- ${orderTotal.couponAmt}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Grand Total </td>
-                                            <td>${orderTotal.grandTotal}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                </div>
                             </div>
-                            {(addressStatus && cardStatus) && (
-                                <a className="btn cus_btn custom01" onClick={()=>placeOrder()}> Place Order </a>
-                            )}
-                            {(!addressStatus || !cardStatus) && (
-                                <a className="btn cus_btn custom01 disabled"> Place Order </a>
-                            )}
+                            <div className="col-sm-6">
+                                <h3> Checkout </h3>   
 
+                                
+                                <AddressComp selectClass={addressStatus?'selected':''} getLatLong={(val)=>setLatlongfc(val)} addressSelct={(e)=>setAddressStatus(e)} />
+                                <SplitForm selectClass={cardStatus?'selected':''} cardSelct={(e)=>cardStatusFuc(e)} />
+
+                                {/* <PaymentCards/> */}
+                            </div>
                         </div>
                     </div>
-                    <div className="col-sm-6">
-                        <h3> Checkout </h3>   
-
-                        
-                        <AddressComp selectClass={addressStatus?'selected':''} addressSelct={(e)=>setAddressStatus(e)} />
-                        <SplitForm selectClass={cardStatus?'selected':''} cardSelct={(e)=>setCardStatus(e)} />
-
-                        {/* <PaymentCards/> */}
-                    </div>
                 </div>
-            </div>
-        </div>
-           </div>
-          ))}
+              </div>
+            ):
+                (<EmptyCart/>)
+            )}
            <Modal
                 show={couponModal}
                 onHide={()=>{couponModalFunc(false)}}

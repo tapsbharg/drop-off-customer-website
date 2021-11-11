@@ -1,6 +1,7 @@
 import authAxios from "../services/authAxios";
 import UnauthAxios from "../services/unauthAxios";
 import ROOT_URL from "./api-url";
+import letlong from "./letlong";
 /* if(window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1'){
     console.log(1);
     ROOT_URL ='http://staging.alphonic.net.in:6002/api/v1/v'
@@ -14,6 +15,7 @@ const apiFunc = {
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/users/token/refresh`,
+      loader:false,
     }).catch((err) => {
       console.log(err);
     }),
@@ -60,14 +62,14 @@ const apiFunc = {
   getDashboardData: () =>
     authAxios({
       method: "GET",
-      url: `${ROOT_URL}/dashboard?lat=36.19040274808616&lng=-101.19938638888843`,
+      url: `${ROOT_URL}/dashboard?lat=${letlong.let}&lng=${letlong.lng}`,
     }).catch((err) => {
       console.log(err);
     }),
   searchProductData: (data) =>
     authAxios({
       method: "POST",
-      url: `${ROOT_URL}/searchProducts?lat=36.19940274808616&lng=-101.19988638888843`,
+      url: `${ROOT_URL}/searchProducts?lat=${letlong.let}&lng=${letlong.lng}`,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -166,10 +168,11 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
-    placeOrder: () =>
+    placeOrder: (data) =>
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/charge`,
+      data: data,
     }).catch((err) => {
       console.log(err);
     }),
@@ -259,6 +262,21 @@ const apiFunc = {
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/preference`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    orderCharges: () =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/ordeSettings/getAll`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    distanceCalculate: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/users/distanceCalculate`,
+      data: data,
     }).catch((err) => {
       console.log(err);
     }),

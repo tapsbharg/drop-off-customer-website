@@ -28,6 +28,7 @@ function StoreViewPage(props) {
     function SubCategoryChange(subcat){
         var values = {
           id:vendorId,
+          search:search,
           subcategory:subcat
         }
         router.push({
@@ -36,7 +37,6 @@ function StoreViewPage(props) {
         }) 
     }
     function vendorProductData(vendorId){
-        console.log(props)
         let cart = props.cartData.cart
         apiFunc.vendorProductData(vendorId).then((res)=>{
             let  prods =res.data.data
@@ -45,14 +45,28 @@ function StoreViewPage(props) {
                    let found=  cart.find(q=>{
                         return q.productId._id == p._id
                     })
-                    p.quantity= found? found.quantity: 0
+                    p.quantity= found? found.quantity: 0;
+                    p.isVisible = search?JSON.stringify(p).toLowerCase().includes(search.toLowerCase()):true;
                 })  
             })
+            console.log(prods)
             setProdData(prods)
         }).catch((error)=>{
             console.log(error);
         })
     }
+        /* function categoryChange(cate){
+        let  prevData =prodData;
+        prevData.menu.map(m=>{
+            let res = m.products.map((obj) =>{
+                obj.isVisible = JSON.stringify(obj).toLowerCase().includes(cate.toLowerCase());
+                return obj;
+              }
+            );
+            return res;
+        })
+        setProdData(prevData);
+    } */
     function getVendor(vendorId){
         apiFunc.getVendor(vendorId).then((res)=>{
             let timeData=res.data.data
@@ -66,8 +80,7 @@ function StoreViewPage(props) {
                 return p.dayNumber == dayNumber
             })
             let vendorOpenData = findOpenData.openAt <= time && findOpenData.closeAt >= time ? true : false;
-            timeData.isOpen=vendorOpenData
-            console.log(timeData)
+            timeData.isOpen=vendorOpenData;
             setVenderInfo(timeData)
         }).catch((error)=>{
             console.log(error);
@@ -83,24 +96,21 @@ function StoreViewPage(props) {
 
   
     useEffect(()=>{
-        formik.setFieldValue('vendorId',vendorId);
+        formik.setFieldValue('id',vendorId);
         formik.setFieldValue('search',search);
         formik.setFieldValue('subcategory',subcategory);
 
     },[search, props]) 
 
-    function categoryChange(cate){
-        formik.setFieldValue('subcategory', cate);
-        formik.handleSubmit()
-    }
+   
     const initialValues={
-        vendorId:'',
+        id:'',
         search:'',
         subcategory:'',
     }
     const validationSchema = Yup.object({
-        vendorId:Yup.string(),
-        search:Yup.string().required('Please enter keyword'),
+        id:Yup.string(),
+        search:Yup.string(),
         subcategory:Yup.string(),
     })
     const formik = useFormik({
@@ -108,6 +118,7 @@ function StoreViewPage(props) {
         validationSchema,
         onSubmit : values => {
             console.log('submit',values)
+            console.log(values)
             router.push({
                 pathname: '/store-view',
                query: values,
@@ -181,8 +192,8 @@ function StoreViewPage(props) {
     // console.log(prodData)
     return (
       <>
-      {vendorId =='' ? (
-          <NoFound />
+      {vendorId =='' || vendorId == undefined ? (
+          null
       ):(
         <div className="liquor_store">
           <div className="container">
@@ -209,10 +220,10 @@ function StoreViewPage(props) {
                       <div className="searchRlighshwo">
                       <div className="browse_our_menu">
                           <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                              <form>
+                              <form  onSubmit={formik.handleSubmit}>
                                   <div>
                                       <i className="far fa-search"></i>
-                                      <input type="search" className="form-control" placeholder="Search Item..." aria-label="Search"/> 
+                                      <input type="search" className="form-control" placeholder="Search Item..."  {... formik.getFieldProps('search')} aria-label="Search"/> 
                                   </div>
                               </form>
                           </div>
@@ -237,28 +248,30 @@ function StoreViewPage(props) {
                                             `}>
                                                 <h6>{subCat.name} ({subCat.products.length})</h6>
                                                 {subCat.products && (subCat.products.map((product, key) => ( 
-                                                <div key={key} className="recommended_item d-flex flex-wrap align-items-center mb-3">
-                                                {/* {console.log(product)} */}
-                                                    <div className="recommended_item_img">
-                                                        <img src={product.defaultImage.path} alt=""/>
-                                                    </div>
-                                                    <div className="recommended_item_content px-3">
-                                                        <h6>{product.name}</h6>
-                                                        <a className="price" href="#">${product.price}</a>
-                                                        <p>{product.description}</p>
-                                                    </div>
-                                                    <div className={`recommended_item_add prolislbtn ${product.quantity>0?'active':'deactive'}`}>
-                                                        {product.quantity>0?(
-                                                        <div className={`quntityPls`}>
-                                                            <button type="button" onClick={()=>removeToCart(product._id,product.vendorId)} className="qty-minus">-</button>
-                                                            <input type="number" readOnly className="qty" value={product.quantity} />
-                                                            <button type="button" onClick={()=>addToCart(product._id,product.vendorId)} className="qty-plus">+</button>
+                                                    product.isVisible && (
+                                                        <div key={key} className="recommended_item d-flex flex-wrap align-items-center mb-3">
+                                                        {/* {console.log(product)} */}
+                                                            <div className="recommended_item_img">
+                                                                <img src={product.defaultImage.path} alt=""/>
+                                                            </div>
+                                                            <div className="recommended_item_content px-3">
+                                                                <h6>{product.name}</h6>
+                                                                <a className="price" href="#">${product.price}</a>
+                                                                <p>{product.description}</p>
+                                                            </div>
+                                                            <div className={`recommended_item_add prolislbtn ${product.quantity>0?'active':'deactive'}`}>
+                                                                {product.quantity>0?(
+                                                                <div className={`quntityPls`}>
+                                                                    <button type="button" onClick={()=>removeToCart(product._id,product.vendorId)} className="qty-minus">-</button>
+                                                                    <input type="number" readOnly className="qty" value={product.quantity} />
+                                                                    <button type="button" onClick={()=>addToCart(product._id,product.vendorId)} className="qty-plus">+</button>
+                                                                </div>
+                                                                ):( 
+                                                                    <a className="add_product" onClick={()=>addToCart(product._id,product.vendorId)}> add  <i className="far fa-plus"> </i> </a>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                        ):( 
-                                                            <a className="add_product" onClick={()=>addToCart(product._id,product.vendorId)}> add  <i className="far fa-plus"> </i> </a>
-                                                        )}
-                                                    </div>
-                                                </div>
+                                                    )
                                                 )))}
                                             </div>
                                         )))}

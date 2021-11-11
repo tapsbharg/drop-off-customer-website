@@ -619,7 +619,7 @@ form input, form input.form-control[type="file"]{
     max-width: 500px;
 }
 .nosthingContnet h2 {
-    font-size: 30px;
+    font-size: 50px;
     font-weight: 700;
     margin-bottom: 30px;
 }
@@ -649,7 +649,22 @@ form input, form input.form-control[type="file"]{
     max-width: 1000px;
     margin: 0 auto;
 }
+.emptyCart {
+    padding: 100px 0;
+}
 
+.emptyCart h3 {
+    font-size: 30px;
+    margin-bottom: 25px;
+}
 
+.emptyCart h4 {
+    font-size: 16px;
+    margin-bottom: 40px;
+}
+.emptyCart img { 
+    max-width: 300px ; 
+    margin-bottom: 20px ;
+}
 
 

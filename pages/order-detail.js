@@ -75,28 +75,28 @@ export default function OrderDetailPage(props) {
                                     </thead>
                                     <tbody>   
                                         <tr>   
-                                            <td> Grand Total </td>
-                                            <td>${orderData.grandTotal}</td>
+                                            <td> Sub Total </td>
+                                            <td>${orderData.payableAmount}</td>
                                         </tr>
                                         <tr>
                                             <td>Service Fee </td>
                                             <td>${orderData.serviceFee}</td>
                                         </tr>
                                         <tr>
-                                            <td>Delevery Charges </td>
+                                            <td>Delivery Charge </td>
                                             <td>${orderData.deliveryAmount}</td>
                                         </tr>
                                         <tr>
                                             <td> Referral </td>
-                                            <td>-${orderData.referralDeduction}</td>
+                                            <td>- ${orderData.referralDeduction}</td>
                                         </tr>
                                         <tr>
                                             <td>Coupon (Store) </td>
-                                            <td>-${orderData.couponDeduction}</td>
+                                            <td>- ${orderData.couponDeduction}</td>
                                         </tr>
-                                        <tr>   
-                                            <td> Payable Amount </td>
-                                            <td>${orderData.payableAmount}</td>
+                                        <tr>
+                                            <td>Grand Total </td>
+                                            <td>${orderData.grandTotal}</td>
                                         </tr>
                                     </tbody>
                                 </table>

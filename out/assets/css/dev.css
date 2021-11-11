@@ -602,13 +602,69 @@ form input, form input.form-control[type="file"]{
 .recommended_content.active {
     display: block;
 }
+.liquor_store .liquor_store_01 a.btn-danger {
+    background-color: #dc3545;
+}
+.liquor_store .liquor_store_01 a:hover{
+    background-color: #1f9327;
+}
+.liquor_store .liquor_store_01 a.btn-danger:hover{
+    background-color: #f00;
+}
+.notFoundWrapper {
+    padding: 15px;
+}
 
+.notifmagebox img {
+    max-width: 500px;
+}
+.nosthingContnet h2 {
+    font-size: 50px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
 
+.nosthingContnet h4 {
+    font-size: 15px;
+    margin-bottom: 18px;
+    font-weight: 400;
+}
 
+.nosthingContnet {
+    text-align: center;
+}
 
+.counterRedict {
+    font-size: 80px;
+    color: #db3633;
+}
+.nosthingContnet h4 a {
+    color: #db3633;
+    display: inline-block;
+    border-radius: 5px;
+    font-weight: 600;
+    text-decoration: underline;
+}
+.nothinfounxo {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.emptyCart {
+    padding: 100px 0;
+}
 
+.emptyCart h3 {
+    font-size: 30px;
+    margin-bottom: 25px;
+}
 
-
-
+.emptyCart h4 {
+    font-size: 16px;
+    margin-bottom: 40px;
+}
+.emptyCart img { 
+    max-width: 300px ; 
+    margin-bottom: 20px ;
+}
 
 

@@ -42,6 +42,7 @@ export default function SignInPage(props) {
     axios
       .post(`${baseURL}/login`, userData)
       .then((res) => {
+        console.log(res);
         if(res.data.data != undefined){
           reactLocalStorage.set("token", res.data.data.token);
           toast.success(res.data.message);
@@ -57,11 +58,11 @@ export default function SignInPage(props) {
         }else{
           toast.error(res.data.message);
         }
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error(error.message);
+      }).catch((error) => {
+        var message = JSON.parse(error.request.response).message;
+        toast.error(message);
       });
+      
   };
     return (
       <>

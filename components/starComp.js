@@ -1,5 +1,5 @@
 function StarRating(props){
-
+    
     return(
         <>
             <span className={`rating_box ${props.className?props.className:''}`}>

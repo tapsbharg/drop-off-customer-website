@@ -19,7 +19,7 @@ export default function CheckoutPage(props) {
     const [cardStatus,setCardStatus]=useState(false);
     const [addressStatus,setAddressStatus]=useState(false);
     const [defaultLatlong,setDefaultLetLong]=useState([]);
-    const [totalMiles,setTotalMiles]=useState(0);
+    const [totalMiles,setTotalMiles]=useState(null);
     // const [totalAmt,setTotalAmt]=useState(0); 
     const [orderTotal,setOrderTotal]=useState({
         subTotal :0.00,
@@ -85,6 +85,11 @@ export default function CheckoutPage(props) {
             console.log(error);
         })
     }
+    
+    useEffect(()=>{
+        cardListingFunc();
+    },[])
+
     function placeOrder(){
         if(addressStatus == true){
             if(cardStatus == true){
@@ -110,23 +115,30 @@ export default function CheckoutPage(props) {
     function setLatlongfc(data){
         setDefaultLetLong(data)
     }
-    function orderCharges(){
-        apiFunc.orderCharges().then((res)=>{
-            let orderChrg={
-                ...orderTotal,
-                deliveryPerMileCharge:res.data.data.per_mile_charge,
-                deliveryBasePrice:res.data.data.driver_base_charge,
-                serviceFeePercent:res.data.data.service_charge_percentage,
-            }
-            setOrderTotal(orderChrg);
-        }).catch((error)=>{
-            console.log(error);
-        })
+    async function orderCharges(data){
+        let ordResData=orderTotal;
+        if(totalMiles != null){
+            ordResData = await apiFunc.orderCharges().then((res)=>{
+                let orderChrg={
+                    ...orderTotal,
+                    deliveryPerMileCharge:res.data.data.per_mile_charge,
+                    deliveryBasePrice:res.data.data.driver_base_charge,
+                    serviceFeePercent:res.data.data.service_charge_percentage,
+                }
+                setOrderTotal(orderChrg);
+                return orderChrg ;
+            }).catch((error)=>{
+                console.log(error);
+            })
+        }
+        await cartTotalAmout(data,ordResData);
     }
-    useEffect(()=>{
+    
+/*     useEffect(()=>{
         orderCharges();
-    },[])
-    function getDistance(data){
+    },[]) */
+
+    async function getDistance(data){
         if(data != null){
             let venderDetail=data.vendor
             if(venderDetail.location && defaultLatlong[1]){
@@ -137,24 +149,21 @@ export default function CheckoutPage(props) {
                     destinationLong: venderDetail.location.coordinates[0],
                     units: "imperial"
                 }
-                apiFunc.distanceCalculate(postData).then((res)=>{
+                await apiFunc.distanceCalculate(postData).then((res)=>{
                     let resData = res.data.data.rows[0].elements[0].distance;
                     let miles = getMiles(resData?resData.value:0);
                     setTotalMiles(parseFloat(miles));
                 }).catch((error)=>{
                     console.log(error);
-                })
+                }) 
+                
             }
         }
         
+        
+        
     }
-
-    useEffect(()=>{
-        getDistance(props.cartData)
-    },[props.cartData, defaultLatlong])
-
-
-    function cartTotalAmout(data){
+    async function cartTotalAmout(data,chargess){
         var total=0;
         if(data){
             for (var i=0; i < data.cart.length; i++) {
@@ -164,10 +173,10 @@ export default function CheckoutPage(props) {
             }
         }
         let subTotal  = parseFloat(total.toFixed(2));
-        let serviceAmt = parseFloat(((total * orderTotal.serviceFeePercent) / 100).toFixed(2));
-        let deliverAmt = parseFloat(((orderTotal.deliveryPerMileCharge * totalMiles) + orderTotal.deliveryBasePrice).toFixed(2));
+        let serviceAmt = parseFloat(((total * chargess.serviceFeePercent) / 100).toFixed(2));
+        let deliverAmt = parseFloat(((chargess.deliveryPerMileCharge * totalMiles) + chargess.deliveryBasePrice).toFixed(2));
         let grandTotal = parseFloat((parseFloat(total) + parseFloat(serviceAmt) + parseFloat(deliverAmt)).toFixed(2));
-        setOrderTotal({
+        await setOrderTotal({
             ...orderTotal,
             subTotal :subTotal ,
             serviceAmt:serviceAmt,
@@ -177,14 +186,26 @@ export default function CheckoutPage(props) {
     }
     
   
-    useEffect(()=>{
-        cardListingFunc();
-    },[])
     
-    
+
     useEffect(()=>{
+        orderCharges(props.cartData)
+    },[props.cartData, defaultLatlong, totalMiles])
+
+    useEffect(()=>{
+        getDistance(props.cartData)
+    },[defaultLatlong])
+
+  /*   useEffect(()=>{
+        cartTotalAmout(props.cartData)
+        console.log('s',defaultLatlong)
+    },[props.cartData, defaultLatlong, totalMiles])
+ */
+    
+/*     useEffect(()=>{
         cartTotalAmout(props.cartData);
-    },[props.cartData,totalMiles])
+        console.log(totalMiles)
+    },[props.cartData,totalMiles]) */
    /*card list*/
     return (
       <>

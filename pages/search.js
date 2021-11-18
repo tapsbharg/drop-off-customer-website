@@ -39,7 +39,6 @@ export default function SearchPage(props) {
                 })
                 m.quantity= found? found.quantity: 0 
             })
-            console.log(prods)
             setProductList(prods)
         }).catch((error)=>{
             console.log(error);

@@ -110,10 +110,10 @@ function App({ Component, pageProps }) {
     }
   };
 
-/* Router.events.on('routeChangeStart', () => {
+Router.events.on('routeChangeStart', () => {
     document.body.className = 'loading_page';
 });
-Router.events.on('routeChangeComplete', () => {
+/* Router.events.on('routeChangeComplete', () => {
     document.body.className = document.body.className.replace("loading_page","");
     
 }); */

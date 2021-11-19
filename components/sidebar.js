@@ -8,6 +8,11 @@ export default function Sidebar(props) {
       return 'active';
     }
   }
+  function logOut(){
+    console.log(props)
+    props.props.props.logout();
+    // history.push("/sign-in");
+  }
     return (
       <>
         <div className="dashbord_opction">
@@ -21,7 +26,7 @@ export default function Sidebar(props) {
               <li className={ActiveClass('/referral')}><Link href="/referral">Refer & Earn</Link></li>
               <li className={ActiveClass('/help')}><Link href="/help">Help</Link></li>
               <li className={ActiveClass('/change-password')}><Link href="/change-password">Change Password</Link></li>
-              <li><Link href="/">Sign Out</Link></li>
+              <li><a onClick={() => {logOut();}}>Sign Out</a></li>
           </ul>
       </div>
   

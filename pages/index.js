@@ -45,7 +45,7 @@ export default function HomePage(props) {
         initialValues,
         validationSchema,
         onSubmit : values => {
-            console.log('submit',values)
+            // console.log('submit',values)
             router.push({
                 pathname: '/search',
                query: values,

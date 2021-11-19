@@ -18,12 +18,15 @@ export default function OrderDetailPage(props) {
             console.log(error);
         })
     }
+
+   
     useEffect(()=>{
         if(orderId){
             getOrderById(orderId);
         }
         
     },[orderId])
+
     console.log(orderData)
     return (
       <>
@@ -74,9 +77,9 @@ export default function OrderDetailPage(props) {
                                         </tr>
                                     </thead>
                                     <tbody>   
-                                        <tr>   
+                                        <tr> 
                                             <td> Sub Total </td>
-                                            <td>${orderData.payableAmount}</td>
+                                            <td>${orderData.subTotal}</td>
                                         </tr>
                                         <tr>
                                             <td>Service Fee </td>

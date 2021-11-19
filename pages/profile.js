@@ -12,7 +12,7 @@ export default function ProfilePage(props) {
     const[bannerImageBase64, setBannerImageBase64]=useState();
     const[imgStateBanner, setImgStateBanner]=useState('');
     
-    useEffect(()=>{
+    function getProfileData(){
         apiFunc.getProfileData().then((res) => {
             SetProfileData(res.data.data);
             if(res.data.data){
@@ -25,6 +25,10 @@ export default function ProfilePage(props) {
         .catch((error) => {
             console.log(error);
         });
+    }
+
+    useEffect(()=>{
+        getProfileData()
         
     },[])
     
@@ -33,6 +37,7 @@ export default function ProfilePage(props) {
         email: "",
         code: "",
         phone: "",
+        photoId: "",
       };
       const validationSchema = Yup.object({
         name: Yup.string().required("Please enter name"),
@@ -41,6 +46,7 @@ export default function ProfilePage(props) {
             .required('Please enter email'),
         code: Yup.string().required("Please enter code"),
         phone: Yup.string().required("Please enter phone"),
+        photoId: Yup.string().required("Please attach photoId"),
       });
       const formik = useFormik({
         initialValues,
@@ -129,6 +135,8 @@ export default function ProfilePage(props) {
                 profileImage:response.data.data._id
             }
             apiFunc.postProfileImage(resData).then(res => {
+                formik.setFieldValue('photoId',res.data.data.photoId)
+                getProfileData();
                 toast.success(res.data.message)
     
             }).catch((error) => {
@@ -166,6 +174,9 @@ export default function ProfilePage(props) {
                             </label>
                         </div>
                     </div>
+                    {formik.touched.photoId && formik.errors.photoId ? (
+                        <div className="errorMsg text-center">{formik.errors.photoId}</div>
+                    ) : null}
                     </div>
                 </form>
                 <div className="comman_from">

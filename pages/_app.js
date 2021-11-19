@@ -113,10 +113,10 @@ function App({ Component, pageProps }) {
 Router.events.on('routeChangeStart', () => {
     document.body.className = 'loading_page';
 });
-/* Router.events.on('routeChangeComplete', () => {
+Router.events.on('routeChangeComplete', () => {
     document.body.className = document.body.className.replace("loading_page","");
     
-}); */
+});
   return (
         <Layout 
         logout={()=>logOut()} 
@@ -127,7 +127,8 @@ Router.events.on('routeChangeStart', () => {
                 <link rel="stylesheet" href="/favicon.ico"/>
             </Head>
             <Component 
-            setlogin={()=>setLogin()} 
+            setlogin={()=>setLogin()}
+            logout={()=>logOut()}  
             auth={isAuth} 
             getCart={()=>cartListShow()} 
             cartData={cartData} {...pageProps} />

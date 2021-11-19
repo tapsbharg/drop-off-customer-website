@@ -11,6 +11,7 @@ import Head from "next/head";
 import StarRating from '../components/starComp'
 import moment from 'moment';
 import NoFound from "../components/notFound";
+import cartService from "../services/cartSrvice";
 
 
 function StoreViewPage(props) {
@@ -49,7 +50,7 @@ function StoreViewPage(props) {
                     p.isVisible = search?JSON.stringify(p).toLowerCase().includes(search.toLowerCase()):true;
                 })  
             })
-            console.log(prods)
+            // console.log(prods)
             setProdData(prods)
         }).catch((error)=>{
             console.log(error);
@@ -126,63 +127,13 @@ function StoreViewPage(props) {
         },
         
     })
-    function addToCart(prodId,vendId){
-        if(!guestId){
-            const cartData={
-                "vendorId": vendId,
-                "quantity": 1
-            }
-            apiFunc.addTocart(cartData,prodId).then((res)=>{
-                props.getCart()
-            }).catch((error)=>{
-                toast.error(error.message);
-                console.log(error);
-            })
-        }
-        else{
-            const cartData={
-                "guestId":guestId,
-                "vendorId": vendId,
-                "quantity": 1
-            }
-            apiFunc.addTocartGuest(cartData,prodId).then((res)=>{
-                // setProductList(res.data.data)
-                props.getCart()
-                // toast.success(res.data.message);
-            }).catch((error)=>{
-                toast.error(error.message);
-                console.log(error.message);
-            })
-        }
+    async function addToCart(prodId,vendId){
+        await cartService.addToCart(prodId, vendId, props);
+    }
+    async function removeToCart(prodId,vendId){
+        await cartService.removeToCart(prodId, vendId, props);
+    }
 
-    }
-    function removeToCart(prodId,vendId){
-        if(!guestId){
-            const cartDataDelete={
-                "vendorId": vendId,
-                "quantity": -1
-            }
-            apiFunc.addTocart(cartDataDelete,prodId).then((res)=>{
-                // setProductList(res.data.data)
-                props.getCart()
-            }).catch((error)=>{
-                console.log(error);
-            })
-        }
-        else{
-            const cartDataDelete={
-                "guestId":guestId,
-                "vendorId": vendId,
-                "quantity": -1
-            }
-            apiFunc.addTocartGuest(cartDataDelete,prodId).then((res)=>{
-                // setProductList(res.data.data)
-                props.getCart()
-            }).catch((error)=>{
-                console.log(error);
-            })
-        }
-    }
     useEffect(()=>{
         var  token= reactLocalStorage.get("token");
         var guestid = reactLocalStorage.get("guestid");

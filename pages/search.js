@@ -7,6 +7,7 @@ import { useFormik } from "formik";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { toast, ToastContainer } from "react-toastify";
 import Head from "next/head";
+import cartService from "../services/cartSrvice";
 
 export default function SearchPage(props) {
     const [dashdata, setDashData]=useState([]);
@@ -45,125 +46,13 @@ export default function SearchPage(props) {
         })
     }
     
-    
-    function addToCart(prodId,vendId){
-        if(!guestId){
-            const cartData={
-                "vendorId": vendId,
-                "quantity": 1
-            }
-            apiFunc.addTocart(cartData,prodId).then((res)=>{
-                props.getCart()
-            }).catch((error)=>{
-                toast.error(error.message);
-                console.log(error);
-            })
-        }
-        else{
-            const cartData={
-                "guestId":guestId,
-                "vendorId": vendId,
-                "quantity": 1
-            }
-            apiFunc.addTocartGuest(cartData,prodId).then((res)=>{
-                // setProductList(res.data.data)
-                props.getCart()
-                // toast.success(res.data.message);
-            }).catch((error)=>{
-                toast.error(error.message);
-                console.log(error.message);
-            })
-        }
+    async function addToCart(prodId,vendId){
+        await cartService.addToCart(prodId, vendId, props);
+    }
+    async function removeToCart(prodId,vendId){
+        await cartService.removeToCart(prodId, vendId, props);
+    }
 
-    }
-    function removeToCart(prodId,vendId){
-        if(!guestId){
-            const cartDataDelete={
-                "vendorId": vendId,
-                "quantity": -1
-            }
-            apiFunc.addTocart(cartDataDelete,prodId).then((res)=>{
-                // setProductList(res.data.data)
-                props.getCart()
-            }).catch((error)=>{
-                console.log(error);
-            })
-        }
-        else{
-            const cartDataDelete={
-                "guestId":guestId,
-                "vendorId": vendId,
-                "quantity": -1
-            }
-            apiFunc.addTocartGuest(cartDataDelete,prodId).then((res)=>{
-                // setProductList(res.data.data)
-                props.getCart()
-            }).catch((error)=>{
-                console.log(error);
-            })
-        }
-    }
-    function EmptyCartAll(id){
-        console.log(id)
-        apiFunc.deleteCartData(id).then((res)=>{
-            // setProductList(res.data.data)
-            // toast.error(error.message);
-            console.log(res)
-            props.getCart()
-        }).catch((error)=>{
-            toast.error(error.message);
-            console.log(error);
-        })
-    }
-    
-    // EmptyCartAll("6136e9b1da28413d28bd7759")
-/*     function checkCartValue(propsData) {
-        if(propsData.cartData ){
-            var cartDataList=[]
-            for (var i=0; i < propsData.cartData.cart.length; i++) {
-                if(propsData.cartData.cart[i].productId){
-                    var dataByList = {};
-                    let listId =propsData.cartData.cart[i].productId._id
-                    let qty=propsData.cartData.cart[i].quantity;
-                    dataByList =  {"id": listId,"qty": qty};
-                }
-                
-                // datas.push(dataByList);
-                cartDataList.push(dataByList)
-            } 
-            setCartStatusList(cartDataList);
-        }
-        
-    }
-    function checkCartIs(datas, cartlist){
-        var prodlIddata={};
-        for (var i=0; i < cartlist.length; i++) {
-            if(datas._id == cartlist[i].id){
-                prodlIddata={
-                    ...datas,
-                    cartStatus:cartlist[i].qty > 0?true:false,
-                    cartQty:cartlist[i].qty
-                }
-            }
-        }
-        if(!prodlIddata.cartStatus){
-            prodlIddata={
-                ...datas,
-                cartStatus:false,
-            }
-        }
-        return prodlIddata;
-    }
-    function setAfterData(datas, list){
-        var cartlist= cartStatusList;
-        var updatPRdList=[]
-        if(datas){
-            for (var i=0; i < datas.length; i++) {
-                updatPRdList.push(checkCartIs(datas[i], cartlist));
-            }
-        }
-        setProductList(updatPRdList)
-    } */
     
     
     function setToken(token){

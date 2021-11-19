@@ -24,13 +24,13 @@ export default function SignInPage(props) {
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-      console.log("submit", values);
+      // console.log("submit", values);
       login(values);
     },
   });
   function mergeCart(id){
     apiFunc.userCartMerge(id).then((res)=>{
-      console.log(res)
+      // console.log(res)
       reactLocalStorage.remove("guestid");
       props.setlogin();
       history.push("/profile");
@@ -42,9 +42,10 @@ export default function SignInPage(props) {
     axios
       .post(`${baseURL}/login`, userData)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if(res.data.data != undefined){
           reactLocalStorage.set("token", res.data.data.token);
+          reactLocalStorage.set("userId", res.data.data._id);
           toast.success(res.data.message);
           const getId=reactLocalStorage.get("guestid");
           if(getId && props.cartData.cart.length > 0){

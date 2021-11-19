@@ -7,13 +7,18 @@ import api from "../services/api";
 
 export default function Header(appProps) {
   const [profile, setProfile] = useState({});
+  const [address, setAddress] = useState({});
   const history = useRouter();
   useEffect(() => {
     if (appProps.props.auth) {
       api.getProfileData().then((res) => {
         // console.log("in api ", res.data);
         let data = res.data.data;
+        let addrss = data.address.filter((a) => a.isDefault == true).map((b)=>{
+          setAddress(b);
+        })
         setProfile(data);
+        
       }).catch((error) => {
         console.log(error);
         toast.error(error.message);
@@ -36,7 +41,7 @@ export default function Header(appProps) {
                   </Link>
                   {appProps.props.auth && (
                     <ul>
-                      <li><a href="#"><i className="fas fa-map-marker-alt"></i> Scott Rd Keuka Park, New York(NY) </a></li>
+                      <li><Link href="/addresses"><a href="#"><i className="fas fa-map-marker-alt"></i> {address.address} </a></Link></li>
                     </ul>
                  )}
             </div>

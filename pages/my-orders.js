@@ -89,7 +89,7 @@ export default function MyOrdersPage(props) {
                                                     </li>
                                                 </ul>
                                                 <ul className="my_order03 d-flex flex-wrap justify-content-between align-items-center ">
-                                                    <li> <a href="#"> ${data.payableAmount} </a> </li>
+                                                    <li> <a href="#"> ${data.grandTotal} </a> </li>
                                                     <li> <Link href={`/order-detail?orderId=${data._id}`}>Track Details </Link> </li>
                                                 </ul>
                                             </div>

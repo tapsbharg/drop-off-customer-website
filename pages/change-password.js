@@ -33,8 +33,8 @@ export default function ChangePasswordPage(props) {
         apiFunc.postChangePassword(data).then((res)=>{
             toast.success(res.data.message);
         }).catch((error)=>{
-            toast.error('Invalid details');
-            console.log(error);
+            var message = JSON.parse(error.request.response).message;
+            toast.error(message);
         })
     }
     return (

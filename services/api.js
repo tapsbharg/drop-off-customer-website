@@ -110,6 +110,20 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    deleteCartDataAll: () =>
+    authAxios({
+      method: "DELETE",
+      url: `${ROOT_URL}/user/deleteWholeCart`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    deleteGuestCartAll: (id) =>
+    authAxios({
+      method: "DELETE",
+      url: `${ROOT_URL}/guest/clearCart/${id}`,
+    }).catch((err) => {
+      console.log(err);
+    }),
     guestid: () =>
     authAxios({
       method: "GET",

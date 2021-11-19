@@ -9,6 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 import SplitForm from "../components/cardsComp";
 import AddressComp from "../components/addressComp";
 import EmptyCart from "../components/emptyCart";
+import cartService from "../services/cartSrvice";
 // const stripePromise = loadStripe("pk_test_6pRNASCoBOKtIshFeQd4XMUh");
 
 export default function CheckoutPage(props) {
@@ -51,29 +52,11 @@ export default function CheckoutPage(props) {
     }
     
     
-    function addToCart(prodId,vendId){
-        const cartData={
-            "vendorId": vendId,
-            "quantity": 1
-        }
-        apiFunc.addTocart(cartData,prodId).then((res)=>{
-            props.getCart();
-        }).catch((error)=>{
-            toast.error(error.message);
-            console.log(error);
-        })
-
+    async function addToCart(prodId,vendId){
+        await cartService.addToCart(prodId, vendId, props);
     }
-    function removeToCart(prodId,vendId){
-        const cartDataDelete={
-            "vendorId": vendId,
-            "quantity": -1
-        }
-        apiFunc.addTocart(cartDataDelete,prodId).then((res)=>{
-            props.getCart()
-        }).catch((error)=>{
-            console.log(error);
-        })
+    async function removeToCart(prodId,vendId){
+        await cartService.removeToCart(prodId, vendId, props);
     }
 
     /*card list*/

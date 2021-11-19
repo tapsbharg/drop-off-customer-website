@@ -4,7 +4,7 @@ import {reactLocalStorage} from 'reactjs-localstorage';
 const baseURL = 'ROOT_URL';
 const authAxios = axios.create();
 authAxios.interceptors.request.use((config) => {  
-    config.loader == false ? null : document.body.className = 'loading_page';
+    // config.loader == false ? null : document.body.className = 'loading_page';
     let token = reactLocalStorage.get('token');
     let headers = {
         'baseURL':baseURL,
@@ -37,10 +37,10 @@ authAxios.interceptors.request.use((config) => {
 }); */
 
 authAxios.interceptors.response.use((response) => {
-    document.body.className = document.body.className.replace("loading_page","");
+    // document.body.className = document.body.className.replace("loading_page","");
     return response;
 },(error) => {
-    document.body.className = document.body.className.replace("loading_page","");
+    // document.body.className = document.body.className.replace("loading_page","");
     console.log(error.response.data.message)
     return Promise.reject(error);
 });

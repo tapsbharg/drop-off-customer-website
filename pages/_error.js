@@ -1,3 +1,4 @@
+import NoFound from "../components/notFound";
 function Error({ statusCode }) {
     return (
       <p>

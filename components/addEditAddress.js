@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Children, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap"
 import apiFunc from "../services/api";
 import * as Yup from "yup";
@@ -24,23 +24,27 @@ export default function AddEditAddress(props){
         zoom: 11,
         address: "",
         draggable: true,
-        lat: 52,
-        lng: 30,
+        lat: 26.922070,
+        lng: 75.778885,
         center: {
-            lat: 52,
-            lng: 30,
+            lat:26.922070,
+            lng:75.778885,
         }
       });
-      function setDefaultAddress(){
-        setMapData({
-            ...mapData,
-            lat: 52,
-            lng: 30,
-            center: {
-              lat: 52,
-              lng: 30,
-            }
-        });
+      function setDefaultAddress(coordinates,address){
+          if(coordinates){
+            setMapData({
+                ...mapData,
+                address:address || '',
+                lat: coordinates[1] || '',
+                lng: coordinates[0] || '',
+                center: {
+                  lat: coordinates[1] || '',
+                  lng: coordinates[0] || '',
+                }
+            });
+          }
+        
       }
       const  _onChange = ({ center, zoom }) => {
         setMapData({
@@ -135,6 +139,7 @@ export default function AddEditAddress(props){
         lat: "",
         address: "",
         zipcode: "",
+        // isDefault: false,
       };
     const validationSchema = Yup.object({
         lng: Yup.string().required("Please enter lang"),
@@ -145,11 +150,25 @@ export default function AddEditAddress(props){
     const formik = useFormik({
         initialValues,
         validationSchema,
-        onSubmit: (values) => {
-          console.log("submit", values);
-          addNewAddress(values);
+        onSubmit: async(values) => {
+        //   console.log("submit", values);
+          if(props.type === 'edit'){
+            await editAddress(values,props.id);
+          }else{
+            await addNewAddress(values);
+          }
+          props.action();
         },
       });
+    function editAddress(postData, id){
+        apiFunc.editAddress(postData, id).then(res => {
+            toast.success(res.data.message)
+            addCardModal(false);
+        }).catch((error) => {
+            toast.success(error)
+            console.log(error)
+        });
+    }
     function addNewAddress(postData){
         apiFunc.addNewAddress(postData).then(res => {
             toast.success(res.data.message)
@@ -161,13 +180,13 @@ export default function AddEditAddress(props){
     }
 
     useEffect(()=>{
-        setDefaultAddress();
-    },[])
+        setDefaultAddress(props.coordinates, props.address);
+    },[props.coordinates])
     
     // console.log( mapData)
     return(
         <>
-        <a href="#" className={props.className} onClick={()=>addCardModal(true)}> Add New </a> 
+        <a href="#" className={props.className || ''} onClick={()=>addCardModal(true)}> {props.children || 'Add New'} </a> 
         <Modal
     show={addressModal}
     onHide={()=>{addCardModal(false)}}
@@ -179,7 +198,12 @@ export default function AddEditAddress(props){
             <div className="add_new_card">
                 <div className="add_new_card_contant bg-white p-5 rounded-3">
                     <i className="fal fa-times-circle" onClick={()=>addCardModal(false)}></i>
-                    <h5> Add New Location </h5>
+                    {props.type == 'edit'?(
+                        <h5> Edit Location </h5>
+                    ):(
+                        <h5> Add New Location </h5>
+                    )}
+                    
                     <form className=" " onSubmit={formik.handleSubmit}>
                         {mapData.mapApiLoaded && (
                             <div className="mapSearchinpt">
@@ -187,10 +211,11 @@ export default function AddEditAddress(props){
                                 map={mapData.mapInstance}
                                 mapApi={mapData.mapApi}
                                 addplace={(e)=>addPlace(e)}
+                                address={mapData.address}
                                 />
                             </div>
                             )}
-                        {mapData.address}
+                        {/* {mapData.address} */}
                     <div className="mapviewWrapper">
                         <GoogleMapReact
                             center={mapData.center}
@@ -224,7 +249,10 @@ export default function AddEditAddress(props){
                             />
                         </GoogleMapReact>
                         </div>
-                        <button type="submit" className="btn cus_btn custom01"> Continue </button>
+                        <div className="text-center">
+                            <button type="submit" className="btn cus_btn custom01"> Continue </button>
+                        </div>
+                        
                     </form>
                     
                 </div>

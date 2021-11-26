@@ -14,6 +14,7 @@ import Head from "next/head";
 import Router, { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import apiFunc from "../services/api";
+import { ToastContainer } from "react-toastify";
 
 Router.events.on('routeChangeStart', () => NProgress.start()); 
 Router.events.on('routeChangeComplete', () => NProgress.done()); 
@@ -126,6 +127,7 @@ Router.events.on('routeChangeComplete', () => {
             <Head>
                 <link rel="stylesheet" href="/favicon.ico"/>
             </Head>
+            <ToastContainer />
             <Component 
             setlogin={()=>setLogin()}
             logout={()=>logOut()}  

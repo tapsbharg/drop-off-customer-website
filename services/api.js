@@ -1,3 +1,4 @@
+
 import authAxios from "../services/authAxios";
 import UnauthAxios from "../services/unauthAxios";
 import ROOT_URL from "./api-url";
@@ -10,6 +11,7 @@ import letlong from "./letlong";
     // ROOT_URL ='https://jsonplaceholder.typicode.com'
     console.log(2);
 } */
+
 const apiFunc = {
   refreshToken: () =>
     authAxios({
@@ -249,6 +251,22 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    getHelpdeskByid: (id) =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/helpdesk/${id}`,
+    }),
+    getHelpChatData: (id) =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/getReplytoTicket/${id}`,
+    }),
+    helpChatReply: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/replytoTicket`,
+      data: data,
+    }),
     getHelpdeskClose: (data) =>
     authAxios({
       method: "POST",
@@ -265,6 +283,14 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    editAddress: (data,id) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/users/addressUpdate/${id}`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
     defaultAddress: (id) =>
     authAxios({
       method: "POST",
@@ -276,6 +302,13 @@ const apiFunc = {
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/preference`,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    inStock: (id) =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/order/productsInStock/check`,
     }).catch((err) => {
       console.log(err);
     }),

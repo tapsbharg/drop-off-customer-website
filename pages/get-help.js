@@ -19,22 +19,7 @@ export default function GetHelpsPage(props) {
         subject: Yup.string().required("Please enter subject"),
         orderNumber: Yup.string().required("Please enter order number"),
         message: Yup.string().required("Please enter message"),
-        image: Yup.string().required("Please enter image")
-    });
-    const formik = useFormik({
-        initialValues,
-        validationSchema,
-        onSubmit: (values) => {
-          console.log("submit", values);
-          helpdesk(values)
-        },
-    });
-    const formik2 = useFormik({
-        initialValues:{
-            image: "",
-        },
-        validationSchema:Yup.object({
-            image:Yup
+        image:Yup
             .mixed()
             .required("You need to attach image")
             .test("fileSize", "The image is too large", (value) => {
@@ -55,12 +40,18 @@ export default function GetHelpsPage(props) {
                     fileType === "application/msword" */
                 );
             }),
-          }),
-        onSubmit: (values) => {
+    });
+    const formik = useFormik({
+        initialValues,
+        validationSchema,
+        onSubmit: async(values) => {
           console.log("submit", values);
-          uploadImage(values)
+          let imageId = await uploadImage(values)
+          values.image = imageId;
+          helpdesk(values)
         },
     });
+
     function helpdesk(data){
         apiFunc.helpdesk(data).then(res => {
             toast.success(res.data.message)
@@ -73,21 +64,16 @@ export default function GetHelpsPage(props) {
     const handleFileImage = (e) => {
         var getfile=e.target.files[0];
         if(getfile != undefined || getfile != null){
-            formik2.setFieldValue('image',e.target.files[0]);
-            var reader = new FileReader();
-            reader.readAsDataURL(e.target.files[0]);
-            reader.onload = function () {
-                formik2.handleSubmit()
-            };
+            formik.setFieldValue('image',e.target.files[0]);
         }
         
     };
     function uploadImage(postData){
         const formData = new FormData();
         formData.append("coverImage", postData.image);
-        apiFunc.postUpload(formData).then(response => {
+        return apiFunc.postUpload(formData).then(response => {
             setImageData(response.data.data._id)
-            formik.setFieldValue('image',response.data.data._id);
+            return response.data.data._id;
         }).catch((error) => {
             toast.success(error)
             console.log(error)
@@ -113,12 +99,10 @@ export default function GetHelpsPage(props) {
                                 </div>
                                 <div className="mb-3">
                                     <label className="form-label">Order Number</label>
-                                    <select {...formik.getFieldProps("orderNumber")}>
-                                        <option value="volvo">Enter Your Number</option>
-                                        <option value="volvo">Issue 01</option>
-                                        <option value="saab">Issue 02</option>
-                                    </select>
-                                    
+                                    <input type="text" {...formik.getFieldProps("orderNumber")} className="form-control" placeholder="Enter  order number"/>
+                                    {formik.touched.orderNumber && formik.errors.orderNumber ? (
+                                        <div className="errorMsg">{formik.errors.orderNumber}</div>
+                                    ) : null}
                                 </div>
                                 <div className="mb-3">
                                     <label className="form-label">Subject*</label>
@@ -137,8 +121,8 @@ export default function GetHelpsPage(props) {
                                 <div className="mb-3">
                                     <label className="form-label">Upload Attachments (*jpeg, *jpg, *png)</label>
                                     <input type="file" name="image" onChange={(e)=>handleFileImage(e)} className="form-control" placeholder="Enter Your Subject"/>
-                                    {formik2.touched.image && formik2.errors.image ? (
-                                        <div className="errorMsg">{formik2.errors.image}</div>
+                                    {formik.touched.image && formik.errors.image ? (
+                                        <div className="errorMsg">{formik.errors.image}</div>
                                     ) : null}
                                 </div>    
                                 <button type="submit" className="btn cus_btn custom01">Submit</button>

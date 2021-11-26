@@ -19,6 +19,7 @@ export default function CheckoutPage(props) {
     const [cardList,setCardList]=useState([]);
     const [cardStatus,setCardStatus]=useState(false);
     const [addressStatus,setAddressStatus]=useState(false);
+    const [stocktatus,setStockStatus]=useState(false);
     const [defaultLatlong,setDefaultLetLong]=useState([]);
     const [totalMiles,setTotalMiles]=useState(null);
     // const [totalAmt,setTotalAmt]=useState(0); 
@@ -73,17 +74,30 @@ export default function CheckoutPage(props) {
         cardListingFunc();
     },[])
 
-    function placeOrder(){
+    function stockchecker(){
+        apiFunc.inStock().then((res)=>{
+            let qtycheck=res.data.data.NotInStockProducts.length >= 1?false:true
+            setStockStatus(qtycheck);
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+    async function placeOrder(){
+        await stockchecker();
         if(addressStatus == true){
             if(cardStatus == true){
-                apiFunc.placeOrder(orderTotal).then((res)=>{
-                    setOrderData(res.data)
-                    props.getCart();
-                    orderMsgModalFunc(true)
-                    // toast.success(res);
-                }).catch((error)=>{
-                    console.log(error);
-                })
+                if(stocktatus == true){
+                    apiFunc.placeOrder(orderTotal).then((res)=>{
+                        setOrderData(res.data)
+                        props.getCart();
+                        orderMsgModalFunc(true)
+                        // toast.success(res);
+                    }).catch((error)=>{
+                        console.log(error);
+                    })
+                }else{
+                    toast.error("out of stock");
+                }
             }else{
                 toast.error("Please select card before submit");
             }
@@ -228,12 +242,15 @@ export default function CheckoutPage(props) {
                                                                 <div className={`vegtype ${data.productId.isNonVeg?'non-veg':'veg'}`}></div>
                                                             </td>
                                                             <td className="content">{data.productId.name}</td>
-                                                            <td>  
+                                                            <td className={`${data.productId.stock < data.quantity?'stockOut':'stockIn'}`}>  
                                                                 <div className={`quntityPls show`}>
                                                                     <button type="button" onClick={()=>removeToCart(data.productId._id,data.vendorId._id)} className="qty-minus">-</button>
                                                                     <input type="number" readOnly className="qty" value={data.quantity} />
                                                                     <button type="button" onClick={()=>addToCart(data.productId._id,data.vendorId._id)} className="qty-plus">+</button>
                                                                 </div>
+                                                                {data.productId.stock < data.quantity && (
+                                                                    <div className="text-danger text-center">Out of stock</div>
+                                                                )}
                                                             </td>
                                                             <td className="price" > ${data.quantity * data.productId.price} </td>
                                                         </tr> 

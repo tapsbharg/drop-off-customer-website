@@ -5,6 +5,7 @@ import { Tab, Tabs } from "react-bootstrap";
 import DashLayout from "../components/dashLayout";
 import apiFunc from "../services/api";
 import PageModule from "../components/Pagination";
+import Moment from "react-moment";
 
 
 
@@ -81,7 +82,8 @@ export default function MyOrdersPage(props) {
                                                 <ul className="my_order02 d-flex flex-wrap justify-content-between align-items-center py-3 my-3">
                                                     <li> 
                                                         <span> Ordered On </span> 
-                                                        {data.createdAt} 
+                                                        <Moment format="DD MMM YYYY hh:mm:ss A">{data.createdAt}</Moment>
+                                                         
                                                     </li>
                                                     <li>  
                                                         <span> Scheduled For </span>

@@ -28,7 +28,11 @@ class AutoComplete extends Component {
     componentWillUnmount({ mapApi } = this.props) {
         mapApi.event.clearInstanceListeners(this.searchInput);
     }
-
+    componentDidUpdate(prevProps){
+        if (this.props.address !== prevProps.address) {
+            this.showAddress(this.props.address)
+        }
+    }
     onPlaceChanged = ({ map, addplace } = this.props) => {
         const place = this.autoComplete.getPlace();
 
@@ -47,7 +51,9 @@ class AutoComplete extends Component {
     clearSearchBox() {
         this.searchInput.value = '';
     }
-
+    showAddress(address) {
+        this.searchInput.value = address || '';
+    }
     render() {
         return (
             <div>
@@ -57,7 +63,7 @@ class AutoComplete extends Component {
                         this.searchInput = ref;
                     }}
                     type="text" 
-                    onFocus={this.clearSearchBox}
+                    /* onFocus={this.clearSearchBox} */
                     placeholder="Enter a location"
                 />
             </div>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import {reactLocalStorage} from 'reactjs-localstorage';
 
 const baseURL = 'ROOT_URL';
@@ -35,21 +36,26 @@ authAxios.interceptors.request.use((config) => {
     console.log('resErrr',error);
     return Promise.reject(error);
 }); */
-
+const errorshow = (err) =>{
+    console.log(err.response.data.message)
+    toast.error(err.response.data.message)
+    return err.response.data.message
+  }
 authAxios.interceptors.response.use((response) => {
     // document.body.className = document.body.className.replace("loading_page","");
     return response;
 },(error) => {
-    // document.body.className = document.body.className.replace("loading_page","");
-    console.log(error.response.data.message)
-    return Promise.reject(error);
+    // document.body.className = document.body.className.replace("loading_page","");    
+    // return Promise.reject(error);
+    return errorshow(error)
 });
 authAxios.interceptors.response.use(undefined, function axiosRetryInterceptor(err){
     if(err.response.status === 401){
         reactLocalStorage.clear('token');
         window.location='/sign-in'
     }
-    return Promise.reject(err); 
+    // return Promise.reject(err); 
+    return errorshow(err)
 })
 
 export default authAxios;

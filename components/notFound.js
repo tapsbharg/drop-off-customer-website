@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { useRouter } from "next/dist/client/router"
-import { useEffect, useState } from "react"
+// import { useRouter } from "next/dist/client/router"
+// import { useEffect, useState } from "react"
 
 export default function NoFound(props){
-    const [count, setCount]=useState(5);
+    /* const [count, setCount]=useState(5);
     const router = useRouter()
     useEffect(()=>{
         let counter = 5;
@@ -20,7 +20,7 @@ export default function NoFound(props){
        if(props.hideId){
         clearInterval(setIntr);
        }
-    },[props])
+    },[props]) */
     return(
         <>
             <div className="notFoundWrapper">
@@ -35,8 +35,8 @@ export default function NoFound(props){
                         <div className="col-md-6">
                             <div className="nosthingContnet">
                                 <h2>Oops...!</h2>
-                                <h4>Something Went Wrong. <Link href="/">Click Here</Link> to home</h4>
-                                <div className="counterRedict">{count}</div>
+                                <h4>Something Went Wrong. <Link href="/">Click Here...</Link></h4>
+                                {/* <div className="counterRedict">{count}</div> */}
                             </div>
                         </div>
                     </div>

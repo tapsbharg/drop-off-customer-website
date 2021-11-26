@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from 'react-toastify';
 import apiFunc from "../services/api";
+import AddEditAddress from "./addEditAddress";
 
 
 export default function AddressCards(props){
@@ -13,16 +15,23 @@ export default function AddressCards(props){
     }
     useEffect(()=>{
         getAllAddress();
-    },[props])
+    },[])
 
     function addressEdit(id){
         console.log(id, 'edit');
     }
     function addressDefault(id){
-        console.log(id, 'address Default');
+        apiFunc.defaultAddress(id).then((res)=>{
+            toast.success(res.data.message);
+            getAllAddress();
+        }).catch((error)=>{
+            var message = JSON.parse(error.request.response).message;
+            toast.error(message);
+        })
     }
     return(
         <>
+        <ToastContainer />
         <div className="row">
         {addressData && (
             addressData.map((data,index)=>(
@@ -31,8 +40,23 @@ export default function AddressCards(props){
                         <h6>Home</h6>
                         <p> {data.address} </p>
                         <ul className="d-flex flex-wrap justify-content-between align-items-center">
-                            <li><a onClick={()=>addressEdit(data._id)}> Edit </a> </li>
-                            <li><a onClick={()=>addressDefault(data._id)}> Set As Default </a> </li>
+                            <li>
+                                <AddEditAddress 
+                                    type="edit" 
+                                    coordinates={data.location.coordinates} 
+                                    address={data.address} 
+                                    id={data._id}
+                                    action={()=>getAllAddress()}
+                                >Edit</AddEditAddress>
+                                 </li>
+                            <li>
+                                {data.isDefault && (
+                                    <i className="setDefault"> Selected </i> 
+                                )}
+                                {!data.isDefault && (
+                                    <a onClick={()=>addressDefault(data._id)} className="setDefault"> Set As Default </a> 
+                                )}
+                            </li>
                         </ul>
                     </div>
                 </div>

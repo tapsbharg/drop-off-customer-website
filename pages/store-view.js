@@ -144,7 +144,7 @@ function StoreViewPage(props) {
     return (
       <>
       {vendorId =='' || vendorId == undefined ? (
-          null
+          <NoFound />
       ):(
         <div className="liquor_store">
           <div className="container">

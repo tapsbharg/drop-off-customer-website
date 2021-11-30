@@ -20,8 +20,12 @@ export default function CheckoutPage(props) {
     const [cardStatus,setCardStatus]=useState(false);
     const [addressStatus,setAddressStatus]=useState(false);
     const [stocktatus,setStockStatus]=useState(false);
+    const [idcardCheck,setIdcardCheck]=useState(false);
+    const [prescripCheck,setPrescripCheck]=useState(false);
     const [defaultLatlong,setDefaultLetLong]=useState([]);
     const [totalMiles,setTotalMiles]=useState(null);
+
+
     // const [totalAmt,setTotalAmt]=useState(0); 
     const [orderTotal,setOrderTotal]=useState({
         subTotal :0.00,
@@ -69,31 +73,48 @@ export default function CheckoutPage(props) {
             console.log(error);
         })
     }
-    
+
     useEffect(()=>{
         cardListingFunc();
     },[])
 
+    function prescpAndidcard(){
+        if(props.cartData){
+            props.cartData.cart.map((data, index)=>{
+                let idStatus = data.productId.isIdRequired;
+                let PresStatus = data.productId.isIdRequired;
+                idStatus ? setIdcardCheck(idStatus):false;
+                PresStatus ? setPrescripCheck(PresStatus):false;
+            })
+        }
+    }
+    useEffect(()=>{
+        prescpAndidcard();
+    },[props.cartData])
+
     function stockchecker(){
-        apiFunc.inStock().then((res)=>{
+        return apiFunc.inStock().then((res)=>{
             let qtycheck=res.data.data.NotInStockProducts.length >= 1?false:true
             setStockStatus(qtycheck);
+            return qtycheck;
         }).catch((error)=>{
             console.log(error);
         })
     }
     async function placeOrder(){
-        await stockchecker();
+        let stock = await stockchecker();
+        // let array = [addressStatus, cardStatus, stock, idcardCheck, prescripCheck];
+        
         if(addressStatus == true){
             if(cardStatus == true){
-                if(stocktatus == true){
+                if(stock == true){
                     apiFunc.placeOrder(orderTotal).then((res)=>{
                         setOrderData(res.data)
                         props.getCart();
                         orderMsgModalFunc(true)
                         // toast.success(res);
                     }).catch((error)=>{
-                        console.log(error);
+                        console.log(error.response);
                     })
                 }else{
                     toast.error("out of stock");

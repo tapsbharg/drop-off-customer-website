@@ -3,6 +3,7 @@ import authAxios from "../services/authAxios";
 import UnauthAxios from "../services/unauthAxios";
 import ROOT_URL from "./api-url";
 import letlong from "./letlong";
+import { toast } from "react-toastify";
 /* if(window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1'){
     console.log(1);
     ROOT_URL ='http://staging.alphonic.net.in:6002/api/v1/v'
@@ -11,7 +12,11 @@ import letlong from "./letlong";
     // ROOT_URL ='https://jsonplaceholder.typicode.com'
     console.log(2);
 } */
-
+const errorshow = (err) =>{
+    console.log(err.response.data.message)
+    toast.error(err.response.data.message)
+  // return err.response.data.message
+}
 const apiFunc = {
   refreshToken: () =>
     authAxios({
@@ -25,6 +30,7 @@ const apiFunc = {
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/users/profile`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),
@@ -33,6 +39,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/users/change_password`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -41,6 +48,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/upload`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -49,6 +57,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/users/profileImage`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -57,6 +66,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/users/profileUpdate`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -72,6 +82,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/searchProducts?lat=${letlong.let}&lng=${letlong.lng}`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -94,6 +105,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/user/addToCart/${prodId}`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -102,6 +114,7 @@ const apiFunc = {
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/user/cartlist`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),
@@ -109,6 +122,7 @@ const apiFunc = {
     authAxios({
       method: "DELETE",
       url: `${ROOT_URL}/user/deleteCart/${id}`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),
@@ -116,6 +130,7 @@ const apiFunc = {
     authAxios({
       method: "DELETE",
       url: `${ROOT_URL}/user/deleteWholeCart`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),
@@ -123,6 +138,7 @@ const apiFunc = {
     authAxios({
       method: "DELETE",
       url: `${ROOT_URL}/guest/clearCart/${id}`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),
@@ -137,6 +153,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/guest/addToCart/${prodId}`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -145,6 +162,7 @@ const apiFunc = {
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/guest/cartlist/${id}`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),
@@ -152,6 +170,7 @@ const apiFunc = {
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/user/mergeCart/${id}`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),
@@ -159,6 +178,7 @@ const apiFunc = {
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/viewAllCards`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),
@@ -166,6 +186,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/addNewCard`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -174,6 +195,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/setDefaultCard/${id}`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),
@@ -181,6 +203,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/deleteCard/${id}`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),
@@ -188,14 +211,16 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/charge`,
+      loader:true,
       data: data,
     }).catch((err) => {
-      console.log(err);
+      errorshow(err)
     }),
     getOrdersAll: (data) =>
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/order/products`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -204,6 +229,7 @@ const apiFunc = {
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/order/product/${id}`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),
@@ -211,6 +237,7 @@ const apiFunc = {
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/faqs`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),
@@ -239,6 +266,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/helpdesk/insert`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -247,6 +275,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/helpdesk/active/pagin`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -260,17 +289,20 @@ const apiFunc = {
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/getReplytoTicket/${id}`,
+      loader:true,
     }),
     helpChatReply: (data) =>
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/replytoTicket`,
+      loader:true,
       data: data,
     }),
     getHelpdeskClose: (data) =>
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/helpdesk/closed/pagin`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -279,6 +311,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/users/address`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -287,6 +320,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/users/addressUpdate/${id}`,
+      loader:true,
       data: data,
     }).catch((err) => {
       console.log(err);
@@ -295,6 +329,7 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/users/setDefault/${id}`,
+      loader:true,
     }).catch((err) => {
       console.log(err);
     }),

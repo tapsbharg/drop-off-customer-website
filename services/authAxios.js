@@ -1,11 +1,20 @@
 import axios from "axios";
-import { toast } from "react-toastify";
+
 import {reactLocalStorage} from 'reactjs-localstorage';
+
+
+const bodyAnimation = (type, loader)=>{
+    if(type == 'add' && loader){
+        document.body.className = 'loading_page';
+    }else if(type == 'remove' && loader){
+        document.body.className = document.body.className.replace("loading_page","");
+    }
+}
 
 const baseURL = 'ROOT_URL';
 const authAxios = axios.create();
 authAxios.interceptors.request.use((config) => {  
-    // config.loader == false ? null : document.body.className = 'loading_page';
+    bodyAnimation('add', config.loader);
     let token = reactLocalStorage.get('token');
     let headers = {
         'baseURL':baseURL,
@@ -37,25 +46,25 @@ authAxios.interceptors.request.use((config) => {
     return Promise.reject(error);
 }); */
 const errorshow = (err) =>{
-    console.log(err.response.data.message)
-    toast.error(err.response.data.message)
-    return err.response.data.message
-  }
-authAxios.interceptors.response.use((response) => {
-    // document.body.className = document.body.className.replace("loading_page","");
-    return response;
-},(error) => {
-    // document.body.className = document.body.className.replace("loading_page","");    
-    // return Promise.reject(error);
-    return errorshow(error)
-});
-authAxios.interceptors.response.use(undefined, function axiosRetryInterceptor(err){
     if(err.response.status === 401){
         reactLocalStorage.clear('token');
         window.location='/sign-in'
     }
-    // return Promise.reject(err); 
-    return errorshow(err)
+    // return err.response.data.message
+  }
+authAxios.interceptors.response.use((response) => {
+    bodyAnimation('remove', response.config.loader)
+    return response;
+},(error) => {
+    // document.body.className = document.body.className.replace("loading_page","");  
+    bodyAnimation('remove', error.response.config.loader)  
+    errorshow(error)
+    return Promise.reject(error);
+});
+authAxios.interceptors.response.use(undefined, function axiosRetryInterceptor(err){
+    bodyAnimation('remove', err.response.config.loader)
+    errorshow(err)
+    return Promise.reject(err); 
 })
 
 export default authAxios;

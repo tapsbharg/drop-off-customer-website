@@ -666,5 +666,48 @@ form input, form input.form-control[type="file"]{
     max-width: 300px ; 
     margin-bottom: 20px ;
 }
+.stockOut {
+    opacity: 0.5;
+}
+.chatMainbody {
+    max-height: 300px;
+    overflow: auto;
+    padding: 25px;
+}
 
+.chat_message.receiverChat {
+    justify-content: flex-end;
+}
 
+.chat_message.receiverChat span.time-right {
+    width: 100%;
+    text-align: right;
+    display: block;
+}
+
+.chat_message_outer .chat_message.receiverChat  .chat_message_contant {
+    padding-left: 0;
+    padding-right: 25px;
+}
+.chatsubmitblwpr {
+    display: flex;
+    display: -webkit-flex;
+}
+
+.chatSubmit {
+    width: 150px;
+}
+
+.chatSubmit button {
+    width: 100%;
+    border-radius: 0 5px 5px 0;
+    padding: 12px 0;
+}
+
+.chatInput {
+    width: calc(100% - 150px);
+}
+
+.chatInput input {
+    border-radius: 5px 0 0 5px;
+}

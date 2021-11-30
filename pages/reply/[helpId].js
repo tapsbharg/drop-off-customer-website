@@ -80,7 +80,7 @@ export default function HelpReplyPage(props) {
       <DashLayout props={props}>
       <div className="description_right">
         <div className="chat_message_outer p-3">
-            <h5> Ticket Number #1215461   </h5>
+            <h5> Ticket Number #{orderData.ticketNumber}   </h5>
             
             <div className="chat_order_detail bg-light p-3 mb-3">
                 <ul>

@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { confirmAlert } from "react-confirm-alert";
 import DashLayout from "../components/dashLayout";
@@ -7,91 +7,136 @@ import apiFunc from "../services/api";
 import * as Yup from "yup";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import common from '../services/common'
+import { toast } from "react-toastify";
 
 
 
 export default function IdCardPage(props) {
     const [withdrawalModal,setWithdrawalModal]=useState(false);
+    const [image,setImage]=useState({});
+    const [profileData, SetProfileData]=useState({});
+
+
     const addCardModal = (type) =>{
         setWithdrawalModal(type)
     }
 
-
+    function getProfileData(){
+        apiFunc.getProfileData().then((res) => {
+            SetProfileData(res.data.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+    useEffect(()=>{
+        getProfileData()
+        
+    },[])
     const initialValues = {
-        photoId: "",
+        photoId: '',
+        photoId2:'',
     };
-     const validationSchema = Yup.object({
-        photoId:Yup
-        .mixed()
-        .required("You need to attach image")
+    const validationSchema = Yup.object({
+        photoId:Yup.mixed().required("You need to attach image")
+        .test("type", "Only the following formats are accepted: .jpeg, .jpg, .bmp, .png", (value) => {
+            return common.mineTypeValidate(value);
+        })
         .test("fileSize", "The image is too large", (value) => {
-            if(value == undefined || value == null){
-                return false;
-            }
-            console.log(common.readFile())
-            return value &&  readFile() <= 2000000;
-        }).test("type", "Only the following formats are accepted: .jpeg, .jpg, .bmp, .png", (value) => {
-            if(value == undefined || value == null){
-                return false;
-            }
-            let fileType=value.type;
-            return value && (
-                fileType === "image/jpeg" ||
-                fileType === "image/bmp" ||
-                fileType === "image/png"/* ||
-                fileType === 'application/pdf' ||
-                fileType === "application/msword" */
-            );
+            //fileSizeValidate(value,mb)
+            return common.fileSizeValidate(value,2);
+        }),
+        photoId2:Yup.mixed().required("You need to attach image")
+        .test("type", "Only the following formats are accepted: .jpeg, .jpg, .bmp, .png", (value) => {
+            return common.mineTypeValidate(value);
+        })
+        .test("fileSize2", "The image is too large", (value) => {
+            //fileSizeValidate(value,mb)
+            return common.fileSizeValidate(value,2);
         })
     });
     const formik = useFormik({
         initialValues,
         validationSchema,
-        onSubmit: (values) => {
-          console.log("submit", values);
+        onSubmit: async(values) => {
+            common.loader(true);
+            let photoIdRes1 = await uploadFile('photoId', values.photoId);
+            let photoIdRes2 = await uploadFile('photoId2', values.photoId2);
+            
+            if(parseInt(photoIdRes1.status) == 200 && parseInt(photoIdRes2.status) == 200){
+                setWithdrawalModal(false);
+                formik.resetForm();
+                setImage({})
+
+            }else{
+                toast.error('Please upload again, something wrong')
+            }
+            getProfileData();
+            common.loader(false);
+            console.log("submit", values);
         },
     });
-    function updateProfile(postData){
-        apiFunc.postProfileUpdate(postData).then(res => {
-            toast.success(res.data.message)
+    function uploadFile(name,file){
+        const formData = new FormData();
+        formData.append("coverImage", file);
+        return apiFunc.postUpload(formData).then(response => {
+            const resData={
+                [name]:response.data.data._id
+            }
+            return apiFunc.updateUserDoc(name,resData).then(res => {
+                return res
+            }).catch((error) => {
+                console.log(error)
+            });
         }).catch((error) => {
-            toast.success(error)
             console.log(error)
         });
     }
 
 
+    
 
-    const handleChange = (name, value)=>{
-        
+    const handleChange = (name, e) => {
+        formik.setFieldTouched(name, true);
+        var getfile=e.target.files[0] || '';
+        setImage({
+            ...image,
+            [name]:common.previewURL(getfile)
+        })            
+        formik.setFieldValue(name, getfile);
     };
-
-
-
 
     return (
       <>
       <DashLayout props={props}>
-      <div className="description_right">
+        <div className="description_right">
                         <div className="id-outer"> 
-                            <ul className="d-flex flex-wrap justify-content-between align-items-center">
-                            <li><a href="#"> ID </a></li>
-                            <li><a className="btn custom01" onClick={()=>addCardModal(true)}> Add New </a></li>
+                            <ul className="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                                <li><a href="#"> ID </a></li>
+                                <li><a className="btn custom01" onClick={()=>addCardModal(true)}> Add New </a></li>
                             </ul>
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <div className="id_photo">
-                                        <img src="assets/images/id.png" alt=""/>
-                                        <a href="#"> Delete</a>
+                            
+                            {profileData && (
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <div className="id_photo">
+                                            {profileData.photoId && (
+                                                <img src={profileData.photoId.path} alt=""/>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <div className="id_photo">
+                                            {profileData.photoId2 && (
+                                                <img src={profileData.photoId2.path} alt=""/>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="col-sm-6">
-                                    <div className="id_photo">
-                                        <img src="assets/images/id.png" alt=""/>
-                                        <a href="#"> Delete</a>
-                                    </div>
-                                </div>
-                            </div>
+                            )}
+                                
+                                
+                            
                         </div>
                     </div>
                     <Modal
@@ -111,8 +156,16 @@ export default function IdCardPage(props) {
                             <form onSubmit={formik.handleSubmit}>
                                 <div className="mb-3">
                                     <div className="idrsibackWrp">
-                                        <input type="file" {...formik.getFieldProps("photoId")} onChange={(e)=>handleChange('photoId',e.target.value)} className="form-control"/>
-                                        <div className="idTextfild">Front Side</div>
+                                        <input type="file" name="photoId" onChange={(e)=>{ handleChange('photoId',e)}} className="form-control"/>
+                                        {
+                                            image.photoId ? (
+                                                <div className="imgPreview">
+                                                    <img src={image.photoId} className="img-fluid"/>
+                                                </div>
+                                            ) : (
+                                                <div className="idTextfild">Front Side</div>
+                                            )
+                                        }
                                     </div>
                                     {formik.touched.photoId && formik.errors.photoId ? (
                                         <div className="errorMsg">{formik.errors.photoId}</div>
@@ -120,8 +173,16 @@ export default function IdCardPage(props) {
                                 </div>
                                 <div className="mb-3">
                                     <div className="idrsibackWrp">
-                                        <input type="file" {...formik.getFieldProps("photoId2")} className="form-control"/>
-                                        <div className="idTextfild">Back Side</div>
+                                        <input type="file" name="photoId2" onChange={(e)=>{ handleChange('photoId2',e)}} className="form-control"/>
+                                        {
+                                            image.photoId2 ? (
+                                                <div className="imgPreview">
+                                                    <img src={image.photoId2} className="img-fluid"/>
+                                                </div>
+                                            ) : (
+                                                <div className="idTextfild">Back Side</div>
+                                            )
+                                        }
                                     </div>
                                     {formik.touched.photoId2 && formik.errors.photoId2 ? (
                                         <div className="errorMsg">{formik.errors.photoId2}</div>

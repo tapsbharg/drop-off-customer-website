@@ -13,8 +13,12 @@ import { toast } from "react-toastify";
     console.log(2);
 } */
 const errorshow = (err) =>{
+  let errHndle = err.response != undefined ? true : false
+  if(errHndle){
+    console.log(err.response)
     console.log(err.response.data.message)
     toast.error(err.response.data.message)
+  }    
   // return err.response.data.message
 }
 const apiFunc = {
@@ -362,6 +366,20 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    updateUserDoc: (name,data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/users/update/${name}`,
+      data: data,
+    }).catch((err) => {
+      console.log(err);
+    }),
+    couponIsvalid: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/coupon/isValid`,
+      data: data,
+    })
 };
 
 export default apiFunc;

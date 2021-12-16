@@ -46,8 +46,9 @@ authAxios.interceptors.request.use((config) => {
     return Promise.reject(error);
 }); */
 const errorshow = (err) =>{
-    if(err.response.status === 401){
-        reactLocalStorage.clear('token');
+    let errHndle = err.response != undefined ? true : false
+    if(err.response.status === 401 && errHndle == true){
+        reactLocalStorage.clear();
         window.location='/sign-in'
     }
     // return err.response.data.message
@@ -57,13 +58,15 @@ authAxios.interceptors.response.use((response) => {
     return response;
 },(error) => {
     // document.body.className = document.body.className.replace("loading_page","");  
-    bodyAnimation('remove', error.response.config.loader)  
+    var errorType = error.response != undefined ? error.response.config.loader : true
+    bodyAnimation('remove', errorType);
     errorshow(error)
     return Promise.reject(error);
 });
 authAxios.interceptors.response.use(undefined, function axiosRetryInterceptor(err){
-    bodyAnimation('remove', err.response.config.loader)
-    errorshow(err)
+    var errorType = err.response != undefined ? err.response.config.loader : true
+    bodyAnimation('remove', errorType)
+    errorshow(err);
     return Promise.reject(err); 
 })
 

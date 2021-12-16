@@ -58,7 +58,15 @@ export default function AddressComp(props){
                             <h6> <b>Home</b></h6>
                             <span>{data.address}</span>
                             <ul className="d-flex flex-wrap justify-content-between align-items-center">
-                                <li><a onClick={()=>addressEdit(data._id)} className="setEdit"> Edit </a> </li>
+                                <li>
+                                        <AddEditAddress 
+                                            type="edit" 
+                                            coordinates={data.location.coordinates} 
+                                            address={data.address} 
+                                            id={data._id}
+                                            action={()=>getAllAddress()}
+                                        >Edit</AddEditAddress>
+                                </li>
                                 <li>
                                     {data.isDefault && (
                                         <i className="setDefault"> Selected </i> 

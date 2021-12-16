@@ -25,7 +25,7 @@ function App({ Component, pageProps }) {
   let history=useRouter();
   useEffect(() => {
     AOS.init();
-  }, []);
+  }, []);  
   const [isAuth, authDone] = useState(null);
   const [cartData, setCartData] = useState(null);
   const [guestid, setGuestid] = useState(null);
@@ -69,9 +69,10 @@ function App({ Component, pageProps }) {
   const logOut = () => {
     reactLocalStorage.clear();
     authDone(false);
-    history.push({
+    window.location='/sign-in'
+    /* history.push({
       pathname: '/sign-in',
-  }) 
+    }) */ 
   };
   const setLogin = () => {
     authDone(true);

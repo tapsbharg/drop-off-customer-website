@@ -229,7 +229,7 @@ form  .user_image input {
     transition: all 0.3s ease-in-out;
 }
 .loading_page .loaderWRapper {
-    z-index: 999;
+    z-index: 9999999;
     opacity: 1;
     transition: all 0.3s ease-in-out;
 }
@@ -504,9 +504,7 @@ footer.footer_outer {
     font-size: 16px;
     margin: 0;
 }
-.id_photo {
-    margin-bottom: 25px;
-}
+
 form input, form input.form-control[type="file"]{
     padding: 17px 20px;
 }
@@ -744,13 +742,82 @@ form input, form input.form-control[type="file"]{
     font-weight: 600;
     color: #b9b9b9;
 }
+.imgPreview {
+    height: 100%;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.imgPreview img {
+    max-height: 100%;
+}
 
+.codeVeryfy {
+    font-size: 13px;
+    background: #d20400;
+    color: #fff;
+    border: 0;
+    box-shadow: 0 0 0;
+    width: 100px;
+}
 
+.couponWrapper {
+    position: relative;
+}
+.couponWrapper input {
+    border-radius: 0;
+    border: 0;
+}
+form .coupActive input.form-control {
+    background: #f8fff9;
+    border: 1px solid #90f3a0;
+    border-radius: 0;
+}
+form .coupActive input.form-control {
+    background: #f8fff9;
+    border: 1px solid #90f3a0;
+    border-radius: 0;
+}
 
+.coupinpyt {
+    width: 100%;
+    position: relative;
+}
 
+.coupinpyt a {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translate(0%,-50%);
+}
+.aply_cpuoWrp {
+    display: flex;
+    display: -webkit-flex;
+    width: 100%;
+    position: relative;
+    background: #f1fff1;
+    border: 1px dashed #8bc34a;
+    padding: 5px 0;
+    align-items: center;
+}
 
+.coupicon {
+    width: 50px;
+    text-align: center;
+}
 
+.coupi_remove {
+    width: 50px;
+    text-align: center;
+}
+
+.coupicodebox {
+    width: calc(100% - 100px);
+    padding: 9px 15px;
+    font-weight: bold;
+}
 
 
 

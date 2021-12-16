@@ -22,7 +22,7 @@ useEffect(() => {
   } */
   const intrVal = setInterval(() => {
     refreshtoken()
-  }, 2000);
+  }, 10000);
   if(!token){
     console.log(token)
     clearInterval(intrVal);

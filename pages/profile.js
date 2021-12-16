@@ -135,7 +135,7 @@ export default function ProfilePage(props) {
                 profileImage:response.data.data._id
             }
             apiFunc.postProfileImage(resData).then(res => {
-                formik.setFieldValue('photoId',res.data.data.photoId)
+                formik.setFieldValue('image',res.data.data.photoId)
                 getProfileData();
                 toast.success(res.data.message)
     

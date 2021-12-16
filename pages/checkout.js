@@ -8,8 +8,13 @@ import { toast, ToastContainer } from "react-toastify";
 // import {loadStripe} from '@stripe/stripe-js';
 import SplitForm from "../components/cardsComp";
 import AddressComp from "../components/addressComp";
+import CouponComp from "../components/coupon";
 import EmptyCart from "../components/emptyCart";
 import cartService from "../services/cartSrvice";
+import common from "../services/common";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 // const stripePromise = loadStripe("pk_test_6pRNASCoBOKtIshFeQd4XMUh");
 
 export default function CheckoutPage(props) {
@@ -24,8 +29,10 @@ export default function CheckoutPage(props) {
     const [prescripCheck,setPrescripCheck]=useState(false);
     const [defaultLatlong,setDefaultLetLong]=useState([]);
     const [totalMiles,setTotalMiles]=useState(null);
-
-
+    const [profileData, SetProfileData]=useState({});
+    const [prescrpImage, setPrescrpImage]=useState(null);
+    const [orderDate, setOrderDate]=useState();
+    const [couponData, setCouponData]=useState(null);
     // const [totalAmt,setTotalAmt]=useState(0); 
     const [orderTotal,setOrderTotal]=useState({
         subTotal :0.00,
@@ -39,9 +46,20 @@ export default function CheckoutPage(props) {
         deliveryPerMileCharge:0.00,
         deliveryDistanceInMiles:0,
         coupon:{},
+        scheduleDate:null
     });
     const [orderData,setOrderData]=useState(null);
 
+
+    
+    function getProfileData(){
+        apiFunc.getProfileData().then((res) => {
+            SetProfileData(res.data.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
     const addCardModal = (type) =>{
         setWithdrawalModal(type)
     }
@@ -51,7 +69,6 @@ export default function CheckoutPage(props) {
     const orderMsgModalFunc = (type) =>{
         setOrderMsgModal(type)
     }
-    
     const cardStatusFuc = (e) =>{
         setCardStatus(e)
     }
@@ -92,6 +109,28 @@ export default function CheckoutPage(props) {
         prescpAndidcard();
     },[props.cartData])
 
+    useEffect(()=>{
+        idcardCheck?getProfileData():null
+    },[idcardCheck])
+ /*    const checkProductRequire = () => {
+        let requiredPrp = props.cartData.cart.map((data,index)=>{
+            // console.log(data.productId.isIdRequired)
+            // console.log(data.productId.isPrescriptionRequired)
+            if(data.productId.isIdRequired){
+
+            }
+            return true
+        })
+        console.log(requiredPrp)
+    }
+    useEffect(()=>{   
+        if(props.cartData){
+            checkProductRequire();
+        }   
+        
+    },[props.cartData])
+ */
+
     function stockchecker(){
         return apiFunc.inStock().then((res)=>{
             let qtycheck=res.data.data.NotInStockProducts.length >= 1?false:true
@@ -105,9 +144,11 @@ export default function CheckoutPage(props) {
         let stock = await stockchecker();
         // let array = [addressStatus, cardStatus, stock, idcardCheck, prescripCheck];
         
-        if(addressStatus == true){
-            if(cardStatus == true){
-                if(stock == true){
+        if(addressStatus){
+            if(cardStatus){
+                if(stock){
+                    console.log(orderTotal)
+                    let orderPostData=orderTotal
                     apiFunc.placeOrder(orderTotal).then((res)=>{
                         setOrderData(res.data)
                         props.getCart();
@@ -193,7 +234,9 @@ export default function CheckoutPage(props) {
         let subTotal  = parseFloat(total.toFixed(2));
         let serviceAmt = parseFloat(((total * chargess.serviceFeePercent) / 100).toFixed(2));
         let deliverAmt = parseFloat(((chargess.deliveryPerMileCharge * totalMiles) + chargess.deliveryBasePrice).toFixed(2));
-        let grandTotal = parseFloat((parseFloat(total) + parseFloat(serviceAmt) + parseFloat(deliverAmt)).toFixed(2));
+        let referralDeduction = parseFloat(orderTotal.referralDeduction).toFixed(2);
+        let couponDeduction = parseFloat(orderTotal.couponDeduction).toFixed(2);
+        let grandTotal = parseFloat((parseFloat(total) + parseFloat(serviceAmt) + parseFloat(deliverAmt)).toFixed(2)) - parseFloat(couponDeduction + referralDeduction);
         await setOrderTotal({
             ...orderTotal,
             subTotal :subTotal ,
@@ -208,7 +251,7 @@ export default function CheckoutPage(props) {
 
     useEffect(()=>{
         orderCharges(props.cartData)
-    },[props.cartData, defaultLatlong, totalMiles])
+    },[props.cartData, defaultLatlong, totalMiles, couponData])
 
     useEffect(()=>{
         getDistance(props.cartData)
@@ -225,6 +268,13 @@ export default function CheckoutPage(props) {
         console.log(totalMiles)
     },[props.cartData,totalMiles]) */
    /*card list*/
+
+    const prescHandleChange = (e)=>{
+        var file = e.target.files[0]
+        setPrescrpImage(file);
+    }
+
+   
     return (
       <>
       <ToastContainer />
@@ -259,7 +309,7 @@ export default function CheckoutPage(props) {
                                                     props.cartData.cart.map((data, index)=>(
                                                         data.productId && (
                                                             <tr key={index}>
-                                                            <td className="on-off"> 
+                                                            <td className="on-off">
                                                                 <div className={`vegtype ${data.productId.isNonVeg?'non-veg':'veg'}`}></div>
                                                             </td>
                                                             <td className="content">{data.productId.name}</td>
@@ -283,27 +333,88 @@ export default function CheckoutPage(props) {
                                         </table>
                                     </div>
                                     
-                                    <div className="summer_box01 bg-light02 rounded-3 p-3 mb-3">
-                                        <ul className="d-flex justify-content-between">
-                                            <li> Select Coupon Code </li>
-                                            <li> <a  onClick={()=>{couponModalFunc(true)}}> View Coupons </a> </li>
-                                        </ul>
-                                    </div>
-                                    <div className="summer_box02 bg-light02 rounded-3 p-3 mb-3">
-                                        <ul className="d-flex justify-content-between">
-                                            <li> Upload Your ID Card </li>
-                                            <li> <a href="#"> Upload </a> </li>
-                                        </ul>
-                                        <hr/>
-                                        <ul className="d-flex justify-content-between">
-                                            <li> Upload Your Prescriptions </li>
-                                            <li> <a href="#"> Upload </a> </li>
-                                        </ul>
-                                    </div>
+                                    <CouponComp total={orderTotal.subTotal} setDataCoupon={(e)=>{
+                                        setOrderTotal({
+                                            ...orderTotal,
+                                            coupon:e.couponObj,
+                                            couponDeduction:e.couponDiscount
+                                        });
+                                        setCouponData(e);
+                                    }}/>
+                                    {
+                                        (idcardCheck || prescripCheck)?(
+                                            <div className="summer_box02 bg-light02 rounded-3 p-3 mb-3">
+                                                {idcardCheck && (
+                                                    <>
+                                                        {profileData.photoId ? (
+                                                            <div className="row">
+                                                                <div className="col-sm-6">
+                                                                    <div className="id_photo">
+                                                                        {profileData.photoId && (
+                                                                            <img src={profileData.photoId.path} alt=""/>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6">
+                                                                    <div className="id_photo">
+                                                                        {profileData.photoId2 && (
+                                                                            <img src={profileData.photoId2.path} alt=""/>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ):(
+                                                            <ul className="d-flex justify-content-between">
+                                                                <li> Upload Your ID Card </li>
+                                                                <li> <Link href="/id-card">Upload</Link></li>
+                                                            </ul>
+                                                        )}
+                                                        <hr/>
+                                                    </>
+                                                    
+                                                )}
+                                                
+                                                {prescripCheck && (
+                                                    <>
+                                                        {
+                                                            prescrpImage && (
+                                                                <div>
+                                                                    <img src={common.previewURL(prescrpImage)} className="img-fluid" />
+                                                                    <hr/>
+                                                                </div>
+                                                            )
+                                                        }
+                                                        <ul className="d-flex justify-content-between">
+                                                            <li> Upload Your Prescriptions </li>
+                                                            <li> <input type="file" className="upload" onChange={(e)=>prescHandleChange(e)}></input> </li>
+                                                        </ul>
+                                                    </>
+                                                )}
+                                                
+                                                
+                                            </div>
+                                        ):null
+                                    }
+                                    
                                     <div className="summer_box03 bg-light02 rounded-3 p-3 mb-3">
+                                    
                                         <ul className="d-flex justify-content-between">
                                             <li> Schedule Order </li>
-                                            <li> <a href="#"> Select Date & Time </a> </li>
+                                            <li> 
+                                                <DatePicker 
+                                                dateFormat="dd-MMM-yyyy"
+                                                placeholder="Select Date & Time"
+                                                selected={orderDate} 
+                                                minDate={new Date().setDate(new Date().getDate() + 1)}
+                                                maxDate={new Date().setDate(new Date().getDate() + 3)}
+                                                onChange={date => {
+                                                    setOrderDate(date);
+                                                    setOrderTotal({
+                                                        ...orderTotal,
+                                                        scheduleDate:date
+                                                    })
+                                                }} className="form-control" />
+                                            </li>
                                         </ul>
                                     </div>
 

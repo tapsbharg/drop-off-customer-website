@@ -38,9 +38,8 @@ export default function CheckoutPage(props) {
         subTotal :0.00,
         referralDeduction:0.00,
         couponDeduction:0.00,
-        serviceAmt:0.00,
-        deliverAmt:0.00,
-        grandTotal:0.00,
+        serviceFee:0.00,
+        deliveryAmount:0.00,
         serviceFeePercent:0.00,
         deliveryBasePrice:0.00,
         deliveryPerMileCharge:0.00,
@@ -148,7 +147,6 @@ export default function CheckoutPage(props) {
             if(cardStatus){
                 if(stock){
                     console.log(orderTotal)
-                    let orderPostData=orderTotal
                     apiFunc.placeOrder(orderTotal).then((res)=>{
                         setOrderData(res.data)
                         props.getCart();
@@ -176,20 +174,18 @@ export default function CheckoutPage(props) {
     }
     async function orderCharges(data){
         let ordResData=orderTotal;
-        if(totalMiles != null){
-            ordResData = await apiFunc.orderCharges().then((res)=>{
-                let orderChrg={
-                    ...orderTotal,
-                    deliveryPerMileCharge:res.data.data.per_mile_charge,
-                    deliveryBasePrice:res.data.data.driver_base_charge,
-                    serviceFeePercent:res.data.data.service_charge_percentage,
-                }
-                setOrderTotal(orderChrg);
-                return orderChrg ;
-            }).catch((error)=>{
-                console.log(error);
-            })
-        }
+        ordResData = await apiFunc.orderCharges().then((res)=>{
+            let orderChrg={
+                ...orderTotal,
+                deliveryPerMileCharge:res.data.data.per_mile_charge,
+                deliveryBasePrice:res.data.data.driver_base_charge,
+                serviceFeePercent:res.data.data.service_charge_percentage,
+            }
+            setOrderTotal(orderChrg);
+            return orderChrg ;
+        }).catch((error)=>{
+            console.log(error);
+        })
         await cartTotalAmout(data,ordResData);
     }
     
@@ -231,18 +227,27 @@ export default function CheckoutPage(props) {
                 }
             }
         }
-        let subTotal  = parseFloat(total.toFixed(2));
-        let serviceAmt = parseFloat(((total * chargess.serviceFeePercent) / 100).toFixed(2));
-        let deliverAmt = parseFloat(((chargess.deliveryPerMileCharge * totalMiles) + chargess.deliveryBasePrice).toFixed(2));
-        let referralDeduction = parseFloat(orderTotal.referralDeduction).toFixed(2);
-        let couponDeduction = parseFloat(orderTotal.couponDeduction).toFixed(2);
-        let grandTotal = parseFloat((parseFloat(total) + parseFloat(serviceAmt) + parseFloat(deliverAmt)).toFixed(2)) - parseFloat(couponDeduction + referralDeduction);
+        let subTotal  = parseFloat(total);
+        let serviceFee = parseFloat(((total * chargess.serviceFeePercent) / 100));
+        let deliveryAmount = parseFloat(((chargess.deliveryPerMileCharge * totalMiles) + chargess.deliveryBasePrice));
+        let referralDeduction = parseFloat(orderTotal.referralDeduction);
+        let couponObj = {
+            ...orderTotal.coupon,
+            price:subTotal
+        }
+        let couponDeduction = common.coupanTypeDiscount(couponObj) || 0;
+        let deliveryBasePrice = chargess.deliveryBasePrice || 0;
+        let grandTotal = (parseFloat((parseFloat(total) + parseFloat(serviceFee) + parseFloat(deliveryAmount))) - parseFloat(couponDeduction + referralDeduction));
+        
         await setOrderTotal({
             ...orderTotal,
-            subTotal :subTotal ,
-            serviceAmt:serviceAmt,
-            deliverAmt:deliverAmt,
-            grandTotal:grandTotal,
+            subTotal :subTotal.toFixed(2) ,
+            serviceFee:serviceFee.toFixed(2),
+            deliveryAmount:deliveryAmount.toFixed(2),
+            couponDeduction:couponDeduction.toFixed(2),
+            referralDeduction:referralDeduction.toFixed(2),
+            deliveryBasePrice:deliveryBasePrice.toFixed(2),
+            grandTotal:grandTotal.toFixed(2),
         });
     }
     
@@ -316,7 +321,7 @@ export default function CheckoutPage(props) {
                                                             <td className={`${data.productId.stock < data.quantity?'stockOut':'stockIn'}`}>  
                                                                 <div className={`quntityPls show`}>
                                                                     <button type="button" onClick={()=>removeToCart(data.productId._id,data.vendorId._id)} className="qty-minus">-</button>
-                                                                    <input type="number" readOnly className="qty" value={data.quantity} />
+                                                                    <input type="text" readOnly className="qty" value={data.quantity} />
                                                                     <button type="button" onClick={()=>addToCart(data.productId._id,data.vendorId._id)} className="qty-plus">+</button>
                                                                 </div>
                                                                 {data.productId.stock < data.quantity && (
@@ -336,8 +341,7 @@ export default function CheckoutPage(props) {
                                     <CouponComp total={orderTotal.subTotal} setDataCoupon={(e)=>{
                                         setOrderTotal({
                                             ...orderTotal,
-                                            coupon:e.couponObj,
-                                            couponDeduction:e.couponDiscount
+                                            coupon:e.couponObj
                                         });
                                         setCouponData(e);
                                     }}/>
@@ -432,11 +436,11 @@ export default function CheckoutPage(props) {
                                                 </tr>
                                                 <tr>
                                                     <td>Service Fee </td>
-                                                    <td>${orderTotal.serviceAmt}</td>
+                                                    <td>${orderTotal.serviceFee}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Delivery Charge </td>
-                                                    <td>${orderTotal.deliverAmt}</td>
+                                                    <td>${orderTotal.deliveryAmount}</td>
                                                 </tr>
                                                 <tr>
                                                     <td> Referral </td>

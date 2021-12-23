@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { toast, ToastContainer } from 'react-toastify';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import common from "../services/common";
 
 export default function ProfilePage(props) {
     const [profileData, SetProfileData]=useState({});
@@ -18,7 +19,7 @@ export default function ProfilePage(props) {
             if(res.data.data){
                 formik.setFieldValue('name',res.data.data.name);
                 formik.setFieldValue('email',res.data.data.email);
-                formik.setFieldValue('code',res.data.data.code);
+                // formik.setFieldValue('code',res.data.data.code);
                 formik.setFieldValue('phone',res.data.data.phone);
             }
         })
@@ -35,18 +36,26 @@ export default function ProfilePage(props) {
     const initialValues = {
         name: "",
         email: "",
-        code: "",
+        // code: "",
         phone: "",
-        photoId: "",
+        // photoId: "",
       };
       const validationSchema = Yup.object({
         name: Yup.string().required("Please enter name"),
         email:Yup.string()
             .email('Please enter valid email')
             .required('Please enter email'),
-        code: Yup.string().required("Please enter code"),
-        phone: Yup.string().required("Please enter phone"),
-        photoId: Yup.string().required("Please attach photoId"),
+        // code: Yup.string().required("Please enter code"),
+        phone: Yup
+        .mixed()
+        .required("Please enter phone number")
+        .test("number", "Please enter valid number", (value) => {
+            if(value == undefined || value == null){
+                return false;
+            }
+            return common.isMobile(value);
+        }),
+        // photoId: Yup.string().required("Please attach profile image"),
       });
       const formik = useFormik({
         initialValues,
@@ -195,13 +204,13 @@ export default function ProfilePage(props) {
                                 <div className="errorMsg">{formik.errors.email}</div>
                             ) : null}
                         </div>
-                        <div className="mb-3">
+                       {/*  <div className="mb-3">
                             <label className="form-label">Code</label>
                             <input type="tel" {...formik.getFieldProps("code")} className="form-control" id="" placeholder="Enter Your Mobile Number"/>
                             {formik.touched.code && formik.errors.code ? (
                                 <div className="errorMsg">{formik.errors.code}</div>
                             ) : null}
-                        </div>
+                        </div> */}
                         <div className="mb-3">
                             <label className="form-label">Mobile Number</label>
                             <input type="number" {...formik.getFieldProps("phone")} className="form-control" id="" placeholder="Enter Your Mobile Number"/>

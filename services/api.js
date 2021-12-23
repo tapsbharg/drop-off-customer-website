@@ -73,7 +73,7 @@ const apiFunc = {
       loader:true,
       data: data,
     }).catch((err) => {
-      console.log(err);
+      errorshow(err)
     }),
   getDashboardData: () =>
     authAxios({

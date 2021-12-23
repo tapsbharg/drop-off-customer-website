@@ -179,7 +179,7 @@ export default function SearchPage(props) {
                                        {data.quantity>0?(
                                             <div className={`quntityPls`}>
                                                 <button type="button" onClick={()=>removeToCart(data._id,data.vendorId._id)} className="qty-minus">-</button>
-                                                <input type="number" readOnly className="qty" value={data.quantity} />
+                                                <input type="text" readOnly className="qty" value={data.quantity} />
                                                 <button type="button" onClick={()=>addToCart(data._id,data.vendorId._id)} className="qty-plus">+</button>
                                             </div>
                                         ):(

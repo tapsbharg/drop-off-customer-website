@@ -70,7 +70,7 @@ export default function HomePage(props) {
                     <li key={index}  data-aos="fade-up" data-aos-duration="1000" >
                         <div onClick={()=> setCategory(data._id)} className={cateData == data._id?'active':''}>
                             <a>
-                                <img src="/assets/images/drugs (2).svg" alt=""/>
+                                <img src={`/assets/images/catNumber${data.catNumber}.svg`} alt=""/>
                                 <span>{data.name}</span>
                             </a>
                         </div>

@@ -35,7 +35,8 @@ export default function SignInPage(props) {
       props.setlogin();
       history.push("/profile");
     }).catch((error)=>{
-        console.log(error);
+      var message = JSON.parse(error.request.response).message;
+      toast.error(message);
     })
   }
   const login = (userData) => {

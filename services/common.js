@@ -77,6 +77,10 @@ const common = {
       console.log('CASH DISCOUNT UPTO', disRate)
     }
     return parseFloat(disRate.toFixed(2));
+  },
+  isMobile:(num)=>{
+    var isphone = /^(1\s|1|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/.test(num);
+    return isphone;
   }
 }
 

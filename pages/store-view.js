@@ -214,7 +214,7 @@ function StoreViewPage(props) {
                                                                 {product.quantity>0?(
                                                                 <div className={`quntityPls`}>
                                                                     <button type="button" onClick={()=>removeToCart(product._id,product.vendorId)} className="qty-minus">-</button>
-                                                                    <input type="number" readOnly className="qty" value={product.quantity} />
+                                                                    <input type="text" readOnly className="qty" value={product.quantity} />
                                                                     <button type="button" onClick={()=>addToCart(product._id,product.vendorId)} className="qty-plus">+</button>
                                                                 </div>
                                                                 ):( 

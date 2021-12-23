@@ -6,13 +6,13 @@ import { toast, ToastContainer } from "react-toastify";
 import { reactLocalStorage } from "reactjs-localstorage";
 import ROOT_URL from "../services/api-url";
 import * as Yup from "yup";
+import common from "../services/common";
 export default function SignUpPage(props) {
     const baseURL=ROOT_URL;
     const history = useRouter();
     const initialValues = {
       name: "",
       email: "",
-      code: "",
       phone: "",
       password: "",
       termscheck: "",
@@ -22,8 +22,15 @@ export default function SignUpPage(props) {
         email:Yup.string()
           .email('Please enter valid email')
           .required('Please enter email'),
-        code: Yup.string().required("Please enter code"),
-        phone: Yup.string().required("Please enter phone"),
+        phone:Yup
+        .mixed()
+        .required("Please enter phone number")
+        .test("number", "Please enter valid number", (value) => {
+            if(value == undefined || value == null){
+                return false;
+            }
+            return common.isMobile(value);
+        }),
         password: Yup
         .string()
         .required("Please enter password")
@@ -55,8 +62,8 @@ export default function SignUpPage(props) {
           }
         })
         .catch((error) => {
-          console.log(error);
-          toast.error(error.message);
+          var message = JSON.parse(error.request.response).message;
+          toast.error(message);
         });
     };
     return (
@@ -87,13 +94,13 @@ export default function SignUpPage(props) {
                                     <div className="errorMsg">{formik.errors.email}</div>
                                     ) : null}
                                 </div>
-                                <div className="mb-3">
+                                {/* <div className="mb-3">
                                     <label className="form-label">Code</label>
                                     <input type="text" {...formik.getFieldProps("code")} className="form-control" id="" placeholder="Enter Your  code"/>
                                     {formik.touched.code && formik.errors.code ? (
                                     <div className="errorMsg">{formik.errors.code}</div>
                                     ) : null}
-                                </div>
+                                </div> */}
                                 <div className="mb-3">
                                     <label className="form-label">Mobile Number</label>
                                     <input type="number" {...formik.getFieldProps("phone")} className="form-control" id="" placeholder="Enter Your Mobile Number"/>
@@ -118,7 +125,7 @@ export default function SignUpPage(props) {
                                 <div className="mb-3">
                                     <div className="form-check">
                                         <input type="checkbox" {...formik.getFieldProps("termscheck")} className="form-check-input" id="exampleCheck1"/>
-                                        <label className="checkbox form-check-label" for="exampleCheck1">
+                                        <label className="checkbox form-check-label" htmlFor="exampleCheck1">
                                             By Creating an account, you agree to our <br/>
                                             <a href="">terms & condition </a>and <a href=""> Privacy policy </a>
                                         </label>

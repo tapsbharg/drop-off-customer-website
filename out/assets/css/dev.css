@@ -309,21 +309,40 @@ form  .user_image input {
 }
 
 .quntityPls input.qty {
-    width: 50px;
+    width: 40px;
     text-align: center;
     font-size: 12px;
     padding: 5px 0;
     border: 1px solid #d20400;
-    height: 30px;
+    height: 35px;
+    background: #d20400;
+    color: #fff;
+    outline: none;
 }
 
 .quntityPls .qty-minus, .quntityPls .qty-plus {
-    font-size: 12px;
+    font-size: 17px;
     background: #d20400;
     border: 1px solid #d20400;
     color: #fff;
-    width: 30px;
-    height: 30px;
+    width: 29px;
+    height: 35px;
+    display: flex;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: -moz-flex;
+    align-items: center;
+    justify-content: center;
+}
+.quntityPls .qty-minus {
+    border-radius: 5px 0 0 5px;
+}
+
+.quntityPls .qty-plus {
+    border-radius: 0 5px 5px 0;
+}
+.quntityPls .qty-minus:hover, .quntityPls .qty-plus:hover {
+    background: #b50a07;
 }
 .cartMainWrapper {
     position: fixed;
@@ -585,7 +604,10 @@ form input, form input.form-control[type="file"]{
     display: inline-block;
 }
 .slider ul li .active a span {
-    color: #ff4642;
+    color: #d90d00;
+}
+.slider ul li .active a img {
+    filter: brightness(0.1) sepia(0.9) saturate(6000%);
 }
 .cativerrbbTn {
     text-align: center;
@@ -818,9 +840,10 @@ form .coupActive input.form-control {
     padding: 9px 15px;
     font-weight: bold;
 }
-
-
-
+.notification_popup_inner .custom01 {
+    width: 100%;
+    border-radius: 0;
+}
 
 
 

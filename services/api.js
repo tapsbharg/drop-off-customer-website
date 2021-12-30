@@ -2,8 +2,9 @@
 import authAxios from "../services/authAxios";
 import UnauthAxios from "../services/unauthAxios";
 import ROOT_URL from "./api-url";
-import letlong from "./letlong";
 import { toast } from "react-toastify";
+import common from "./common";
+import { reactLocalStorage } from "reactjs-localstorage";
 /* if(window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1'){
     console.log(1);
     ROOT_URL ='http://staging.alphonic.net.in:6002/api/v1/v'
@@ -20,6 +21,26 @@ const errorshow = (err) =>{
     toast.error(err.response.data.message)
   }    
   // return err.response.data.message
+}
+const letlong = () =>{
+  common.coordinateLocal();
+  let geoL = reactLocalStorage.get('geoLocal');
+  let token = reactLocalStorage.get('token');
+  let coords={
+    lat: 0,
+    lng: 0
+  };
+  if(geoL && !token){
+    coords = JSON.parse(geoL)
+  }else if(token){
+    geoL = reactLocalStorage.get('geoServer');
+    coords = JSON.parse(geoL)
+  }
+  // return common.coordinate()
+  return {
+    let:coords.lat || 0,
+    lng:coords.lng || 0
+  }
 }
 const apiFunc = {
   refreshToken: () =>
@@ -78,14 +99,14 @@ const apiFunc = {
   getDashboardData: () =>
     authAxios({
       method: "GET",
-      url: `${ROOT_URL}/dashboard?lat=${letlong.let}&lng=${letlong.lng}`,
+      url: `${ROOT_URL}/dashboard?lat=${letlong().let}&lng=${letlong().lng}`,
     }).catch((err) => {
       console.log(err);
     }),
   searchProductData: (data) =>
     authAxios({
       method: "POST",
-      url: `${ROOT_URL}/searchProducts?lat=${letlong.let}&lng=${letlong.lng}`,
+      url: `${ROOT_URL}/searchProducts?lat=${letlong().let}&lng=${letlong().lng}`,
       loader:true,
       data: data,
     }).catch((err) => {

@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+import { reactLocalStorage } from "reactjs-localstorage";
 
 const common = {
   loader : (type) => {
@@ -81,6 +83,24 @@ const common = {
   isMobile:(num)=>{
     var isphone = /^(1\s|1|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/.test(num);
     return isphone;
+  },
+  coordinateLocal : ()=>{
+    let coordataL;
+    function asignData(data){
+      coordataL = data
+    }
+    navigator.geolocation.getCurrentPosition(function (position) {
+      let lat = position.coords.latitude;
+      let lng = position.coords.longitude;
+      let jsonCoords = {
+        lat:lat,
+        lng:lng
+      }
+      jsonCoords = JSON.stringify(jsonCoords);
+      asignData(jsonCoords)
+      reactLocalStorage.set('geoLocal', jsonCoords);
+    })
+    // console.log('coordataL', coordataL)
   }
 }
 

@@ -3,7 +3,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { reactLocalStorage } from 'reactjs-localstorage';
 import api from "../services/api";
+import common from '../services/common';
 
 export default function Header(appProps) {
   const [profile, setProfile] = useState({});
@@ -15,6 +17,13 @@ export default function Header(appProps) {
         // console.log("in api ", res.data);
         let data = res.data.data;
         let addrss = data.address.filter((a) => a.isDefault == true).map((b)=>{
+          let coords = {
+            lat : b.location.coordinates[1],
+            lng : b.location.coordinates[0]
+          }
+          coords = JSON.stringify(coords);
+          reactLocalStorage.set('geoServer',coords)
+          // common.coordinate(b);
           setAddress(b);
         })
         setProfile(data);

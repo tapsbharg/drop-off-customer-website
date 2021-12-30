@@ -46,6 +46,7 @@ export default function AddressComp(props){
         <div className={`delivery-address bg-white rounded-3 p-3 mb-3 ${props.selectClass?props.selectClass:''}`}>
             <h6> Choose A Delivery Address </h6> 
             <hr/>
+            <div className="delivAddrScrll scroller">
             {addressData && (
                 addressData.map((data,index)=>(
                     <div  key={index}>
@@ -55,7 +56,7 @@ export default function AddressComp(props){
                             <i className="fas fa-map-marker-alt"></i>
                         </div>
                         <div className="location_content_address">
-                            <h6> <b>Home</b></h6>
+                            <h6> <b>{data.addressType || 'Other'}</b></h6>
                             <span>{data.address}</span>
                             <ul className="d-flex flex-wrap justify-content-between align-items-center">
                                 <li>
@@ -82,7 +83,8 @@ export default function AddressComp(props){
                     </div>
                 ))
             )}
-            <AddEditAddress className="but03" type="add"/>
+            </div>
+            <AddEditAddress action={()=>getAllAddress()} className="but03" type="add"/>
         </div>
         </>
     )

@@ -6,8 +6,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useFormik } from "formik";
 import GoogleMapReact from "google-map-react";
 import AutoComplete from "./autocomplete";
-
-
+import { useRouter } from "next/dist/client/router"
 const AnyReactComponent = ({ text }) => <div className="markerGoogle">
     <img src="/assets/images/marker.png" alt="" />
 </div>;
@@ -15,6 +14,7 @@ const AnyReactComponent = ({ text }) => <div className="markerGoogle">
 
 export default function AddEditAddress(props){
     const [addressModal,setAddressModal]=useState(false);
+    const router = useRouter();
     const [mapData,setMapData]=useState({
         mapApiLoaded: false,
         mapInstance: null,
@@ -31,6 +31,8 @@ export default function AddEditAddress(props){
             lng:75.778885,
         }
       });
+
+
       function setDefaultAddress(coordinates,address){
           if(coordinates){
             setMapData({
@@ -139,6 +141,7 @@ export default function AddEditAddress(props){
         lat: "",
         address: "",
         zipcode: "",
+        addressType: "",
         // isDefault: false,
       };
     const validationSchema = Yup.object({
@@ -146,6 +149,7 @@ export default function AddEditAddress(props){
         lat:Yup.string().required('Please enter lat'),
         address: Yup.string().required("Please enter address"),
         zipcode: Yup.string().required("Please enter zipcode"),
+        addressType: Yup.string().required("Please enter addressType"),
       });
     const formik = useFormik({
         initialValues,
@@ -181,6 +185,7 @@ export default function AddEditAddress(props){
 
     useEffect(()=>{
         setDefaultAddress(props.coordinates, props.address);
+        
     },[props.coordinates])
     
     // console.log( mapData)
@@ -206,7 +211,7 @@ export default function AddEditAddress(props){
                     
                     <form className=" " onSubmit={formik.handleSubmit}>
                         {mapData.mapApiLoaded && (
-                            <div className="mapSearchinpt">
+                            <div className="mapSearchinpt mb-3">
                                 <AutoComplete
                                 map={mapData.mapInstance}
                                 mapApi={mapData.mapApi}
@@ -216,6 +221,14 @@ export default function AddEditAddress(props){
                             </div>
                             )}
                         {/* {mapData.address} */}
+                        <div className="addressTyoess mb-3">
+                            <div className="">
+                                <input type="text" {...formik.getFieldProps("addressType")} className="form-control" placeholder="Enter  address type"/>
+                                {formik.touched.addressType && formik.errors.addressType ? (
+                                    <div className="errorMsg">{formik.errors.addressType}</div>
+                                ) : null}
+                            </div> 
+                        </div>
                     <div className="mapviewWrapper">
                         <GoogleMapReact
                             center={mapData.center}

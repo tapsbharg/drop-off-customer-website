@@ -153,7 +153,7 @@ function StoreViewPage(props) {
                   style={{
                         backgroundImage: venderInfo.coverImage?'url(' + venderInfo.coverImage.path + ')':''
                     }}>
-                        {venderInfo.isOpen?(
+                        {venderInfo.isAvailable?(
                             <a href="#"> open </a>
                         ):(
                             <a href="#" className="btn-danger"> close </a>
@@ -203,7 +203,8 @@ function StoreViewPage(props) {
                                                         <div key={key} className="recommended_item d-flex flex-wrap align-items-center mb-3">
                                                         {/* {console.log(product)} */}
                                                             <div className="recommended_item_img">
-                                                                <img src={product.defaultImage.path} alt=""/>
+                                                                {product.defaultImage&& (<img src={product.defaultImage.path} alt=""/>)}
+                                                                {!product.defaultImage&& (<img src="assets/images/fev.jpg" alt=""/>)}
                                                             </div>
                                                             <div className="recommended_item_content px-3">
                                                                 <h6>{product.name}</h6>

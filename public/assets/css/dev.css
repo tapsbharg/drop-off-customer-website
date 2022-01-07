@@ -864,9 +864,15 @@ form .coupActive input.form-control {
     outline: 1px solid #db3633;
     border-radius: 15px;
 }
-
-
-
+.pass_rest_success .pass_rest_success_contant {
+    margin: 0 auto;
+}
+header .after_login ul li, header .logo img {
+    cursor: pointer;
+}
+.cardHldrName img {
+    max-height: 40px;
+}
 
 
 

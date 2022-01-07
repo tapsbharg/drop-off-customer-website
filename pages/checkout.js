@@ -26,7 +26,8 @@ export default function CheckoutPage(props) {
     const [addressStatus,setAddressStatus]=useState(false);
     const [stocktatus,setStockStatus]=useState(false);
     const [idcardCheck,setIdcardCheck]=useState(false);
-    const [prescripCheck,setPrescripCheck]=useState(false);
+    const [prescripCheck,setPrescripCheck]=useState(null);
+    const [prescription,setPrescription]=useState(null);
     const [defaultLatlong,setDefaultLetLong]=useState([]);
     const [totalMiles,setTotalMiles]=useState(null);
     const [profileData, SetProfileData]=useState({});
@@ -39,13 +40,16 @@ export default function CheckoutPage(props) {
         referralDeduction:0.00,
         couponDeduction:0.00,
         serviceFee:0.00,
-        deliveryAmount:0.00,
+        deliverAmt:0.00,
         serviceFeePercent:0.00,
         deliveryBasePrice:0.00,
         deliveryPerMileCharge:0.00,
         deliveryDistanceInMiles:0,
-        coupon:{},
-        scheduleDate:null
+        scheduleDate:null,
+        couponId:null,
+        addressId:null,
+        prescriptionImage:null,
+        grandTotal:0,
     });
     const [orderData,setOrderData]=useState(null);
 
@@ -229,25 +233,30 @@ export default function CheckoutPage(props) {
         }
         let subTotal  = parseFloat(total);
         let serviceFee = parseFloat(((total * chargess.serviceFeePercent) / 100));
-        let deliveryAmount = parseFloat(((chargess.deliveryPerMileCharge * totalMiles) + chargess.deliveryBasePrice));
+        let deliverAmt = parseFloat(((chargess.deliveryPerMileCharge * totalMiles) + chargess.deliveryBasePrice));
         let referralDeduction = parseFloat(orderTotal.referralDeduction);
         let couponObj = {
-            ...orderTotal.coupon,
+            ...couponData,
             price:subTotal
         }
+        console.log(couponObj)
         let couponDeduction = common.coupanTypeDiscount(couponObj) || 0;
         let deliveryBasePrice = chargess.deliveryBasePrice || 0;
-        let grandTotal = (parseFloat((parseFloat(total) + parseFloat(serviceFee) + parseFloat(deliveryAmount))) - parseFloat(couponDeduction + referralDeduction));
+        let grandTotal = (parseFloat((parseFloat(total) + parseFloat(serviceFee) + parseFloat(deliverAmt))) - parseFloat(couponDeduction + referralDeduction));
         
+        let addressId = addressStatus?addressStatus._id:null || null
+        let prescriptionImage = prescription || null
         await setOrderTotal({
             ...orderTotal,
             subTotal :subTotal.toFixed(2) ,
             serviceFee:serviceFee.toFixed(2),
-            deliveryAmount:deliveryAmount.toFixed(2),
+            deliverAmt:deliverAmt.toFixed(2),
             couponDeduction:couponDeduction.toFixed(2),
             referralDeduction:referralDeduction.toFixed(2),
             deliveryBasePrice:deliveryBasePrice.toFixed(2),
             grandTotal:grandTotal.toFixed(2),
+            addressId:addressId,
+            prescriptionImage:prescriptionImage
         });
     }
     
@@ -256,7 +265,12 @@ export default function CheckoutPage(props) {
 
     useEffect(()=>{
         orderCharges(props.cartData)
-    },[props.cartData, defaultLatlong, totalMiles, couponData])
+    },[props.cartData, 
+        defaultLatlong, 
+        totalMiles, 
+        couponData, 
+        addressStatus,
+        prescription])
 
     useEffect(()=>{
         getDistance(props.cartData)
@@ -273,13 +287,19 @@ export default function CheckoutPage(props) {
         console.log(totalMiles)
     },[props.cartData,totalMiles]) */
    /*card list*/
-
+  
     const prescHandleChange = (e)=>{
         var file = e.target.files[0]
         setPrescrpImage(file);
+        const formData = new FormData();
+        formData.append("coverImage", file);
+        apiFunc.postUpload(formData).then(response => {
+            setPrescription(response.data.data._id)
+        }).catch((error) => {
+            toast.success(error)
+            console.log(error)
+        });
     }
-
-   
     return (
       <>
       <ToastContainer />
@@ -341,9 +361,9 @@ export default function CheckoutPage(props) {
                                     <CouponComp total={orderTotal.subTotal} setDataCoupon={(e)=>{
                                         setOrderTotal({
                                             ...orderTotal,
-                                            coupon:e.couponObj
+                                            couponId:e.couponObj._id
                                         });
-                                        setCouponData(e);
+                                        setCouponData(e.couponObj);
                                     }}/>
                                     {
                                         (idcardCheck || prescripCheck)?(
@@ -440,7 +460,7 @@ export default function CheckoutPage(props) {
                                                 </tr>
                                                 <tr>
                                                     <td>Delivery Charge </td>
-                                                    <td>${orderTotal.deliveryAmount}</td>
+                                                    <td>${orderTotal.deliverAmt}</td>
                                                 </tr>
                                                 <tr>
                                                     <td> Referral </td>

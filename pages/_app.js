@@ -57,6 +57,7 @@ function App({ Component, pageProps }) {
     setTokenGuestid();
     cartListShow();
     
+  
     
     /* var token = reactLocalStorage.get("token");
     var guestid = reactLocalStorage.get("guestid");
@@ -80,6 +81,7 @@ function App({ Component, pageProps }) {
   const loginCheck = () => {
     authDone(true);
   };
+  
   const cartListShow = () => {
     if(isAuth || guestid){
       if(!guestid && isAuth){

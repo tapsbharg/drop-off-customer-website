@@ -5,7 +5,7 @@ const common = {
   loader : (type) => {
     if(type){
       document.body.className = 'loading_page';
-    }else if(type == 'remove' && loader){
+    }else{
       document.body.className = document.body.className.replace("loading_page","");
     }
   },
@@ -101,6 +101,24 @@ const common = {
       reactLocalStorage.set('geoLocal', jsonCoords);
     })
     // console.log('coordataL', coordataL)
+  },
+  creditCardType : (cardType) =>{
+    let imageUrl;
+    cardType = cardType.toLowerCase();
+    switch (cardType) {
+      case "visa":
+        imageUrl = "card-logo-visa.svg";
+        break;
+      case "mastercard":
+        imageUrl = "card-logo-mastercard.svg";
+        break;
+      case "american-express":
+        imageUrl = "card-logo-amex.svg";
+        break;
+      default:
+        imageUrl = "card-logo-unknown.svg";
+    }
+    return imageUrl;
   }
 }
 

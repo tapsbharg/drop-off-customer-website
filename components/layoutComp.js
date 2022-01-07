@@ -6,6 +6,14 @@ import apiFunc from "../services/api";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { useEffect } from "react";
 import Cart from "./cartComp";
+import common from "../services/common";
+
+
+
+
+
+
+
 export default function Layout(props) {
 function refreshtoken(){
   apiFunc.refreshToken().then((res) => {
@@ -27,11 +35,27 @@ useEffect(() => {
     console.log(token)
     clearInterval(intrVal);
   }
+  common.coordinateLocal();
 },[])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     return (
       <>
+      
         <Head>
             <title>Drop Off Customer</title>
         </Head>
@@ -46,6 +70,7 @@ useEffect(() => {
         <Footer />
         <Cart props={props} />
         </div>
+        
       </>
     )
   }

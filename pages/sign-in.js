@@ -29,14 +29,17 @@ export default function SignInPage(props) {
     },
   });
   function mergeCart(id){
+    common.loader(true);
     apiFunc.userCartMerge(id).then((res)=>{
       // console.log(res)
       reactLocalStorage.remove("guestid");
       props.setlogin();
+      common.loader(false);
       history.push("/profile");
     }).catch((error)=>{
       var message = JSON.parse(error.request.response).message;
       toast.error(message);
+      common.loader(false);
     })
   }
   const login = (userData) => {
@@ -82,14 +85,14 @@ export default function SignInPage(props) {
                                 <h5> Sign In To Your Account </h5>
                                 <div className="mb-3">
                                     <label className="form-label">Email</label>
-                                    <input type="email" {...formik.getFieldProps("email")} className="form-control" id="" placeholder="Enter Your Email"/>
+                                    <input type="email" {...formik.getFieldProps("email")} className="form-control" placeholder="Enter Your Email"/>
                                     {formik.touched.email && formik.errors.email ? (
                                     <div className="errorMsg">{formik.errors.email}</div>
                                     ) : null}
                                 </div>
                                 <div className="mb-3">
                                     <label className="form-label">Password</label>
-                                    <input type="password" {...formik.getFieldProps("password")} className="form-control" id="" placeholder="Enter Your Password"/>
+                                    <input type="password" {...formik.getFieldProps("password")} className="form-control" placeholder="Enter Your Password"/>
                                     {formik.touched.password && formik.errors.password ? (
                                     <div className="errorMsg">{formik.errors.password}</div>
                                     ) : null}

@@ -23,7 +23,6 @@ const errorshow = (err) =>{
   // return err.response.data.message
 }
 const letlong = () =>{
-  common.coordinateLocal();
   let geoL = reactLocalStorage.get('geoLocal');
   let token = reactLocalStorage.get('token');
   let coords={
@@ -33,8 +32,9 @@ const letlong = () =>{
   if(geoL && !token){
     coords = JSON.parse(geoL)
   }else if(token){
-    geoL = reactLocalStorage.get('geoServer');
-    coords = JSON.parse(geoL)
+    let geoServ = reactLocalStorage.get('geoServer');
+    console.log(geoServ, geoL)
+    coords = geoL != undefined?JSON.parse(geoL):JSON.parse(geoServ);
   }
   // return common.coordinate()
   return {
@@ -352,7 +352,7 @@ const apiFunc = {
     }),
     defaultAddress: (id) =>
     authAxios({
-      method: "POST",
+      method: "GET",
       url: `${ROOT_URL}/users/setDefault/${id}`,
       loader:true,
     }).catch((err) => {

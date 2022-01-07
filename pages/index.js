@@ -110,7 +110,7 @@ export default function HomePage(props) {
                                     <Link href={`store-view?id=${vendorStore._id}`} key={key}>
                                 <div className="store_box bg-light02 d-flex flex-wrap Pointer">
                                     <div className="store_box_img">
-                                        <img src={vendorStore.image.path} alt=""/>    
+                                        {vendorStore.image && (<img src={vendorStore.image.path} alt=""/>)}
                                     </div>
                                     <div className="store_content">
                                         <h5>{vendorStore.storeName}</h5>
@@ -204,7 +204,7 @@ export default function HomePage(props) {
               <div className="d-flex flex-wrap align-items-center justify-content-between pt-5">
                   <div className="signup_box" data-aos="zoom-in"  data-aos-duration="1500" data-aos-delay="100">
                       <img src="assets/images/sig.svg" alt=""/>
-                      <a className="btn cus_btn custom01 "> Sign up as a store </a>
+                      <Link href="/vendor/sign-up"><a className="btn cus_btn custom01"> Sign up as a store </a></Link>
                   </div>
                   <div className="signup_box" data-aos="zoom-in"  data-aos-duration="1500" data-aos-delay="100">
                       <img src="assets/images/sig01.svg" alt=""/>

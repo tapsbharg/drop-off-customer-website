@@ -1,106 +1,99 @@
+import { useFormik } from "formik";
 import React, { useMemo,useEffect, useState } from "react";
-import {
-  useStripe,
-  useElements,
-  CardNumberElement,
-  CardCvcElement,
-  CardExpiryElement
-} from "@stripe/react-stripe-js";
 import { Modal } from "react-bootstrap"
 import apiFunc from "../services/api";
+import * as Yup from "yup";
+import { toast, ToastContainer } from "react-toastify";
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+import {PaymentElement} from '@stripe/react-stripe-js';
+import CheckoutForm from "./checkoutForm";
 
 
-const useOptions = () => {
-  const options = useMemo(
-    () => ({
-      style: {
-        base: {
-            backgroundColor:"#fff",
-            color: "#000",
-            letterSpacing: "0.025em",
-            fontFamily: "Source Code Pro, monospace",
-            "::placeholder": {
-                color: "#252525"
-            },
-        },
-        invalid: {
-            color: "#f00",
-            "::placeholder": {
-                color: "#f00"
-            }
-        }
-      }
-    }),
-    []
-  );
+const stripePromise = loadStripe('pk_test_51J3DGCCSN2jNmtALotIqwa1DkZIQkHHJALZuHHOFvbWCRwxxlvXUYjuNF7AlSOC65tjBk54I3acnD10OttMHRgmu007HanxG0F');
 
-  return options;
-};
+// const clientKey =""
 
-const SplitForm = () => {
+const SplitForm = (props) => {
+    /* const options = {
+        // passing the client secret obtained from the server
+        clientSecret: clientKey,
+      }; */
+
     const [withdrawalModal,setWithdrawalModal]=useState(false);
     const [cardList,setCardList]=useState([]);
-    const stripe = useStripe();
-    const elements = useElements();
-    const options = useOptions();
+    const [defaultCardItem,setDefaultCardItem]=useState([]);
     const addCardModal = (type) =>{
         setWithdrawalModal(type)
     }
     /*card list*/
-    
     function cardListingFunc(){
         apiFunc.getAllCard().then((res)=>{
             setCardList(res.data.cardListing)
+            checkStatus(res.data.cardListing)
         }).catch((error)=>{
             console.log(error);
         })
     }
+    function checkStatus(datas){
+        datas.map((data,i)=>{
+            if(data.defaultCard == true){
+                props.cardSelct(true);
+            }
+        })
+    }
+    useEffect(()=>{
+        cardListingFunc();
+    },[])
 
-useEffect(()=>{
-    cardListingFunc();
-},[])
-/*card list*/
-    function addCard(options){
-        
-        apiFunc.addNewCard().then((res)=>{
-            setCardList(res.data.cardListing)
+
+    function addCard(data){
+        console.log(data)
+        apiFunc.addNewCard(data).then((res)=>{
+            toast.success(res.data.message);
+            setWithdrawalModal(false);
+            cardListingFunc();
+            props.reload();
         }).catch((error)=>{
             console.log(error);
         })
     }
-  const handleSubmit = async event => {
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable
-      // form submission until Stripe.js has loaded.
-      return;
-    }
-    const payload = await stripe.createPaymentMethod({
-      type: "card",
-      card: elements.getElement(CardNumberElement)
-    });
-    if(!payload.error){
-        console.log(event.target);
-        // addCard(event)
+    function setDefaultCard(data){
+        apiFunc.setDefaultCard(data.cardId).then((res)=>{
+            toast.success(res.data.message);
+            setDefaultCardItem(data);
+            cardListingFunc();
+            props.cardSelct(true)
+        }).catch((error)=>{
+            console.log(error);
+        })
     }
     
-  };
-
   return (
+    <Elements stripe={stripePromise}>
     <>
-    <div className="delivery-address bg-white rounded-3 p-3 mb-3">
+    {props.page && (
+        <a  className="btn custom01" onClick={()=>addCardModal(true)}> <i className="fas fa-plus"></i>  Add New Card </a>
+    )}
+    {(!props.page || props.page=='checkout') && (
+    <div className={`delivery-address bg-white rounded-3 p-3 mb-3 ${props.selectClass?props.selectClass:''}`}>
           <h6> Select Card </h6> 
           
           <hr/>
           {cardList.map((data, index)=>(
               <div key={index}>
-                  <div className="address_group d-flex justify-content-between my-3">
+                  <div className={`address_group d-flex justify-content-between my-3 ${data.defaultCard?' selectDefault':''}`}>
                       <div className="location_img">
-                          <p> <b> 4545-xxxx-xxxx-1512 </b></p>
+                          <p> <b> xxxx-xxxx-xxxx-{data.cardLast4} </b></p>
                       </div>
                       <div className="location_content">
-                          <a className="but03" href="#"> Pay Now </a>        
+                          {/* <a className="but03" onClick={()=>setDefaultCard(data)}> Select </a>  */}  
+                          {data.defaultCard && (
+                                <i className="setDefault"> Selected </i> 
+                            )}
+                            {!data.defaultCard && (
+                                <a onClick={()=>setDefaultCard(data)} className="setDefault"> Set As Default </a> 
+                            )}     
                       </div>
                   </div>
                   <hr/>
@@ -108,7 +101,7 @@ useEffect(()=>{
           ))}
           <a className="but03" onClick={()=>addCardModal(true)}> <i className="fas fa-plus"></i>  Add New Card </a>
       </div>
-
+    )}
 
   <Modal
           show={withdrawalModal}
@@ -120,29 +113,14 @@ useEffect(()=>{
       >
           <div className="add_new_card">
               <div className="add_new_card_contant bg-white p-5 rounded-3">
-                  <i className="fal fa-times-circle" onClick={()=>addCardModal(false)}></i>
-                  <h5> Add New Card </h5>
-                  <form onSubmit={handleSubmit}>
-                        <div className="row bg-black p-4 rounded-3 mb-3">
-                            <div className="col-sm-12 mb-3">
-                                <CardNumberElement  options={options} placeholder="Enter Card Number" />
-                            </div>
-                            <div className="col-sm-6  mb-3">
-                                <CardExpiryElement options={options}  placeholder="Card Holder's Name" />
-                            </div>
-                            <div className="col-sm-6  mb-3">
-                                <CardCvcElement options={options} placeholder="Expiry Date" />
-                            </div>
-                        </div>
-                        <button type="submit" className="btn cus_btn custom01" disabled={!stripe}>
-                            Add Card
-                        </button>
-                    </form>
+                    <i className="fal fa-times-circle" onClick={()=>addCardModal(false)}></i>
+                    <h5> Add New Card </h5>
+                    <CheckoutForm addcard={(data)=>addCard(data)}/>
               </div>
           </div>
       </Modal>
 </>
-    
+    </Elements>
   );
 };
 

@@ -84,12 +84,12 @@ const common = {
     var isphone = /^(1\s|1|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/.test(num);
     return isphone;
   },
-  coordinateLocal : ()=>{
+  coordinateLocal : async()=>{
     let coordataL;
     function asignData(data){
       coordataL = data
     }
-    navigator.geolocation.getCurrentPosition(function (position) {
+    await navigator.geolocation.getCurrentPosition(function (position) {
       let lat = position.coords.latitude;
       let lng = position.coords.longitude;
       let jsonCoords = {
@@ -98,9 +98,11 @@ const common = {
       }
       jsonCoords = JSON.stringify(jsonCoords);
       asignData(jsonCoords)
-      reactLocalStorage.set('geoLocal', jsonCoords);
+      localStorage.setItem('geoLocal', jsonCoords);
+      // console.log('coordataL', localStorage.getItem('geoLocal'))
+      // reactLocalStorage.set('geoLocal', jsonCoords);
     })
-    // console.log('coordataL', coordataL)
+    return coordataL;
   },
   creditCardType : (cardType) =>{
     let imageUrl;

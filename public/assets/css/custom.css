@@ -1,11 +1,6 @@
 @font-face {
     font-family: 'SF Pro';
-    src: url('../font/fontsfree-net-sfprotext-light-webfont.eot');
-    src: url('../font/fontsfree-net-sfprotext-light-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../font/fontsfree-net-sfprotext-light-webfont.woff2') format('woff2'),
-         url('../font/fontsfree-net-sfprotext-light-webfont.woff') format('woff'),
-         url('../font/fontsfree-net-sfprotext-light-webfont.ttf') format('truetype'),
-         url('../font/fontsfree-net-sfprotext-light-webfont.svg#sf_pro_textlight') format('svg');
+    src:url('../font/fontsfree-net-sfprotext-light-webfont.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 

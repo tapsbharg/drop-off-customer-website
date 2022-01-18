@@ -127,11 +127,18 @@ function StoreViewPage(props) {
         },
         
     })
-    async function addToCart(prodId,vendId){
-        await cartService.addToCart(prodId, vendId, props);
+    async function addToCart(data){
+        var stockchk = data.stock
+        var quantity = data.quantity
+        if(stockchk > quantity){
+            await cartService.addToCart(data._id, data.vendorId, props);
+        }else{
+            toast.error('Out of Stock;')
+        }
+        
     }
-    async function removeToCart(prodId,vendId){
-        await cartService.removeToCart(prodId, vendId, props);
+    async function removeToCart(data){
+        await cartService.removeToCart(data._id, data.vendorId, props);
     }
 
     useEffect(()=>{
@@ -213,13 +220,25 @@ function StoreViewPage(props) {
                                                             </div>
                                                             <div className={`recommended_item_add prolislbtn ${product.quantity>0?'active':'deactive'}`}>
                                                                 {product.quantity>0?(
-                                                                <div className={`quntityPls`}>
-                                                                    <button type="button" onClick={()=>removeToCart(product._id,product.vendorId)} className="qty-minus">-</button>
-                                                                    <input type="text" readOnly className="qty" value={product.quantity} />
-                                                                    <button type="button" onClick={()=>addToCart(product._id,product.vendorId)} className="qty-plus">+</button>
+                                                                <div className={`${product.stock < product.quantity?'stockOut':'stockIn'}`}> 
+                                                                    <div className={`quntityPls`}>
+                                                                        <button type="button" onClick={()=>removeToCart(product)} className="qty-minus">-</button>
+                                                                        <input type="text" readOnly className="qty" value={product.quantity} />
+                                                                        <button type="button" onClick={()=>addToCart(product)} className="qty-plus">+</button>
+                                                                    </div>
+                                                                    {product.stock < product.quantity && (
+                                                                        <div className="text-danger text-center">Out of stock</div>
+                                                                    )}
                                                                 </div>
                                                                 ):( 
-                                                                    <a className="add_product" onClick={()=>addToCart(product._id,product.vendorId)}> add  <i className="far fa-plus"> </i> </a>
+                                                                    <div className={`${product.stock <= 0?'stockOut':'stockIn'}`}> 
+                                                                        {(product.stock <= 0) ? (
+                                                                            <div className="text-danger text-center">Out of stock</div>
+                                                                        ):(
+                                                                            <a className="add_product" onClick={()=>addToCart(product)}> add  <i className="far fa-plus"> </i> </a>
+                                                                        )}
+                                                                    </div>
+                                                                    
                                                                 )}
                                                             </div>
                                                         </div>

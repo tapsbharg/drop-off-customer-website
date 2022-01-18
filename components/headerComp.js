@@ -1,16 +1,23 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import api from "../services/api";
 import common from '../services/common';
+import { UserContext } from './context/locationContext';
+
 
 export default function Header(appProps) {
+
+
   const [profile, setProfile] = useState({});
   const [address, setAddress] = useState({});
   const history = useRouter();
+
+  const context = useContext(UserContext);
+  
   useEffect(() => {
     if (appProps.props.auth) {
       api.getProfileData().then((res) => {
@@ -23,11 +30,11 @@ export default function Header(appProps) {
           }
           coords = JSON.stringify(coords);
           reactLocalStorage.set('geoServer',coords)
-          // common.coordinate(b);
           setAddress(b);
+          context.setAddress(b.address)
+          context.setLocation(coords)
         })
         setProfile(data);
-        
       }).catch((error) => {
         console.log(error);
         toast.error(error.message);
@@ -35,10 +42,21 @@ export default function Header(appProps) {
     }
   }, [appProps.props.auth]);
   function logOut(){
-    console.log(appProps.props)
     appProps.props.logout();
     // history.push("/sign-in");
   }
+/*   const things = useContext(ThingsContext)
+   const renderThings = things => {
+     console.log(things);
+    //  return things;
+     return things.map( thing => {
+         return thing
+     })
+   } */
+
+
+  //  const AddressContext = AddressContext(address);
+  //  console.log(AddressContext)
     return (
       <>
         <header className="header">
@@ -50,9 +68,22 @@ export default function Header(appProps) {
                   </Link>
                   {appProps.props.auth && (
                     <ul>
-                      <li><Link href="/addresses"><a href="#"><i className="fas fa-map-marker-alt"></i> {address.address} </a></Link></li>
+                        <li><Link href="/addresses"><a href="#"><i className="fas fa-map-marker-alt"></i> {context.address} </a></Link></li>
                     </ul>
+                    
                  )}
+                 {/* <AddressContext.Provider value={{address:'kunwar'}}>
+                    {console.log(Children.map((data,index)=> {return data}))}
+                </AddressContext.Provider>
+                <AddressContext.Consumer>
+                {context => {
+                  if (context === undefined) {
+                    throw new Error('CountConsumer must be used within a CountProvider')
+                  }
+                  console.log(context)
+                  // return children(context)
+                }}
+                </AddressContext.Consumer> */}
             </div>
             {!appProps.props.auth && (
                 <nav className="d-flex flex-wrap">

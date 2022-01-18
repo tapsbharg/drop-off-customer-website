@@ -1,11 +1,13 @@
 module.exports = {
     apps: [
       {
-        name: 'dropoff',
-        // cwd: '/drop-off-customer-website/',
-        script: 'npm start',
-        /* args: 'start',
-        exec_mode: "cluster" */
+        name: 'Customer',
+        cwd: ' /home/your-name/my-nextjs-project',
+        script: 'npm',
+        args: 'start',
+        env: {
+          NEXT_PUBLIC_CUST: 'NEXT_PUBLIC_CUST',
+        },
       },
       // optionally a second project
   ],};

@@ -1,14 +1,31 @@
 import DashLayout from "../components/dashLayout";
 import AddEditAddress from "../components/addEditAddress";
-import { useEffect, useState } from "react";
+import {  useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import apiFunc from "../services/api";
+import { reactLocalStorage } from "reactjs-localstorage";
+import { UserContext } from "../components/context/locationContext";
+
 
 export default function AddressesPage(props) {
   const [addressData,setAddressData]=useState([]);
+  
+  const context = useContext(UserContext);
+
   function getAllAddress(){
       apiFunc.getProfileData().then((res)=>{
           setAddressData(res.data.data.address)
+          let addrss = res.data.data.address.filter((a) => a.isDefault == true).map((b)=>{
+            let coords = {
+              lat : b.location.coordinates[1],
+              lng : b.location.coordinates[0]
+            }
+            coords = JSON.stringify(coords);
+            reactLocalStorage.set('geoServer',coords)
+            context.setAddress(b.address)
+            context.setLocation(coords)
+          })
+          
       }).catch((error)=>{
           console.log(error);
       })
@@ -73,9 +90,10 @@ export default function AddressesPage(props) {
             
         </div>
         </div>
-
+        
       </DashLayout>
       </>
     )
   }
+
   

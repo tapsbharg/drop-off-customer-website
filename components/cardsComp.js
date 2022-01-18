@@ -26,7 +26,7 @@ const SplitForm = (props) => {
     function checkStatus(datas){
         datas.map((data,i)=>{
             if(data.defaultCard == true){
-                props.cardSelct(true);
+                props.cardSelct(data);
             }
         })
     }

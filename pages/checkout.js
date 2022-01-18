@@ -73,15 +73,23 @@ export default function CheckoutPage(props) {
         setOrderMsgModal(type)
     }
     const cardStatusFuc = (e) =>{
+        console.log(e)
         setCardStatus(e)
     }
     
     
-    async function addToCart(prodId,vendId){
-        await cartService.addToCart(prodId, vendId, props);
+    async function addToCart(data){
+        var stockchk = data.productId.stock
+        var quantity = data.quantity
+        if(stockchk > quantity){
+            await cartService.addToCart(data.productId._id, data.vendorId._id, props);
+        }else{
+            toast.error('Out of Stock')
+        }
+        
     }
-    async function removeToCart(prodId,vendId){
-        await cartService.removeToCart(prodId, vendId, props);
+    async function removeToCart(data){
+        await cartService.removeToCart(data.productId._id, data.vendorId._id, props);
     }
 
     /*card list*/
@@ -233,6 +241,7 @@ export default function CheckoutPage(props) {
         }
         let subTotal  = parseFloat(total);
         let serviceFee = parseFloat(((total * chargess.serviceFeePercent) / 100));
+        let serviceFeePercent = chargess.serviceFeePercent || 0;
         let deliverAmt = parseFloat(((chargess.deliveryPerMileCharge * totalMiles) + chargess.deliveryBasePrice));
         let referralDeduction = parseFloat(orderTotal.referralDeduction);
         let couponObj = {
@@ -245,7 +254,9 @@ export default function CheckoutPage(props) {
         let grandTotal = (parseFloat((parseFloat(total) + parseFloat(serviceFee) + parseFloat(deliverAmt))) - parseFloat(couponDeduction + referralDeduction));
         
         let addressId = addressStatus?addressStatus._id:null || null
+        let cardId = cardStatus?cardStatus.cardId:null || null
         let prescriptionImage = prescription || null
+        let deliveryDistanceInMiles = totalMiles || 0
         await setOrderTotal({
             ...orderTotal,
             subTotal :subTotal.toFixed(2) ,
@@ -256,7 +267,11 @@ export default function CheckoutPage(props) {
             deliveryBasePrice:deliveryBasePrice.toFixed(2),
             grandTotal:grandTotal.toFixed(2),
             addressId:addressId,
-            prescriptionImage:prescriptionImage
+            prescriptionImage:prescriptionImage,
+            cardId:cardId,
+            deliveryPerMileCharge:chargess.deliveryPerMileCharge,
+            deliveryDistanceInMiles:deliveryDistanceInMiles,
+            serviceFeePercent:serviceFeePercent,
         });
     }
     
@@ -270,7 +285,8 @@ export default function CheckoutPage(props) {
         totalMiles, 
         couponData, 
         addressStatus,
-        prescription])
+        prescription,
+        cardStatus])
 
     useEffect(()=>{
         getDistance(props.cartData)
@@ -324,7 +340,8 @@ export default function CheckoutPage(props) {
                                             {props.cartData && (
                                                 <tr>
                                                     <td className="address" colSpan="2"> 
-                                                        {props.cartData.vendor.storeName} 
+                                                        <Link href={`/store-view?id=${props.cartData.vendor._id}`}><span> {props.cartData.vendor.storeName} </span></Link>
+                                                        
                                                         <span><i className="fas fa-map-marker-alt"></i> {props.cartData.vendor.address}</span> 
                                                     </td>
                                                     <td colSpan="2" align="right"> Upload Your Identity/ Prescriptions </td>
@@ -340,9 +357,9 @@ export default function CheckoutPage(props) {
                                                             <td className="content">{data.productId.name}</td>
                                                             <td className={`${data.productId.stock < data.quantity?'stockOut':'stockIn'}`}>  
                                                                 <div className={`quntityPls show`}>
-                                                                    <button type="button" onClick={()=>removeToCart(data.productId._id,data.vendorId._id)} className="qty-minus">-</button>
+                                                                    <button type="button" onClick={()=>removeToCart(data)} className="qty-minus">-</button>
                                                                     <input type="text" readOnly className="qty" value={data.quantity} />
-                                                                    <button type="button" onClick={()=>addToCart(data.productId._id,data.vendorId._id)} className="qty-plus">+</button>
+                                                                    <button type="button" onClick={()=>addToCart(data)} className="qty-plus">+</button>
                                                                 </div>
                                                                 {data.productId.stock < data.quantity && (
                                                                     <div className="text-danger text-center">Out of stock</div>

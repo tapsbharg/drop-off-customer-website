@@ -23,8 +23,10 @@ const errorshow = (err) =>{
   // return err.response.data.message
 }
 const letlong = () =>{
-  let geoL = reactLocalStorage.get('geoLocal');
-  let token = reactLocalStorage.get('token');
+  let reswait = common.coordinateLocal();
+  let geoL = localStorage.getItem('geoLocal');
+  console.log(geoL)
+  let token = localStorage.getItem('token');
   let coords={
     lat: 0,
     lng: 0
@@ -33,8 +35,8 @@ const letlong = () =>{
     coords = JSON.parse(geoL)
   }else if(token){
     let geoServ = reactLocalStorage.get('geoServer');
-    console.log(geoServ, geoL)
-    coords = geoL != undefined?JSON.parse(geoL):JSON.parse(geoServ);
+    // console.log(geoServ, geoL)
+    coords = geoServ ?JSON.parse(geoServ) : JSON.parse(geoL);
   }
   // return common.coordinate()
   return {

@@ -1,4 +1,5 @@
-let ROOT_URL ='http://staging.alphonic.net.in:6002/api/v1/c'
+// let ROOT_URL ='http://staging.alphonic.net.in:6002/api/v1/c'
+let ROOT_URL ='https://doapi.alphonic.net.in/api/v1/c'
 /* if(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'){
     console.log(1);
     // ROOT_URL ='https://jsonplaceholder.typicode.com'

@@ -873,8 +873,13 @@ header .after_login ul li, header .logo img {
 .cardHldrName img {
     max-height: 40px;
 }
-
-
+span.vendorAvlv {
+    margin-left: 10px;
+    color: red !important;
+}
+.notAvail {
+    opacity: 0.6;
+}
 
 
 

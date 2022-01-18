@@ -9,7 +9,7 @@ import * as Yup from "yup";
 import common from "../../services/common";
 import { useEffect, useState } from "react";
 export default function SignUpPage(props) {
-    const VendroBaseURL='http://staging.alphonic.net.in:6002/api/v1/v';
+    const VendroBaseURL='https://doapi.alphonic.net.in/api/v1/v';
     const history = useRouter();
     const [category,setCategory]=useState(null);
     const initialValues = {
@@ -52,9 +52,9 @@ export default function SignUpPage(props) {
             /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
             "Password must contain at least 8 characters, one uppercase, one number and one special case character"
         ),
-        confirmPassword: Yup
-        .string()
-        .required("Please enter confirm password"),
+        confirmPassword: Yup.string().required('Please enter confirm password').test("match", "password isn't match", (values)=>{
+            return values == formik.values.password;
+        }),
     });
     const formik = useFormik({
       initialValues,
@@ -75,8 +75,9 @@ export default function SignUpPage(props) {
             common.loader(false);
             //http://staging.alphonic.net.in:6200
             // console.log(res.data.data)
+            let urlOrigin = 'https://vendor.alphonic.net.in'
             history.push({
-                    pathname: 'http://localhost:3002/verifyEmail',
+                    pathname: `${urlOrigin}/verifyEmail`,
                     query: { email: userData.email, otp: res.data.otp}
                 });
           }else{
@@ -90,11 +91,9 @@ export default function SignUpPage(props) {
           common.loader(false);
         });
     };
-
     function getCategory(){
         axios.get(`${VendroBaseURL}/vendorCategory/getAll`)
         .then((res) => {
-            console.log(res)
             setCategory(res.data.data)
         }).catch((error)=>{
             console.log(error);

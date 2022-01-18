@@ -46,12 +46,20 @@ export default function SearchPage(props) {
         })
     }
     
-    async function addToCart(prodId,vendId){
-        await cartService.addToCart(prodId, vendId, props);
+    async function addToCart(data){
+        var stockchk = data.stock
+        var quantity = data.quantity
+        if(stockchk > quantity){
+            await cartService.addToCart(data._id, data.vendorId._id, props);
+        }else{
+            toast.error('Out of Stock;')
+        }
+        
     }
-    async function removeToCart(prodId,vendId){
-        await cartService.removeToCart(prodId, vendId, props);
+    async function removeToCart(data){
+        await cartService.removeToCart(data._id, data.vendorId._id, props);
     }
+    
 
     
     
@@ -131,7 +139,6 @@ export default function SearchPage(props) {
     */
     return (
       <>
-      <ToastContainer />
         <div className="search_outer ">
             <div className="container">
                 <div className="search_inner my-5">
@@ -161,7 +168,7 @@ export default function SearchPage(props) {
                             <div  key={index}>
                                 {/* { data.category.name.replaceAll(' ','') == category.replaceAll(' ','')} */}
                                 {data.vendorId.storeType == category  && (
-                            <div className="product_grpup">
+                            <div className={`product_grpup ${!data.vendorId.isAvailable? 'notAvail':'avail'}`}>
                                 <div className="product_informaction d-flex flex-wrap align-items-center bg-white mb-3">
                                     <div className="product_img">
                                         {data.defaultImage && (
@@ -173,17 +180,38 @@ export default function SearchPage(props) {
                                         <div className="producliscont">
                                             <h6><b>{data.name}</b></h6>
                                             <div className="price"><h6> ${data.price} </h6></div>
-                                            <Link href={`/store-view?id=${data.vendorId._id}`}><span> {data.vendorId.storeName} </span></Link>
+                                            <Link href={`/store-view?id=${data.vendorId._id}`}>
+                                                <span> 
+                                                    {data.vendorId.storeName}
+                                                    {!data.vendorId.isAvailable && (
+                                                        <span className="vendorAvlv">
+                                                            (Not Available)
+                                                        </span>
+                                                    )}
+                                                </span>
+                                            </Link>
+                                            
                                         </div>
                                        <div className={`prolislbtn ${data.quantity>0?'active':'deactive'}`}>
                                        {data.quantity>0?(
+                                           <div className={`${data.stock < data.quantity?'stockOut':'stockIn'}`}> 
                                             <div className={`quntityPls`}>
-                                                <button type="button" onClick={()=>removeToCart(data._id,data.vendorId._id)} className="qty-minus">-</button>
+                                                <button type="button" onClick={()=>removeToCart(data)} className="qty-minus">-</button>
                                                 <input type="text" readOnly className="qty" value={data.quantity} />
-                                                <button type="button" onClick={()=>addToCart(data._id,data.vendorId._id)} className="qty-plus">+</button>
+                                                <button type="button" onClick={()=>addToCart(data)} className="qty-plus">+</button>
+                                            </div>
+                                            {data.stock < data.quantity && (
+                                                <div className="text-danger text-center">Out of stock</div>
+                                            )}
                                             </div>
                                         ):(
-                                            <a className="add_product" onClick={()=>addToCart(data._id,data.vendorId._id)}> add  <i className="far fa-plus"> </i> </a>
+                                            <div className={`${data.stock <= 0?'stockOut':'stockIn'}`}> 
+                                                {(data.stock <= 0) ? (
+                                                    <div className="text-danger text-center">Out of stock</div>
+                                                ):(
+                                                    <a className="add_product" onClick={()=>addToCart(data)}> add  <i className="far fa-plus"> </i> </a>
+                                                )}
+                                            </div>
                                         )}
                                         </div> 
                                         

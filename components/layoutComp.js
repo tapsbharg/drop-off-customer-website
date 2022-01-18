@@ -6,7 +6,7 @@ import apiFunc from "../services/api";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { useEffect } from "react";
 import Cart from "./cartComp";
-import common from "../services/common";
+import { UserProvider } from "./context/locationContext";
 
 
 
@@ -32,13 +32,9 @@ useEffect(() => {
     refreshtoken()
   }, 10000);
   if(!token){
-    console.log(token)
     clearInterval(intrVal);
   }
-  common.coordinateLocal();
 },[])
-
-
 
 
 
@@ -59,6 +55,7 @@ useEffect(() => {
         <Head>
             <title>Drop Off Customer</title>
         </Head>
+        <UserProvider>
         <div className="loaderWRapper">
           <div className="loader loaderCircle"></div>
         </div>
@@ -70,7 +67,7 @@ useEffect(() => {
         <Footer />
         <Cart props={props} />
         </div>
-        
+        </UserProvider>
       </>
     )
   }

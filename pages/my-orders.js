@@ -69,7 +69,7 @@ export default function MyOrdersPage(props) {
                                                 <div className="my_order01 d-flex flex-wrap justify-content-between align-items-center vendmrnadpr">
                                                     <div className="d-flex flex-wrap justify-content-between align-items-center vendrodewrp">
                                                         <div className="my_order_img">
-                                                            <img src={data.vendorId.image.path} alt=""/>
+                                                            {data.vendorId.image&&(<img src={data.vendorId.image.path} alt=""/>)}
                                                         </div>
                                                         <div className="my_order_content px-2">
                                                             <p> <b> {data.vendorId.storeName} </b>  

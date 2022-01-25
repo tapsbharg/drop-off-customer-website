@@ -28,6 +28,7 @@
     "react-geolocated": "^3.2.0",
     "react-moment": "^1.1.1",
     "react-payment-inputs": "^1.1.8",
+    "react-rating": "^2.0.5",
     "react-toastify": "^7.0.4",
     "reactjs-localstorage": "^1.0.1",
     "yup": "^0.32.9"

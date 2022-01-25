@@ -161,7 +161,6 @@ export default function ProfilePage(props) {
     return (
       <>
       <DashLayout props={props}>
-          <ToastContainer/>
         <div className="description_right">
             <div className="profile_outer"> 
                 <div className="d-flex flex-wrap justify-content-between align-items-center mb-4">

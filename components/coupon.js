@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import * as Yup from "yup"
 import apiFunc from "../services/api";
 import common from "../services/common";
+import { Modal } from "react-bootstrap"
 
 
 
@@ -11,6 +12,11 @@ function CouponComp(props){
     const [coupon, setCoupon] = useState({});
     const [couponError, setCouponError] = useState(null);
     const [couponSuccess, setCouponSuccess] = useState(null);
+    const [couponLS, setCouponList] = useState([]);
+    const [couponModal,setCouponModal]=useState(false);
+    const couponModalFunc = (type) =>{
+        setCouponModal(type)
+    }
     const initialValues = {
         couponCode:'',
         orderAmount:''
@@ -57,6 +63,29 @@ function CouponComp(props){
             }, 3000);
         });
     }
+    const searchCoupon = (strg) =>{
+        couponList(strg)
+    }
+    const couponList = (strg)=>{
+        let data = {
+            "vendorId": props.vendorId,
+            "searchString": strg
+        }
+        couponModalFunc(true);
+        apiFunc.couponList(data).then((res)=>{
+            setCouponList(res.data.result)
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
+    const applyCoupon = (data) =>{
+        let cpData={
+            couponCode:data.couponCode,
+            orderAmount:props.total
+        }
+        couponIsvalid(cpData);
+        couponModalFunc(false)
+    }
     useEffect(()=>{
         if(props.total){
             formik.setFieldValue('orderAmount',props.total);
@@ -88,6 +117,9 @@ function CouponComp(props){
                         </div>
                         <button type="submit" className="codeVeryfy">Apply</button>
                     </div>
+                    <div className="couponListwrp">
+                        <a onClick={()=>couponList()}>View Coupons</a>
+                    </div>
                     {(formik.touched.couponCode && formik.errors.couponCode) && (!couponError) ? (
                         <div className="errorMsg">{formik.errors.couponCode}</div>
                     ) : null}
@@ -99,6 +131,48 @@ function CouponComp(props){
             )}
                 
             </div>
+            <Modal
+                show={couponModal}
+                onHide={()=>{couponModalFunc(false)}}
+                backdrop="static"
+                keyboard={false}
+                className="modal-gray"
+                centered
+            >
+                <div className="apply_coupon">
+                    <div className="apply_coupon_contant bg-white p-5 rounded-3">
+                        <i className="fal fa-times-circle"  onClick={()=>{couponModalFunc(false)}}></i>
+                        <h5> Apply Coupon </h5>
+                        <form className="mb-3" action="">
+                            <div>
+                                <i className="far fa-search"></i>
+                                <input type="search" className="form-control" placeholder="Search Item..." onChange={(e)=>searchCoupon(e.target.value)} aria-label="Search"/> 
+                            </div>
+                        </form>
+                        {couponLS.map((data,key)=>(
+                            <div className="coupon_code mb-3" key={key}>
+                                <ul>
+                                    <li className="off"><b> {data.discount}% OFF </b></li>
+                                    <li className="content">Use code <b>{data.couponCode}</b> to avail this offer</li>
+                                    <li className="edit">
+                                        <a onClick={()=>applyCoupon(data)}> Apply </a> 
+                                    </li>
+                                </ul>
+                            </div>
+                        ))}
+                        
+                        {/* <div className="coupon_code mb-3">
+                            <ul>
+                                <li className="off"><b> 50% OFF </b></li>
+                                <li className="content">Use code NEW50 to avail this offer</li>
+                                <li className="edit">
+                                    <a href="#"> Apply </a> 
+                                </li>
+                            </ul>
+                        </div> */}
+                    </div>
+                </div>
+            </Modal>
         </>
     )
 }

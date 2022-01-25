@@ -402,7 +402,30 @@ const apiFunc = {
       method: "POST",
       url: `${ROOT_URL}/coupon/isValid`,
       data: data,
-    })
+    }),
+    couponList: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/coupon/listing`,
+      data: data,
+    }),
+    ratingVendor: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/ratings/vendor`,
+      data: data,
+    }),
+    ratingDriver: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/ratings/driver`,
+      data: data,
+    }),
+    getOrderReview: (id) =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/ratings/givenForOrder/${id}`,
+    }),
 };
 
 export default apiFunc;

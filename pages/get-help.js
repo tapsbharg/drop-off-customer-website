@@ -81,7 +81,6 @@ export default function GetHelpsPage(props) {
     }
     return (
       <>
-      <ToastContainer />
       <DashLayout props={props}>
         <div className="description_right">
                 <div className="">

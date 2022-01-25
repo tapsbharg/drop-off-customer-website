@@ -19,7 +19,6 @@ import moment from "moment";
 
 export default function CheckoutPage(props) {
     const [withdrawalModal,setWithdrawalModal]=useState(false);
-    const [couponModal,setCouponModal]=useState(false);
     const [orderMsgModal,setOrderMsgModal]=useState(false);
     const [cardList,setCardList]=useState([]);
     const [cardStatus,setCardStatus]=useState(false);
@@ -33,22 +32,22 @@ export default function CheckoutPage(props) {
     const [profileData, SetProfileData]=useState({});
     const [prescrpImage, setPrescrpImage]=useState(null);
     const [orderDate, setOrderDate]=useState();
-    const [couponData, setCouponData]=useState(null);
+    const [couponData, setCouponData]=useState({});
     // const [totalAmt,setTotalAmt]=useState(0); 
     const [orderTotal,setOrderTotal]=useState({
         subTotal :0.00,
         referralDeduction:0.00,
         couponDeduction:0.00,
         serviceFee:0.00,
-        deliverAmt:0.00,
+        deliveryAmount:0.00,
         serviceFeePercent:0.00,
         deliveryBasePrice:0.00,
         deliveryPerMileCharge:0.00,
         deliveryDistanceInMiles:0,
-        scheduleDate:null,
-        couponId:null,
-        addressId:null,
-        prescriptionImage:null,
+        scheduleDate:"",
+        couponId:"",
+        addressId:"",
+        prescriptionImage:"",
         grandTotal:0,
     });
     const [orderData,setOrderData]=useState(null);
@@ -66,14 +65,11 @@ export default function CheckoutPage(props) {
     const addCardModal = (type) =>{
         setWithdrawalModal(type)
     }
-    const couponModalFunc = (type) =>{
-        setCouponModal(type)
-    }
+    
     const orderMsgModalFunc = (type) =>{
         setOrderMsgModal(type)
     }
     const cardStatusFuc = (e) =>{
-        console.log(e)
         setCardStatus(e)
     }
     
@@ -242,26 +238,25 @@ export default function CheckoutPage(props) {
         let subTotal  = parseFloat(total);
         let serviceFee = parseFloat(((total * chargess.serviceFeePercent) / 100));
         let serviceFeePercent = chargess.serviceFeePercent || 0;
-        let deliverAmt = parseFloat(((chargess.deliveryPerMileCharge * totalMiles) + chargess.deliveryBasePrice));
+        let deliveryAmount = parseFloat(((chargess.deliveryPerMileCharge * totalMiles) + chargess.deliveryBasePrice));
         let referralDeduction = parseFloat(orderTotal.referralDeduction);
         let couponObj = {
             ...couponData,
             price:subTotal
         }
-        console.log(couponObj)
         let couponDeduction = common.coupanTypeDiscount(couponObj) || 0;
         let deliveryBasePrice = chargess.deliveryBasePrice || 0;
-        let grandTotal = (parseFloat((parseFloat(total) + parseFloat(serviceFee) + parseFloat(deliverAmt))) - parseFloat(couponDeduction + referralDeduction));
+        let grandTotal = (parseFloat((parseFloat(total) + parseFloat(serviceFee) + parseFloat(deliveryAmount))) - parseFloat(couponDeduction + referralDeduction));
         
-        let addressId = addressStatus?addressStatus._id:null || null
-        let cardId = cardStatus?cardStatus.cardId:null || null
-        let prescriptionImage = prescription || null
+        let addressId = addressStatus?addressStatus._id:"" || "";
+        let cardId = cardStatus?cardStatus.cardId:"" || "";
+        let prescriptionImage = prescription || "";
         let deliveryDistanceInMiles = totalMiles || 0
         await setOrderTotal({
             ...orderTotal,
             subTotal :subTotal.toFixed(2) ,
             serviceFee:serviceFee.toFixed(2),
-            deliverAmt:deliverAmt.toFixed(2),
+            deliveryAmount:deliveryAmount.toFixed(2),
             couponDeduction:couponDeduction.toFixed(2),
             referralDeduction:referralDeduction.toFixed(2),
             deliveryBasePrice:deliveryBasePrice.toFixed(2),
@@ -318,7 +313,6 @@ export default function CheckoutPage(props) {
     }
     return (
       <>
-      <ToastContainer />
       <AuthLayout props={props}>
           {props.cartData && (
               props.cartData.cart.length > 0 ? (
@@ -375,7 +369,7 @@ export default function CheckoutPage(props) {
                                         </table>
                                     </div>
                                     
-                                    <CouponComp total={orderTotal.subTotal} setDataCoupon={(e)=>{
+                                    <CouponComp total={orderTotal.subTotal} vendorId={props.cartData.vendor._id} setDataCoupon={(e)=>{
                                         setOrderTotal({
                                             ...orderTotal,
                                             couponId:e.couponObj._id
@@ -477,14 +471,14 @@ export default function CheckoutPage(props) {
                                                 </tr>
                                                 <tr>
                                                     <td>Delivery Charge </td>
-                                                    <td>${orderTotal.deliverAmt}</td>
+                                                    <td>${orderTotal.deliveryAmount}</td>
                                                 </tr>
                                                 <tr>
                                                     <td> Referral </td>
                                                     <td>- ${orderTotal.referralDeduction}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Coupon (Store) </td>
+                                                    <td>Coupon {couponData.couponIssuer?`(${couponData.couponIssuer})`:''}</td>
                                                     <td>- ${orderTotal.couponDeduction}</td>
                                                 </tr>
                                                 <tr>
@@ -519,54 +513,7 @@ export default function CheckoutPage(props) {
             ):
                 (<EmptyCart/>)
             )}
-           <Modal
-                show={couponModal}
-                onHide={()=>{couponModalFunc(false)}}
-                backdrop="static"
-                keyboard={false}
-                className="modal-gray"
-                centered
-            >
-                <div className="apply_coupon">
-                    <div className="apply_coupon_contant bg-white p-5 rounded-3">
-                        <i className="fal fa-times-circle"  onClick={()=>{couponModalFunc(false)}}></i>
-                        <h5> Apply Coupon </h5>
-                        <form className="mb-3" action="">
-                            <div>
-                                <i className="far fa-search"></i>
-                                <input type="search" className="form-control" placeholder="Search Item..." aria-label="Search"/> 
-                            </div>
-                        </form>
-                        <div className="coupon_code mb-3">
-                            <ul>
-                                <li className="off"><b> 50% OFF </b></li>
-                                <li className="content">Use code NEW50 to avail this offer</li>
-                                <li className="edit">
-                                    <a href="#"> Apply </a> 
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="coupon_code mb-3">
-                            <ul>
-                                <li className="off"><b> 50% OFF </b></li>
-                                <li className="content">Use code NEW50 to avail this offer</li>
-                                <li className="edit">
-                                    <a href="#"> Apply </a> 
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="coupon_code mb-3">
-                            <ul>
-                                <li className="off"><b> 50% OFF </b></li>
-                                <li className="content">Use code NEW50 to avail this offer</li>
-                                <li className="edit">
-                                    <a href="#"> Apply </a> 
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </Modal>
+           
             <Modal
                 show={orderMsgModal}
                 onHide={()=>{orderMsgModalFunc(false)}}

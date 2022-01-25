@@ -40,7 +40,6 @@ export default function ChangePasswordPage(props) {
     return (
       <>
       <DashLayout props={props}>
-      <ToastContainer />
       <div className="description_right">
                         <div className=" change_password_web">
                             <div className="form_middle">

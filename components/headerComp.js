@@ -2,8 +2,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
+import Moment from 'react-moment';
 import { toast } from 'react-toastify';
 import { reactLocalStorage } from 'reactjs-localstorage';
+import apiFunc from '../services/api';
 import api from "../services/api";
 import common from '../services/common';
 import { UserContext } from './context/locationContext';
@@ -14,10 +16,18 @@ export default function Header(appProps) {
 
   const [profile, setProfile] = useState({});
   const [address, setAddress] = useState({});
+  const [notificationList, setNotification] = useState(new Array());
   const history = useRouter();
 
   const context = useContext(UserContext);
-  
+  const calendarStrings = {
+    lastDay : '[Yesterday at] LT',
+    sameDay : '[Today at] LT',
+    nextDay : '[Tomorrow at] LT',
+    lastWeek : '[last] dddd [at] LT',
+    nextWeek : 'dddd [at] LT',
+    sameElse : 'L'
+  };
   useEffect(() => {
     if (appProps.props.auth) {
       api.getProfileData().then((res) => {
@@ -39,6 +49,7 @@ export default function Header(appProps) {
         console.log(error);
         toast.error(error.message);
       });
+      getNotification();
     }
   }, [appProps.props.auth]);
   function logOut(){
@@ -57,6 +68,19 @@ export default function Header(appProps) {
 
   //  const AddressContext = AddressContext(address);
   //  console.log(AddressContext)
+
+
+   const getNotification = () => {
+     let notiData = {
+        page : 1,
+        perPage : 20
+    }
+     apiFunc.notification(notiData).then((res)=>{
+      setNotification(res.data.result)
+     }).catch((error) => {
+      console.log(error);
+    });
+   }
     return (
       <>
         <header className="header">
@@ -104,77 +128,25 @@ export default function Header(appProps) {
 
                     <Dropdown.Menu>
                       <div className="notification_popup_inner">
-                        <div className="notification_box  p-3">
-                          <ul>
-                            <li className="active">
-                              <div className="form-check form-switch">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  id="flexSwitchCheckChecked"
-                                  checked=""
-                                />
+                      <div className="notifyInside scroller">
+
+                        {notificationList.map((data,key)=>(
+                          <div className="notifyWrappr  p-3" key={key}>
+                            <div className="d-flex flex-wrap justify-content-between notifyHead">
+                              <div className="notifyHeadinNamge">
+                                <h4>{data.title}</h4>
                               </div>
-                            </li>
-                            <li className="title">
-                              {" "}
-                              <b> Free Delivery </b>
-                            </li>
-                            <li className="date">02:32AM</li>
-                            <li className="content">
-                              Lorem ipsum dolor sit amet, consetetur sadipscing
-                              elitr, sed diam nonumy eirmod tempor invidunt ut
-                              labore et dolore magna{" "}
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="notification_box  p-3">
-                          <ul>
-                            <li className="active">
-                              <div className="form-check form-switch">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  id="flexSwitchCheckChecked"
-                                  checked=""
-                                />
+                              <div className="notifyTimer">
+                              <Moment calendar={calendarStrings}>
+                                {data.createdAt}
+                              </Moment>
                               </div>
-                            </li>
-                            <li className="title">
-                              {" "}
-                              <b> Free Delivery </b>
-                            </li>
-                            <li className="date">02:32AM</li>
-                            <li className="content">
-                              Lorem ipsum dolor sit amet, consetetur sadipscing
-                              elitr, sed diam nonumy eirmod tempor invidunt ut
-                              labore et dolore magna{" "}
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="notification_box  p-3">
-                          <ul>
-                            <li className="active">
-                              <div className="form-check form-switch">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  id="flexSwitchCheckChecked"
-                                  checked=""
-                                />
-                              </div>
-                            </li>
-                            <li className="title">
-                              {" "}
-                              <b> Free Delivery </b>
-                            </li>
-                            <li className="date">02:32AM</li>
-                            <li className="content">
-                              Lorem ipsum dolor sit amet, consetetur sadipscing
-                              elitr, sed diam nonumy eirmod tempor invidunt ut
-                              labore et dolore magna{" "}
-                            </li>
-                          </ul>
+                            </div>
+                            <div className="notifyDescrp">
+                              <p>{data.description}</p>
+                            </div>
+                          </div>
+                        ))}
                         </div>
                         <Link href="/notifications">
                           <span className="btn cus_btn custom01 d-block"> View All </span>

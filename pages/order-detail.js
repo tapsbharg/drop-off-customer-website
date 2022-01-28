@@ -7,18 +7,27 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import Rating from "react-rating";
 import { toast } from "react-toastify";
+import Link from 'next/link'
+import Moment from "react-moment";
 
 export default function OrderDetailPage(props) {
     const [reviewModal, setReviewModal]=useState(false);
+    const [CancelModal, setCancelModal]=useState(false);
     const [reviewType, setReviewType]=useState('');
     const [ratingView, setRating]=useState(0);
     const [orderReview, setOrderReview]=useState({});
     const [orderData, setOrderData] = useState({
         vendorId:{storeName:'',address:''},
         products:[],
-        rating:{}
+        rating:{},
+        subTotal:0,
+        serviceFee:0,
+        deliveryAmount:0,
+        referralDeduction:0,
+        couponDeduction:0,
+        grandTotal:0,
     });
-    const router = useRouter()
+    const router = useRouter() ;
     const params = router.query || '';
     const orderId = params.orderId || '';
     function getOrderById(data){
@@ -96,12 +105,44 @@ export default function OrderDetailPage(props) {
             setReviewModal(false);
             getOrderReview(orderId)
             toast.success(`Thankyou for giving your valuable feedback`)
-        })
+        }).catch((error) => {
+            var message = JSON.parse(error.request.response).message;
+            toast.error(message);
+          });
       }
       const handleRating = (rate)=>{
           formik.setFieldValue("rating",rate);
           formik.handleChange("rating");
           setRating(rate)
+      }
+      const initialValues2 = {
+        cancelReason: "",
+        cancelMessage: "", 
+      };
+    const validationSchema2 = Yup.object({
+        cancelReason: Yup.string().required("Please select reason"),
+        cancelMessage:Yup.string().required('Please enter message'),
+      });
+    const formik2 = useFormik({
+        initialValues:initialValues2,
+        validationSchema2,
+        onSubmit: async(values) => {
+          console.log("submit", values,orderId);
+          cancelOrder(values,orderId);
+        },
+      });
+      const cancelOrder = (data,orderId) =>{
+          if(orderId){
+            apiFunc.cancelOrder(data,orderId).then((res)=>{
+                setCancelModal(false)
+                toast.success(res.data.message);
+            }).catch((error) => {
+                var message = JSON.parse(error.request.response).message;
+                toast.error(message);
+                setCancelModal(false)
+              });
+          }
+        
       }
     return (
       <>
@@ -117,33 +158,89 @@ export default function OrderDetailPage(props) {
                                 <table className="order_from">
                                     <thead>
                                         <tr>
-                                            <th colSpan="4"> Order From </th>
+                                            <th colSpan="4">
+                                                <div className="ordDetaheadWRp">
+                                                    <div className="ordrInfor">
+                                                        <h3>ORDER ID #123455</h3>
+                                                    </div>
+                                                    <div className="goHelp">
+                                                        <Link href="/help">
+                                                            Help
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td className="address" colSpan="2"> 
+                                            <td className="address" colSpan="2">
                                                 {orderData.vendorId.storeName} 
                                                 <span><i className="fas fa-map-marker-alt"></i> {orderData.vendorId.address}</span> 
                                             </td>
                                         </tr>
                                         {orderData.products.map((data,index)=>(
                                             <tr key={index}>
-                                                <td className="on-off"> 
-                                                    <div className={`vegtype ${data.isNonVeg?'non-veg':'veg'}`}></div>
+                                                <td className="content on-off" valign="center">
+                                                    <span className={`vegtype ${data.isNonVeg?'non-veg':'veg'}`}></span>
+                                                    <span>{data.productName}</span>
                                                 </td>
-                                                <td className="content">{data.productName}</td>
                                                 <td className="quntity">  
                                                             x{data.quantity}
                                                 </td>
-                                                <td className="price" > ${data.price} </td>
+                                                <td className="price text-end" > ${(data.price).toFixed(2)} </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
                                 
-                            
+                            <div className= "order_detail p-3 my-3 bg-light02" > 
+                                <div className="ordDetaheadWRp">
+                                    <div className="ordrInfor">
+                                        <h3>
+                                            Order Status
+                                            {orderData.scheduleDate && (
+                                                <span> (Scheduled for <Moment format="DD MMM YYYY">{orderData.scheduleDate}</Moment>)</span>
+                                            )}
+                                        </h3>
+                                    </div>
+                                    <div className="goHelp">
+                                        {orderData.status != 'CANCELLED' && (
+                                            <div className="cancel_ordr_Pwrp">
+                                                <a onClick={()=>setCancelModal(true)}>Cancel</a>
+                                            </div>
+                                        )}
+                                        
+                                    </div>
+                                </div>
+                                <ul className={`ordr_status ${orderData.status}`}>
+                                    <li className={`unactive ${(orderData.status == 'ACCEPTS' || orderData.status == 'PACKED' || orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
+                                        <i className="fas fa-check "></i > 
+                                        <span> <b> Accepted </b></span> 
+                                    </li>
+                                    <li className={`unactive ${(orderData.status == 'PACKED' || orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
+                                        <i className="fas fa-check"></i> 
+                                        <span> <b> Packed </b></span> 
+                                    </li>
+                                    <li className={`unactive ${(orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
+                                        <i className="fas fa-check"></i> 
+                                        <span> <b> On The Way </b>&nbsp;</span > 
+                                    </li>
+                                    {orderData.status == 'CANCELLED' ? (
+                                        <li className={`unactive ${orderData.status == 'CANCELLED'? 'active':''}`}>
+                                            <i className="fas fa-check"></i> 
+                                            <span> <b> Cancelled </b>&nbsp;</span>
+                                        </li>
+                                    ):(
+                                        <li className={`unactive ${orderData.status == 'DELIVERED'? 'active':''}`}>
+                                            <i className="fas fa-check"></i> 
+                                            <span> <b> Delivered </b>&nbsp;</span>
+                                        </li>
+                                    )}
+                                    
+                                </ul>
+                            </div>
                             <div className="summer_box04 bg-light02 rounded-3 p-3 mb-3">
                                 <table>
                                     <thead>
@@ -154,30 +251,31 @@ export default function OrderDetailPage(props) {
                                     <tbody>   
                                         <tr> 
                                             <td> Sub Total </td>
-                                            <td>${orderData.subTotal}</td>
+                                            <td>${(orderData.subTotal).toFixed(2)}</td>
                                         </tr>
                                         <tr>
                                             <td>Service Fee </td>
-                                            <td>${orderData.serviceFee}</td>
+                                            <td>${(orderData.serviceFee).toFixed(2)}</td>
                                         </tr>
                                         <tr>
                                             <td>Delivery Charge </td>
-                                            <td>${orderData.deliveryAmount}</td>
+                                            <td>${(orderData.deliveryAmount).toFixed(2)}</td>
                                         </tr>
                                         <tr>
                                             <td> Referral </td>
-                                            <td>- ${orderData.referralDeduction}</td>
+                                            <td>- ${(orderData.referralDeduction).toFixed(2)}</td>
                                         </tr>
                                         <tr>
                                             <td>Coupon {orderData.coupon?`(${orderData.coupon.couponIssuer})`:''} </td>
-                                            <td>- ${orderData.couponDeduction}</td>
+                                            <td>- ${(orderData.couponDeduction).toFixed(2)}</td>
                                         </tr>
                                         <tr>
                                             <td>Grand Total </td>
-                                            <td>${orderData.grandTotal}</td>
+                                            <td>${(orderData.grandTotal).toFixed(2)}</td>
                                         </tr>
                                     </tbody>
                                 </table>
+                                
                             </div>
                             
                         </div>
@@ -297,6 +395,47 @@ export default function OrderDetailPage(props) {
                                 <input type="text" {...formik.getFieldProps("review")} className="form-control" placeholder="Enter review"/>
                                 {formik.touched.review && formik.errors.review ? (
                                     <div className="errorMsg">{formik.errors.review}</div>
+                                ) : null}
+                            </div> 
+                        </div>
+                        <div className="text-center">
+                            <button type="submit" className="btn cus_btn custom01"> Submit </button>
+                        </div>
+                        
+                    </form>
+                    
+                </div>
+            </div>
+        </Modal>
+        <Modal
+    show={CancelModal}
+    onHide={()=>{setCancelModal(false)}}
+    backdrop="static"
+    keyboard={false}
+    className="modal-gray"
+    centered
+        >
+            <div className="add_new_card">
+                <div className="add_new_card_contant bg-white p-5 rounded-3">
+                    <i className="fal fa-times-circle" onClick={()=>setCancelModal(false)}></i>
+                    <h5 className="mb-4"> Cancel Order </h5>
+                    
+                    <form className=" " onSubmit={formik2.handleSubmit}>
+                        <div className="">
+                            <div className="mb-3">
+                                <select {...formik2.getFieldProps("cancelReason")} className="form-select" placeholder="Enter cancel message">
+                                    <option>Select Reason</option>
+                                    <option value="Price is too high">Price is too high</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                {formik2.touched.reason && formik2.errors.reason ? (
+                                    <div className="errorMsg">{formik2.errors.reason}</div>
+                                ) : null}
+                            </div> 
+                            <div className="mb-3">
+                                <textarea type="text" {...formik2.getFieldProps("cancelMessage")} className="form-textarea" placeholder="Enter cancel message"></textarea>
+                                {formik2.touched.message && formik2.errors.message ? (
+                                    <div className="errorMsg">{formik2.errors.message}</div>
                                 ) : null}
                             </div> 
                         </div>

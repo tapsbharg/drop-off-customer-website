@@ -426,6 +426,25 @@ const apiFunc = {
       method: "GET",
       url: `${ROOT_URL}/ratings/givenForOrder/${id}`,
     }),
+    notification: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/notification/pagin`,
+      data: data,
+    }),
+    cancelOrder: (data,id) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/order/cancel/${id}`,
+      data: data,
+    }),
+    givenForVendor: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/ratings/givenForVendor/pagin`,
+      data: data,
+    }),
+    
 };
 
 export default apiFunc;

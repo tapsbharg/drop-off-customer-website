@@ -880,7 +880,19 @@ span.vendorAvlv {
 .notAvail {
     opacity: 0.6;
 }
+.couponListwrp {
+    position: absolute;
+    right: 110px;
+    font-size: 13px;
+    top: 16px;
+}
 
-
+.summer_box01 {
+    position: relative;
+}
+.starsRating span {
+    color: #f90 !important;
+    font-size: 18px !important;
+}
 
 

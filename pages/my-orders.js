@@ -74,6 +74,7 @@ export default function MyOrdersPage(props) {
                                                         <div className="my_order_content px-2">
                                                             <p> <b> {data.vendorId.storeName} </b>  
                                                             <span>{data.vendorId.address}</span> </p> 
+                                                            <p>Order No : {data.orderNumber}</p>
                                                         </div>
                                                     </div>
                                                     <div className={`vendrStats ${data.status}`} href="#"> {data.status} </div> 
@@ -82,12 +83,11 @@ export default function MyOrdersPage(props) {
                                                 <ul className="my_order02 d-flex flex-wrap justify-content-between align-items-center py-3 my-3">
                                                     <li> 
                                                         <span> Ordered On </span> 
-                                                        <Moment format="DD MMM YYYY hh:mm:ss A">{data.createdAt}</Moment>
-                                                         
+                                                        <Moment format="DD MMM YYYY">{data.createdAt}</Moment>
                                                     </li>
                                                     <li>  
                                                         <span> Scheduled For </span>
-                                                        N/A
+                                                        <Moment format="DD MMM YYYY">{data.scheduleDate}</Moment>
                                                     </li>
                                                 </ul>
                                                 <ul className="my_order03 d-flex flex-wrap justify-content-between align-items-center ">
@@ -109,13 +109,13 @@ export default function MyOrdersPage(props) {
                             <div className="table_border">
                                 {/* <div className="release"> */}
                                 <PageModule
-                                totalItems={orderData.totalItemsCount}
-                                itemsPerPage={orderData.itemsCountPerPage}
-                                currentPage={orderData.activePage}
-                                range={3}
-                                pageChange={(page) => {
-                                    pageHasChanged(page);
-                                }}
+                                    totalItems={orderData.totalItemsCount}
+                                    itemsPerPage={orderData.itemsCountPerPage}
+                                    currentPage={orderData.activePage}
+                                    range={3}
+                                    pageChange={(page) => {
+                                        pageHasChanged(page);
+                                    }}
                                 />
                                 {/* </div> */}
                             </div>

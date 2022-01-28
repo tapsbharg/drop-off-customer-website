@@ -12,11 +12,15 @@ import StarRating from '../components/starComp'
 import moment from 'moment';
 import NoFound from "../components/notFound";
 import cartService from "../services/cartSrvice";
+import Rating from "react-rating";
+import PageModule from "../components/Pagination";
+import Moment from "react-moment";
 
 
 function StoreViewPage(props) {
     const [prodData, setProdData]=useState([]);
     const [venderInfo, setVenderInfo]=useState([]);
+    const [vendorReivew, setVendorReivew]=useState([]);
     const [guestId, setGuestId] = useState(null);
     const [storeOpenData, setStoreOpenData] = useState(false);
     const router = useRouter()
@@ -24,8 +28,20 @@ function StoreViewPage(props) {
     const vendorId = params.id || ''
     const search = params.search || ''
     const subcategory = params.subcategory || ''
-
-
+    const page = params.page || '';
+    const [reviewData, setReivewData] = useState({
+        list: [],
+        activePage: parseInt(page) || 1,
+        itemsCountPerPage: 10,
+      });
+      const calendarStrings = {
+        lastDay : '[Yesterday at] LT',
+        sameDay : '[Today at] LT',
+        nextDay : '[Tomorrow at] LT',
+        lastWeek : '[last] dddd [at] LT',
+        nextWeek : 'dddd [at] LT',
+        sameElse : 'L'
+      };
     function SubCategoryChange(subcat){
         var values = {
           id:vendorId,
@@ -148,6 +164,46 @@ function StoreViewPage(props) {
 
     },[])  
     // console.log(prodData)
+    
+    function pageHasChanged(pageNumber) {
+        if (pageNumber !== reviewData.activePage) {
+          setReivewData({
+            ...reviewData,
+            activePage: pageNumber,
+            list: [],
+          });
+    
+          router.push({
+            pathname: '/store-view',
+           query: values,
+        }) 
+        }
+      }
+
+    const getCustomerReview = (data)=>{
+        apiFunc.givenForVendor(data).then((res)=>{
+            setVendorReivew(res.data.result)
+            setReivewData({
+                ...reviewData,
+                list: res.data.result,
+            });
+        }).catch((error) => {
+            var message = JSON.parse(error.request.response).message;
+            toast.error(message);
+          });
+    }
+
+    useEffect(()=>{
+        if(vendorId){
+            let reviewPayload = {
+                "page" :  1,
+                "perPage" : 10,
+                "vendorId" : vendorId||'' 
+            }
+            getCustomerReview(reviewPayload);
+        }
+    },[vendorId]) 
+
     return (
       <>
       {vendorId =='' || vendorId == undefined ? (
@@ -169,8 +225,14 @@ function StoreViewPage(props) {
                   </div>
                   <div className="liquor_store_02 d-flex flex-wrap  align-items-center justify-content-between py-3">
                       <h3>{venderInfo.storeName} <span> <i className="fas fa-map-marker-alt"></i> {venderInfo.address} </span> </h3>
-                      <div className="stars">
-                          <StarRating rate={venderInfo.rating} />
+                      <div className="starsRating">
+                          <Rating
+                            emptySymbol="far fa-star"
+                            fullSymbol="fas fa-star"
+                            fractions={2}
+                            initialRating={venderInfo.rating ?venderInfo.rating:0}
+                            readonly
+                          />
                           <sup>{venderInfo.rating}</sup>
                       </div>
                   </div>
@@ -272,52 +334,54 @@ function StoreViewPage(props) {
                           <Tab eventKey="tab2" title="Top Reviews *">
                           <div className="all_reviews">
                                   <h6>All Reviews</h6>
+                                  {reviewData.list.map((data,key)=>(
                                   <div className="all_reviews_box d-flex flex-wrap justify-content-between mb-3"> 
                                       <div className="all_reviews_img ">
-                                          <img src="assets/images/web/earning.png" alt=""/>
+                                          {data.givenByUser && (
+                                            <img src={data.givenByUser.image.path} alt=""/>
+                                          )}
+                                          
                                       </div>
                                       <div className="all_reviews_content d-flex justify-content-between align-items-center bg-light01 p-3 rounded-3">
                                           <div className="all_reviews_cont">
-                                              <h6>Janny</h6>
-                                              <p>"Very good, this first time we will we how essay will come"</p>
+                                              <h6>{data.givenByUser.name}</h6>
+                                              <p>"{data.review}"</p>
                                           </div>
-                                          <div className="stars">
-                                              <i className="active fas fa-star"> </i>
-                                              <i className="active fas fa-star"> </i>
-                                              <i className="active fas fa-star"> </i>
-                                              <i className="active fas fa-star"> </i>
-                                              <i className="  fas fa-star"> </i>
-                                              <span> 4.88 </span>
-                                          </div>
-                                      </div>
-                                      <div className="message_date">
-                                          <span> 2 days ago </span> 
-                                      </div>
-                                  </div>
-                                  <div className="all_reviews_box d-flex flex-wrap justify-content-between mb-3"> 
-                                      <div className="all_reviews_img ">
-                                          <img src="assets/images/web/earning.png" alt=""/>
-                                      </div>
-                                      <div className="all_reviews_content d-flex justify-content-between align-items-center bg-light01 p-3 rounded-3">
-                                          <div className="all_reviews_cont">
-                                              <h6>Janny</h6>
-                                              <p>"Very good, this first time we will we how essay will come"</p>
-                                          </div>
-                                          <div className="stars">
-                                              <i className="active fas fa-star"> </i>
-                                              <i className="active fas fa-star"> </i>
-                                              <i className="active fas fa-star"> </i>
-                                              <i className=" fas fa-star"> </i>
-                                              <i className=" fas fa-star"> </i>
-                                              <span> 3.88 </span>
+                                          <div className="starsRating">
+                                            <Rating
+                                                emptySymbol="far fa-star"
+                                                fullSymbol="fas fa-star"
+                                                fractions={2}
+                                                initialRating={data.rating ?data.rating:0}
+                                                readonly
+                                            />
+                                            <sup>{data.rating}</sup>
                                           </div>
                                       </div>
                                       <div className="message_date">
-                                          <span> 2 days ago </span> 
+                                        <Moment calendar={calendarStrings}>
+                                            {data.createdAt}
+                                        </Moment>
                                       </div>
                                   </div>
+                                  ))}
 
                               </div>
+                              <div className="table_botm_paging">
+                            <div className="table_border">
+                                {/* <div className="release"> */}
+                                <PageModule
+                                        totalItems={reviewData.totalItemsCount}
+                                        itemsPerPage={reviewData.itemsCountPerPage}
+                                        currentPage={reviewData.activePage}
+                                        range={3}
+                                        pageChange={(page) => {
+                                            pageHasChanged(page);
+                                        }}
+                                    />
+                                    {/* </div> */}
+                                </div>
+                            </div>
                           
                           </Tab>
                       </Tabs>

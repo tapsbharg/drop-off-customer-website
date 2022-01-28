@@ -413,6 +413,8 @@ form  .user_image input {
     border: 1px solid #e1e1e1;
     padding: 3px;
     position: relative;
+    display: inline-block;
+    margin-right: 5px;
 }
 
 
@@ -891,8 +893,139 @@ span.vendorAvlv {
     position: relative;
 }
 .starsRating span {
-    color: #f90 !important;
+    color: #d20400 !important;
     font-size: 18px !important;
 }
+.notifyHead h4 {
+    font-size: 14px;
+    margin: 0;
+}
+
+.notifyTimer {
+    font-size: 12px;
+}
+
+.notifyHead {
+    margin-bottom: 9px;
+}
+
+.notifyDescrp p {
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+.notifyInside {
+    max-height: 50vh;
+    overflow: auto;
+}
+header.header {
+    position: sticky;
+    top: 0;
+    background: #fff;
+}
+ul.ordr_status {
+    display: flex;
+    display: -webkit-flex;
+    border-top: 2px solid #e3e3e3;
+    margin-top: 30px;
+}
+
+ul.ordr_status li {
+    font-size: 13px;
+    width: 25%;
+    position: relative;
+    padding-top: 24px;
+    padding: 24px 15px 0px;
+    text-align: center;
+}
+
+ul.ordr_status li i {
+    position: absolute;
+}
+
+ul.ordr_status li i {
+    position: absolute;
+    left: calc(50% - 15px);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid #e1e1e1;
+    top: -15px;
+    background: #fff;
+    color: #000;
+}
+
+ul.ordr_status li:before {
+    content: '';
+    background: #fff;
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    top: -2px;
+}
+
+ul.ordr_status li.active:before {
+    background: #000;
+}
+
+ul.ordr_status li.active i {
+    color: #fff;
+    background: #000;
+    border-color: #fff;
+}
+
+ul.ordr_status li p {
+    font-size: 10px;
+}
+.ordDetaheadWRp {
+    display: flex;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: -moz-flex;
+    align-items: center;
+}
+
+.goBack {
+    width: 60px;
+    text-align: right;
+}
+
+.goHelp {
+    width: 60px;
+    text-align: right;
+}
+
+.ordrInfor {
+    width: calc(100% - 60px);
+}
+
+.ordrInfor h3 {
+    font-size: 16px;
+    margin: 0;
+    font-weight: 900;
+}
+.ordrInfor h3 span {
+    font-size: 13px;
+}
+.all_reviews_img img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+
+
+
+
+
+
+
 
 

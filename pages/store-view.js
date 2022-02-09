@@ -214,7 +214,7 @@ function StoreViewPage(props) {
               <div className="liquor_store_inner mt-3 mb-5"> 
                   <div className="liquor_store_01" 
                   style={{
-                        backgroundImage: venderInfo.coverImage?'url(' + venderInfo.coverImage.path + ')':''
+                        backgroundImage: venderInfo.coverImage?'url(' + venderInfo.coverImage.path + ')':'url(/assets/images/default_banner.jpg)'
                     }}>
                         {venderInfo.isAvailable?(
                             <a href="#"> open </a>

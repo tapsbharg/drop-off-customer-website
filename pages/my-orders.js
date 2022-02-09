@@ -83,6 +83,7 @@ export default function MyOrdersPage(props) {
                                                     <div className="d-flex flex-wrap justify-content-between align-items-center vendrodewrp">
                                                         <div className="my_order_img">
                                                             {data.vendorId.image&&(<img src={data.vendorId.image.path} alt=""/>)}
+                                                            {!data.vendorId.image&&(<img src={`/assets/images/default_img.jpg`} alt=""/>)}
                                                         </div>
                                                         <div className="my_order_content px-2">
                                                             <p> <b> {data.vendorId.storeName} </b>  
@@ -123,6 +124,7 @@ export default function MyOrdersPage(props) {
                                                     <div className="d-flex flex-wrap justify-content-between align-items-center vendrodewrp">
                                                         <div className="my_order_img">
                                                             {data.vendorId.image&&(<img src={data.vendorId.image.path} alt=""/>)}
+                                                            {!data.vendorId.image&&(<img src={`/assets/images/default_img.jpg`} alt=""/>)}
                                                         </div>
                                                         <div className="my_order_content px-2">
                                                             <p> <b> {data.vendorId.storeName} </b>  

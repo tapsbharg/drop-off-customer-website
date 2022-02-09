@@ -135,6 +135,10 @@ export default function OrderDetailPage(props) {
           if(orderId){
             apiFunc.cancelOrder(data,orderId).then((res)=>{
                 setCancelModal(false)
+                if(orderId){
+                    getOrderById(orderId);
+                    getOrderReview(orderId)
+                }
                 toast.success(res.data.message);
             }).catch((error) => {
                 var message = JSON.parse(error.request.response).message;
@@ -161,7 +165,7 @@ export default function OrderDetailPage(props) {
                                             <th colSpan="4">
                                                 <div className="ordDetaheadWRp">
                                                     <div className="ordrInfor">
-                                                        <h3>ORDER ID #123455</h3>
+                                                        <h3>ORDER ID #{orderData.orderNumber}</h3>
                                                     </div>
                                                     <div className="goHelp">
                                                         <Link href="/help">
@@ -200,13 +204,13 @@ export default function OrderDetailPage(props) {
                                     <div className="ordrInfor">
                                         <h3>
                                             Order Status
-                                            {orderData.scheduleDate && (
+                                            {orderData.scheduleDate && (orderData.status != 'CANCELLED' && orderData.status != 'REJECTS') && (
                                                 <span> (Scheduled for <Moment format="DD MMM YYYY">{orderData.scheduleDate}</Moment>)</span>
                                             )}
                                         </h3>
                                     </div>
                                     <div className="goHelp">
-                                        {orderData.status != 'CANCELLED' && (
+                                        {(orderData.status == 'PENDING') && (
                                             <div className="cancel_ordr_Pwrp">
                                                 <a onClick={()=>setCancelModal(true)}>Cancel</a>
                                             </div>
@@ -215,27 +219,36 @@ export default function OrderDetailPage(props) {
                                     </div>
                                 </div>
                                 <ul className={`ordr_status ${orderData.status}`}>
-                                    <li className={`unactive ${(orderData.status == 'ACCEPTS' || orderData.status == 'PACKED' || orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
+                                    <li className={`unactive ${(orderData.status == 'ACCEPTS' || orderData.status == 'PACKED' || orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED' || orderData.status == 'REJECTS') ? 'active':''}`}>
                                         <i className="fas fa-check "></i > 
                                         <span> <b> Accepted </b></span> 
                                     </li>
-                                    <li className={`unactive ${(orderData.status == 'PACKED' || orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
-                                        <i className="fas fa-check"></i> 
-                                        <span> <b> Packed </b></span> 
-                                    </li>
-                                    <li className={`unactive ${(orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
-                                        <i className="fas fa-check"></i> 
-                                        <span> <b> On The Way </b>&nbsp;</span > 
-                                    </li>
-                                    {orderData.status == 'CANCELLED' ? (
+                                    {(orderData.status != 'CANCELLED' && orderData.status != 'REJECTS') && (
+                                        <>
+                                            <li className={`unactive ${(orderData.status == 'PACKED' || orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
+                                                <i className="fas fa-check"></i> 
+                                                <span> <b> Packed </b></span> 
+                                            </li>
+                                            <li className={`unactive ${(orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
+                                                <i className="fas fa-check"></i> 
+                                                <span> <b> On The Way </b>&nbsp;</span > 
+                                            </li>
+                                            <li className={`unactive ${orderData.status == 'DELIVERED'? 'active':''}`}>
+                                                <i className="fas fa-check"></i> 
+                                                <span> <b> Delivered </b>&nbsp;</span>
+                                            </li>
+                                        </>
+                                    )}
+                                    {orderData.status == 'CANCELLED' &&  (
                                         <li className={`unactive ${orderData.status == 'CANCELLED'? 'active':''}`}>
                                             <i className="fas fa-check"></i> 
                                             <span> <b> Cancelled </b>&nbsp;</span>
                                         </li>
-                                    ):(
-                                        <li className={`unactive ${orderData.status == 'DELIVERED'? 'active':''}`}>
+                                    )}
+                                    {orderData.status == 'REJECTS' &&  (
+                                        <li className={`unactive ${orderData.status == 'REJECTS'? 'active':''}`}>
                                             <i className="fas fa-check"></i> 
-                                            <span> <b> Delivered </b>&nbsp;</span>
+                                            <span> <b> Rejects </b>&nbsp;</span>
                                         </li>
                                     )}
                                     
@@ -291,9 +304,10 @@ export default function OrderDetailPage(props) {
                                     <p> <b> Store </b>  </p>
                                     {orderReview.toVendor ? (
                                         <p><span> {orderReview.toVendor.review} </span></p>
-                                    ) : (
-                                        <a className="but03" onClick={()=>addReivew('vendor')}>   Add Review </a>
-                                    )}
+                                    ) : (orderData.status != 'CANCELLED' && orderData.status != 'REJECTS') && (
+                                            <a className="but03" onClick={()=>addReivew('vendor')}>   Add Review </a>
+                                        )
+                                    }
                                 </div>
                                 <div className="location_content">
                                     <div className="starsRating">
@@ -314,9 +328,10 @@ export default function OrderDetailPage(props) {
                                     <p> <b> Driver </b>  </p>
                                     {orderReview.toDriver ? (
                                         <p><span> {orderReview.toDriver.review} </span></p>
-                                    ) : (
-                                        <a className="but03" onClick={()=>addReivew('driver')}>   Add Review </a>
-                                    )}
+                                    ) : (orderData.status != 'CANCELLED' && orderData.status != 'REJECTS') && (
+                                            <a className="but03" onClick={()=>addReivew('driver')}>   Add Review </a>
+                                        )
+                                    }
                                 </div>
                                 <div className="location_content">
                                     <div className="starsRating">

@@ -620,6 +620,8 @@ form input, form input.form-control[type="file"]{
 }
 .recommended_item_img img {
     width: 100px;
+    height: 100px;
+    object-fit: cover;
 }
 
 .recommended_content {
@@ -926,8 +928,10 @@ header.header {
 ul.ordr_status {
     display: flex;
     display: -webkit-flex;
-    border-top: 2px solid #e3e3e3;
+    border-top: 0 solid #e3e3e3;
     margin-top: 30px;
+    position: relative;
+    z-index: 1;
 }
 
 ul.ordr_status li {
@@ -956,21 +960,23 @@ ul.ordr_status li i {
     border: 1px solid #e1e1e1;
     top: -15px;
     background: #fff;
-    color: #000;
+    color: #ababab;
 }
 
 ul.ordr_status li:before {
     content: '';
     background: #fff;
     position: absolute;
-    left: 0;
+    left:0;
     right: 0;
     height: 2px;
     top: -2px;
+    z-index: -2;
 }
 
 ul.ordr_status li.active:before {
     background: #000;
+    z-index: 0;
 }
 
 ul.ordr_status li.active i {
@@ -1018,12 +1024,104 @@ ul.ordr_status li p {
     border-radius: 50%;
     object-fit: cover;
 }
+.tab-content .store_box .store_box_img {
+    width: 180px;
+    height: 180px;
+}
+.tab-content .store_box .store_content {
+    width: calc(100% - 180px);
+}
+.store_box_img.store_box_border {
+    border: 0px solid #000;
+    border-radius: 8px;
+}
+.pagination li {
+    border: 1px solid #121212;
+    border-left: 0;
+}
 
+.pagination li a {
+    padding: 5px 11px;
+    display: block;
+    color: #000;
+}
 
+.pagination li:nth-child(1) {
+    border-left: 1px solid #121212;
+}
 
+.pagination li.active a {
+    color: #fff;
+}
 
+.pagination li.active {
+    border-color: #212529;
+    color: #000;
+    background: #212529;
+}
+ul.ordr_status:before {
+    content: '';
+    position: absolute;
+    background: #e3e3e3;
+    left: 15%;
+    right: 15%;
+    height: 2px;
+    top: -2px;
+}
 
+ul.ordr_status li:nth-child(1):before {
+    width: 50%;
+    left: 50%;
+}
 
+ul.ordr_status li:nth-last-child(1):before {
+    width: 50%;
+}
+ul.ordr_status.CANCELLED:before {
+    right: 75%;
+}
+ul.ordr_status.REJECTS:before {
+    right: 75%;
+}
+.store_content .starsRating {
+    margin-bottom: 14px;
+}
+.product_informaction .product_img {
+    width: 120px;
+    height: 120px;
+}
+.product_informaction .product_img img {
+    height: 100%;
+}
+header .logo ul a {
+    width: 100%;
+    display: block;
+}
+
+.heaDerAdress {
+    width: calc(100% - 480px);
+}
+
+.logo {
+    width: 180px;
+}
+
+.after_login {
+    width: 300px;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: flex-end;
+}
+header ul li a {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+}
+.ql-editor {
+    -webkit-user-modify: read-only;
+}
 
 
 

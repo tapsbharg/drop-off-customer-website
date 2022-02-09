@@ -7,10 +7,12 @@ const cartService = {
      addToCart : async(prodId, vendId,props) => {
         let vendorData = props.cartData.vendor;
         if(vendorData._id != undefined && (vendorData._id !=vendId)){
-
+            let newVendorData = await apiFunc.getVendor(vendId).then((res)=> {
+                return res.data.data;
+            });
             await confirmAlert({
-                title: "Are you sure ?",
-                message: "You have choose different vendor's product, You want to replace cart.",
+                title: "Replace cart item ?",
+                message: `Your cart contains product  from ${vendorData.storeName}. Do you want to discard the selection and add product from ${newVendorData.storeName}`,
                 buttons: [
                   {
                     label: 'Confirm',

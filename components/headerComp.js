@@ -17,6 +17,7 @@ export default function Header(appProps) {
   const [profile, setProfile] = useState({});
   const [address, setAddress] = useState({});
   const [notificationList, setNotification] = useState(new Array());
+  const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const history = useRouter();
 
   const context = useContext(UserContext);
@@ -81,6 +82,7 @@ export default function Header(appProps) {
       console.log(error);
     });
    }
+   const toggleDropdown = () => setDropdownIsOpen(!dropdownIsOpen)
     return (
       <>
         <header className="header">
@@ -90,12 +92,7 @@ export default function Header(appProps) {
                 <Link className="d-flex align-items-center" href="/">
                   <img src="/assets/images/logo.svg" alt="" />
                   </Link>
-                  {appProps.props.auth && (
-                    <ul>
-                        <li><Link href="/addresses"><a href="#"><i className="fas fa-map-marker-alt"></i> {context.address} </a></Link></li>
-                    </ul>
-                    
-                 )}
+                  
                  {/* <AddressContext.Provider value={{address:'kunwar'}}>
                     {console.log(Children.map((data,index)=> {return data}))}
                 </AddressContext.Provider>
@@ -109,6 +106,13 @@ export default function Header(appProps) {
                 }}
                 </AddressContext.Consumer> */}
             </div>
+            <div className="heaDerAdress">
+              {appProps.props.auth && (
+                  <ul>
+                      <li><Link href="/addresses"><a href="#"><i className="fas fa-map-marker-alt"></i> {context.address} </a></Link></li>
+                  </ul>
+              )}
+            </div>
             {!appProps.props.auth && (
                 <nav className="d-flex flex-wrap">
                     <ul className="d-flex text-end ">
@@ -121,7 +125,7 @@ export default function Header(appProps) {
             <div className="after_login">
               <ul className="d-flex text-end ">
                 <li className="notice notification_popup_outer">
-                  <Dropdown>
+                  <Dropdown show={dropdownIsOpen} onToggle={toggleDropdown} >
                     <Dropdown.Toggle variant="thm" id="dropdown-basic">
                       <i className={"far fa-bell"}></i>
                     </Dropdown.Toggle>
@@ -149,7 +153,7 @@ export default function Header(appProps) {
                         ))}
                         </div>
                         <Link href="/notifications">
-                          <span className="btn cus_btn custom01 d-block"> View All </span>
+                          <span onClick={()=>toggleDropdown()} className="btn cus_btn custom01 d-block"> View All </span>
                         </Link>
                       </div>
                     

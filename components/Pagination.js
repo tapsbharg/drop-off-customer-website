@@ -31,7 +31,7 @@ export default function PageModule(props) {
             props.pageChange(i);
           }}
         >
-          <span style={{ color: "red" }}>
+          <span>
             <b>{i}</b>
           </span>
         </a>

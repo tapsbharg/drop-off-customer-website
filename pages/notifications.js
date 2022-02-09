@@ -1,63 +1,56 @@
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import Moment from 'react-moment';
 import AuthLayout from '../components/authLayout';
+import apiFunc from '../services/api';
 
 export default function Notifiactions(props) {
-
+    const [notificationList, setNotification] = useState(new Array());
+    const calendarStrings = {
+        lastDay : '[Yesterday at] LT',
+        sameDay : '[Today at] LT',
+        nextDay : '[Tomorrow at] LT',
+        lastWeek : '[last] dddd [at] LT',
+        nextWeek : 'dddd [at] LT',
+        sameElse : 'L'
+      };
+      useEffect(() => {
+        if (props.auth) {
+          getNotification();
+        }
+      }, [props.auth]);
+    const getNotification = () => {
+        let notiData = {
+           page : 1,
+           perPage : 20
+       }
+        apiFunc.notification(notiData).then((res)=>{
+         setNotification(res.data.result)
+        }).catch((error) => {
+         console.log(error);
+       });
+      }
     return (
       <>
       <AuthLayout props={props}>
          <section className="notification_outer py-5">
             <div className="container"> 
                 <h5> Notification </h5>  
-
-                <div className="notification_box  bg-light02 p-4 mb-3" data-aos="fade-up"  data-aos-duration="1500" data-aos-delay="100">
-                    <ul>
-                        <li className="active">
-                            <div className="form-check form-switch">
-                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" />
-                            </div>
-                        </li>
-                        <li className="title"> <b> Free Delivery </b></li>
-                        <li className="date">02:32AM</li>
-                        <li className="content">Lorem ipsum dolor sit amet, consetetur sadipscing elitr,  sed diam nonumy eirmod tempor invidunt ut labore et dolore magna sed diam nonumy eirmod tempor invidunt ut labore et dolore magna</li>
-                    </ul>
+                {notificationList.map((data,key)=>(
+                <div className="notification_box  bg-light02 p-4 mb-3" key={key}>
+                    <div className="d-flex flex-wrap justify-content-between notifyHead">
+                        <div className="notifyHeadinNamge">
+                            <h4>{data.title}</h4>
+                        </div>
+                        <div className="notifyTimer">
+                            <Moment calendar={calendarStrings}>
+                                {data.createdAt}
+                            </Moment>
+                        </div>
+                    </div>
+                    <div className="notifyDescrp"><p>{data.description}</p></div>
                 </div>
-                <div className="notification_box  bg-white p-4 mb-3"  data-aos="fade-up"  data-aos-duration="1500" data-aos-delay="150">
-                    <ul>
-                        <li className="active">
-                            <div className="form-check form-switch">
-                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" />
-                            </div>
-                        </li>
-                        <li className="title"> <b> Free Delivery </b></li>
-                        <li className="date">02:32AM</li>
-                        <li className="content">Lorem ipsum dolor sit amet, consetetur sadipscing elitr,  sed diam nonumy eirmod tempor invidunt ut labore et dolore magna sed diam nonumy eirmod tempor invidunt ut labore et dolore magna</li>
-                    </ul>
-                </div>
-                <div className="notification_box  bg-light02 p-4 mb-3"  data-aos="fade-up"  data-aos-duration="1500" data-aos-delay="200">
-                    <ul>
-                        <li className="active">
-                            <div className="form-check form-switch">
-                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" />
-                            </div>
-                        </li>
-                        <li className="title"> <b> Free Delivery </b></li>
-                        <li className="date">02:32AM</li>
-                        <li className="content">Lorem ipsum dolor sit amet, consetetur sadipscing elitr,  sed diam nonumy eirmod tempor invidunt ut labore et dolore magna sed diam nonumy eirmod tempor invidunt ut labore et dolore magna</li>
-                    </ul>
-                </div>
-                <div className="notification_box  bg-light02 p-4 mb-3"  data-aos="fade-up"  data-aos-duration="1500" data-aos-delay="250">
-                    <ul>
-                        <li className="active">
-                            <div className="form-check form-switch">
-                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" />
-                            </div>
-                        </li>
-                        <li className="title"> <b> Free Delivery </b></li>
-                        <li className="date">02:32AM</li>
-                        <li className="content">Lorem ipsum dolor sit amet, consetetur sadipscing elitr,  sed diam nonumy eirmod tempor invidunt ut labore et dolore magna sed diam nonumy eirmod tempor invidunt ut labore et dolore magna</li>
-                    </ul>
-                </div>
+                ))}
             </div>
         </section>
         </AuthLayout>

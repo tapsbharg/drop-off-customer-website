@@ -175,6 +175,8 @@ export default function SearchPage(props) {
                                             <img src={data.defaultImage.path} alt=""/>
                                         )}
                                         
+                                        {!data.defaultImage && (<img src={`/assets/images/default_img.jpg`} alt=""/>)}
+                                        
                                     </div>
                                     <div className="product_content px-3">
                                         <div className="producliscont">

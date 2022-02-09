@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from "react";
 import apiFunc from "../services/api";
 import { Tab, Tabs } from "react-bootstrap";
+import Rating from "react-rating";
 
 export default function HomePage(props) {
     const [dashdata, setDashData]=useState([]);
@@ -109,25 +110,28 @@ export default function HomePage(props) {
                                 data.vendors.map((vendorStore, key)=>(
                                     <Link href={`store-view?id=${vendorStore._id}`} key={key}>
                                 <div className="store_box bg-light02 d-flex flex-wrap Pointer">
-                                    <div className="store_box_img">
+                                    <div className={`store_box_img ${vendorStore.image?'':'store_box_border'}`}>
                                         {vendorStore.image && (<img src={vendorStore.image.path} alt=""/>)}
+                                        {!vendorStore.image && (<img src={`/assets/images/default_img.jpg`} alt=""/>)}
                                     </div>
                                     <div className="store_content">
                                         <h5>{vendorStore.storeName}</h5>
-                                        <div className="start">
-                                            <i className="active fas fa-star"></i>
-                                            <i className="active fas fa-star"></i>
-                                            <i className="active fas fa-star"></i>
-                                            <i className="active fas fa-star"></i>
-                                            <i className=" fas fa-star"></i>
-                                            <sup>4.0</sup> ***
+                                        <div className="starsRating">
+                                            <Rating
+                                                emptySymbol="far fa-star"
+                                                fullSymbol="fas fa-star"
+                                                fractions={2}
+                                                initialRating={vendorStore.rating ?vendorStore.rating:0}
+                                                readonly
+                                            />
+                                            <sup>{vendorStore.rating}</sup>
                                         </div>
                                         <div className="store_country">
                                             {vendorStore.address}
                                         </div>
-                                        <div className="store_discount">
+                                        {/* <div className="store_discount">
                                             30% Off | Average Price $10 ***
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                                     </Link>

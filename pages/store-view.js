@@ -273,7 +273,7 @@ function StoreViewPage(props) {
                                                         {/* {console.log(product)} */}
                                                             <div className="recommended_item_img">
                                                                 {product.defaultImage&& (<img src={product.defaultImage.path} alt=""/>)}
-                                                                {!product.defaultImage&& (<img src="assets/images/fev.jpg" alt=""/>)}
+                                                                {!product.defaultImage&& (<img src="/assets/images/default_img.jpg" alt=""/>)}
                                                             </div>
                                                             <div className="recommended_item_content px-3">
                                                                 <h6>{product.name}</h6>
@@ -286,7 +286,7 @@ function StoreViewPage(props) {
                                                                     <div className={`quntityPls`}>
                                                                         <button type="button" onClick={()=>removeToCart(product)} className="qty-minus">-</button>
                                                                         <input type="text" readOnly className="qty" value={product.quantity} />
-                                                                        <button type="button" onClick={()=>addToCart(product)} className="qty-plus">+</button>
+                                                                        <button type="button" onClick={()=>addToCart(product,subCat)} className="qty-plus">+</button>
                                                                     </div>
                                                                     {product.stock < product.quantity && (
                                                                         <div className="text-danger text-center">Out of stock</div>

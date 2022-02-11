@@ -170,10 +170,10 @@ export default function ProfilePage(props) {
                     <div className="profile_img d-flex flex-wrap align-items-center justify-content-center bg-light01 p-5 rounded-3">
                         <div className="profilIm">
                         {!profileData && (
-                            <img src="assets/images/web/earning.png" alt=""/>
+                            <img src="assets/images/default_user.jpg" alt=""/>
                         )}
                         {profileData && (
-                            <img src={profileData.image ?profileData.image.path:'assets/images/web/earning.png' } alt=""/>
+                            <img src={profileData.image ?profileData.image.path:'assets/images/default_user.jpg' } alt=""/>
                         )}
                         <div className="proillUPload">
                             <label>

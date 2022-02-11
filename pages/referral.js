@@ -1,7 +1,14 @@
 import Link from "next/link";
+import { useContext } from "react";
+import { UserContext } from "../components/context/locationContext";
 import DashLayout from "../components/dashLayout";
 
 export default function ReferPage(props) {
+
+
+    const context = useContext(UserContext);
+
+
     return (
       <>
       <DashLayout props={props}>
@@ -29,7 +36,7 @@ export default function ReferPage(props) {
                             <div className="referral_box04 d-flex flex-wrap my-3">
                                 <h6>Your Referral Code </h6>
                                     <div className="refer_input d-flex flex-wrap justify-content-between align-items-center">
-                                        <input type="text" placeholder="JOHN151"/>
+                                        <input type="text" placeholder="Referral Code" readOnly defaultValue={context.profile.referralCode} />
                                         <a className="btn custom01" href="#">Refer Now </a>
                                     </div>
                                 <a className="term-con" href="#"> Terms & Conditions Apply* </a>

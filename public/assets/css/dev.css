@@ -924,6 +924,7 @@ header.header {
     position: sticky;
     top: 0;
     background: #fff;
+    z-index: 999;
 }
 ul.ordr_status {
     display: flex;
@@ -1083,6 +1084,9 @@ ul.ordr_status.CANCELLED:before {
 ul.ordr_status.REJECTS:before {
     right: 75%;
 }
+ul.ordr_status.REJECTED:before {
+    right: 75%;
+}
 .store_content .starsRating {
     margin-bottom: 14px;
 }
@@ -1122,6 +1126,57 @@ header ul li a {
 .ql-editor {
     -webkit-user-modify: read-only;
 }
+.ql-clipboard {
+    display: none;
+}
+
+.ql-tooltip.ql-hidden {
+    display: none;
+}
+.refrimagBox {
+    width: 90px;
+    height: 90px;
+}
+
+.refrimagBox img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.constRefstr {
+    width: calc(100% - 90px);
+}
+.transactions_detail {
+    text-align: right;
+    color: #898989;
+}
+
+.trns_amount {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.trns_remarks {
+    font-size: 14px;
+}
+.TRNSC_CR {
+    color: #53D960;
+}
+
+.TRNSC_DR {
+    color: #D20400;
+}
+
+
+
+
+
+
+
+
+
 
 
 

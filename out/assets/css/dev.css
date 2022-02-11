@@ -924,6 +924,7 @@ header.header {
     position: sticky;
     top: 0;
     background: #fff;
+    z-index: 999;
 }
 ul.ordr_status {
     display: flex;
@@ -1122,7 +1123,13 @@ header ul li a {
 .ql-editor {
     -webkit-user-modify: read-only;
 }
+.ql-clipboard {
+    display: none;
+}
 
+.ql-tooltip.ql-hidden {
+    display: none;
+}
 
 
 

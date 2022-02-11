@@ -34,6 +34,7 @@ export default function Header(appProps) {
       api.getProfileData().then((res) => {
         // console.log("in api ", res.data);
         let data = res.data.data;
+        context.setProfile(res.data.data)
         let addrss = data.address.filter((a) => a.isDefault == true).map((b)=>{
           let coords = {
             lat : b.location.coordinates[1],

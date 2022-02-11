@@ -15,6 +15,7 @@ export default function SignUpPage(props) {
       email: "",
       phone: "",
       password: "",
+      referralCode: "",
       termscheck: "",
     };
     const validationSchema = Yup.object({
@@ -38,6 +39,7 @@ export default function SignUpPage(props) {
             /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
             "Password must contain at least 8 characters, one uppercase, one number and one special case character"
         ),
+        referralCode: Yup.string(),
         termscheck: Yup.string().required("Please check terms and privacy policy"),
     });
     const formik = useFormik({
@@ -121,7 +123,7 @@ export default function SignUpPage(props) {
                                 </div>
                                 <div className="mb-3">
                                     <label className="form-label">Referral Code</label>
-                                    <input type="text" {...formik.getFieldProps("referral")} className="form-control" id="" placeholder="Enter Referral Code"/>
+                                    <input type="text" {...formik.getFieldProps("referralCode")} className="form-control" id="" placeholder="Enter Referral Code"/>
                                 </div>
                                 
                                 

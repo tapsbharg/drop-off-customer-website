@@ -87,7 +87,7 @@ function StoreViewPage(props) {
     function getVendor(vendorId){
         apiFunc.getVendor(vendorId).then((res)=>{
             let timeData=res.data.data
-            const date = new Date();
+            /* const date = new Date();
             const dayNumber = moment(date).day(); 
             const day = moment(date).format('dddd'); 
             const hour = moment(date).format('HH')*100; 
@@ -97,7 +97,7 @@ function StoreViewPage(props) {
                 return p.dayNumber == dayNumber
             })
             let vendorOpenData = findOpenData.openAt <= time && findOpenData.closeAt >= time ? true : false;
-            timeData.isOpen=vendorOpenData;
+            timeData.isOpen=vendorOpenData; */
             setVenderInfo(timeData)
         }).catch((error)=>{
             console.log(error);
@@ -335,7 +335,7 @@ function StoreViewPage(props) {
                           <div className="all_reviews">
                                   <h6>All Reviews</h6>
                                   {reviewData.list.map((data,key)=>(
-                                  <div className="all_reviews_box d-flex flex-wrap justify-content-between mb-3"> 
+                                  <div className="all_reviews_box d-flex flex-wrap justify-content-between mb-3" key={key}> 
                                       <div className="all_reviews_img ">
                                           {data.givenByUser && (
                                             <img src={data.givenByUser.image.path} alt=""/>
@@ -344,7 +344,7 @@ function StoreViewPage(props) {
                                       </div>
                                       <div className="all_reviews_content d-flex justify-content-between align-items-center bg-light01 p-3 rounded-3">
                                           <div className="all_reviews_cont">
-                                              <h6>{data.givenByUser.name}</h6>
+                                              <h6>{data.givenByUser?.name}</h6>
                                               <p>"{data.review}"</p>
                                           </div>
                                           <div className="starsRating">

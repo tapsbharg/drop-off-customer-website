@@ -7,6 +7,7 @@ import "../public/favicon.ico";
 import "react-toastify/dist/ReactToastify.css";
 import "../public/sass/comman.css";
 import "../public/assets/css/custom.css";
+import "../public/assets/css/nprogress.css";
 import "../public/assets/css/dev.css";
 import { reactLocalStorage } from "reactjs-localstorage";
 import Layout from "../components/layoutComp";
@@ -15,7 +16,7 @@ import Router, { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import apiFunc from "../services/api";
 import { ToastContainer } from "react-toastify";
-
+// NProgress.configure({ showSpinner: publicRuntimeConfig.NProgressShowSpinner });
 Router.events.on('routeChangeStart', () => NProgress.start()); 
 Router.events.on('routeChangeComplete', () => NProgress.done()); 
 Router.events.on('routeChangeError', () => NProgress.done());
@@ -114,13 +115,13 @@ function App({ Component, pageProps }) {
     }
   };
 
-Router.events.on('routeChangeStart', () => {
+/* Router.events.on('routeChangeStart', () => {
     document.body.className = 'loading_page';
 });
 Router.events.on('routeChangeComplete', () => {
     document.body.className = document.body.className.replace("loading_page","");
     
-});
+}); */
   return (
         <Layout 
         logout={()=>logOut()} 

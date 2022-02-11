@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap"
 import Link from "next/link";
 import AuthLayout from "../components/authLayout";
@@ -15,6 +15,7 @@ import common from "../services/common";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
+import { UserContext } from "../components/context/locationContext";
 // const stripePromise = loadStripe("pk_test_6pRNASCoBOKtIshFeQd4XMUh");
 
 export default function CheckoutPage(props) {
@@ -52,6 +53,7 @@ export default function CheckoutPage(props) {
     });
     const [orderData,setOrderData]=useState(null);
 
+    const context = useContext(UserContext);
 
     
     function getProfileData(){
@@ -188,6 +190,7 @@ export default function CheckoutPage(props) {
                 deliveryPerMileCharge:res.data.data.per_mile_charge,
                 deliveryBasePrice:res.data.data.driver_base_charge,
                 serviceFeePercent:res.data.data.service_charge_percentage,
+                referralDeduction:res.data.data.maxReferralDiscount,
             }
             setOrderTotal(orderChrg);
             return orderChrg ;
@@ -239,7 +242,9 @@ export default function CheckoutPage(props) {
         let serviceFee = parseFloat(((total * chargess.serviceFeePercent) / 100));
         let serviceFeePercent = chargess.serviceFeePercent || 0;
         let deliveryAmount = parseFloat(((chargess.deliveryPerMileCharge * totalMiles) + chargess.deliveryBasePrice));
-        let referralDeduction = parseFloat(orderTotal.referralDeduction);
+        // let referralDeduction = parseFloat(orderTotal.referralDeduction);
+        let referralDeduction = context.profile?.balance > chargess.referralDeduction ? chargess.referralDeduction : context.profile?.balance || 0.00 ;
+        // console.log(referralDeduction, context.profile?.balance, chargess.referralDeduction)
         let couponObj = {
             ...couponData,
             price:subTotal

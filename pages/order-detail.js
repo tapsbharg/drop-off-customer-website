@@ -204,7 +204,7 @@ export default function OrderDetailPage(props) {
                                     <div className="ordrInfor">
                                         <h3>
                                             Order Status
-                                            {orderData.scheduleDate && (orderData.status != 'CANCELLED' && orderData.status != 'REJECTS') && (
+                                            {orderData.scheduleDate && (orderData.status != 'CANCELLED' && orderData.status != 'REJECTED') && (
                                                 <span> (Scheduled for <Moment format="DD MMM YYYY">{orderData.scheduleDate}</Moment>)</span>
                                             )}
                                         </h3>
@@ -219,11 +219,11 @@ export default function OrderDetailPage(props) {
                                     </div>
                                 </div>
                                 <ul className={`ordr_status ${orderData.status}`}>
-                                    <li className={`unactive ${(orderData.status == 'ACCEPTS' || orderData.status == 'PACKED' || orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED' || orderData.status == 'REJECTS') ? 'active':''}`}>
+                                    <li className={`unactive ${(orderData.status == 'ACCEPTS' || orderData.status == 'PACKED' || orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED' || orderData.status == 'REJECTED') ? 'active':''}`}>
                                         <i className="fas fa-check "></i > 
                                         <span> <b> Accepted </b></span> 
                                     </li>
-                                    {(orderData.status != 'CANCELLED' && orderData.status != 'REJECTS') && (
+                                    {(orderData.status != 'CANCELLED' && orderData.status != 'REJECTED') && (
                                         <>
                                             <li className={`unactive ${(orderData.status == 'PACKED' || orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
                                                 <i className="fas fa-check"></i> 
@@ -245,10 +245,10 @@ export default function OrderDetailPage(props) {
                                             <span> <b> Cancelled </b>&nbsp;</span>
                                         </li>
                                     )}
-                                    {orderData.status == 'REJECTS' &&  (
-                                        <li className={`unactive ${orderData.status == 'REJECTS'? 'active':''}`}>
+                                    {orderData.status == 'REJECTED' &&  (
+                                        <li className={`unactive ${orderData.status == 'REJECTED'? 'active':''}`}>
                                             <i className="fas fa-check"></i> 
-                                            <span> <b> Rejects </b>&nbsp;</span>
+                                            <span> <b> Rejected </b>&nbsp;</span>
                                         </li>
                                     )}
                                     
@@ -304,7 +304,7 @@ export default function OrderDetailPage(props) {
                                     <p> <b> Store </b>  </p>
                                     {orderReview.toVendor ? (
                                         <p><span> {orderReview.toVendor.review} </span></p>
-                                    ) : (orderData.status != 'CANCELLED' && orderData.status != 'REJECTS') && (
+                                    ) : (orderData.status == 'DELIVERED' && (orderReview.toDriver? orderReview.toDriver.rating > 0 : true)) && (
                                             <a className="but03" onClick={()=>addReivew('vendor')}>   Add Review </a>
                                         )
                                     }
@@ -328,7 +328,7 @@ export default function OrderDetailPage(props) {
                                     <p> <b> Driver </b>  </p>
                                     {orderReview.toDriver ? (
                                         <p><span> {orderReview.toDriver.review} </span></p>
-                                    ) : (orderData.status != 'CANCELLED' && orderData.status != 'REJECTS') && (
+                                    ) : (orderData.status == 'DELIVERED' && (orderReview.toDriver? orderReview.toDriver.rating > 0 : true)) && (
                                             <a className="but03" onClick={()=>addReivew('driver')}>   Add Review </a>
                                         )
                                     }

@@ -377,7 +377,7 @@ const apiFunc = {
     orderCharges: () =>
     authAxios({
       method: "GET",
-      url: `${ROOT_URL}/ordeSettings/getAll`,
+      url: `${ROOT_URL}/getSettings`,
     }).catch((err) => {
       console.log(err);
     }),
@@ -442,6 +442,18 @@ const apiFunc = {
     authAxios({
       method: "POST",
       url: `${ROOT_URL}/ratings/givenForVendor/pagin`,
+      data: data,
+    }),
+    referralDetail: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/referral/pagin`,
+      data: data,
+    }),
+    referralAcount: (data) =>
+    authAxios({
+      method: "POST",
+      url: `${ROOT_URL}/account/pagin`,
       data: data,
     }),
     

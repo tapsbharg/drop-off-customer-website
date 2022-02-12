@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import apiFunc from "../services/api";
 import AddEditAddress from "./addEditAddress";
+import { UserContext } from "./context/locationContext";
 
 
-export default function AddressComp(props){
+export default function AddressComp({props}){
+    const context = useContext(UserContext);
     const [addressData,setAddressData]=useState([]);
     function getAllAddress(){
         apiFunc.getProfileData().then((res)=>{
-            let resArr=res.data.data.address.map((data)=>{
+            /* let resArr=res.data.data.address.map((data)=>{
                 let resObj = data.isDefault == true
                 resObj == true ? props.getLatLong(data.location.coordinates) : null
-            })
+            }) */
+            
             setAddressData(res.data.data.address)
             checkStatus(res.data.data.address)
         }).catch((error)=>{
@@ -21,9 +24,40 @@ export default function AddressComp(props){
     function checkStatus(datas){
         datas.map((data,i)=>{
             if(data.isDefault == true){
-                props.addressSelct(data);
+                context.setLatLong(data.location.coordinates)
+                context.setAddressId(data._id)
+                getDistance(data.location.coordinates)
+                // props.addressSelct(data);
             }
         })
+    }
+    function getMiles(i) {
+        return (i*0.000621371192).toFixed(1);
+    }
+    async function getDistance(defaultLatlong){
+        if(defaultLatlong != null){
+            let venderDetail=props?.cartData?.vendor
+            if(venderDetail?.location && defaultLatlong[1]){
+                let postData={
+                    originLat: defaultLatlong[1],
+                    originLong: defaultLatlong[0],
+                    destinationLat: venderDetail.location.coordinates[1],
+                    destinationLong: venderDetail.location.coordinates[0],
+                    units: "imperial"
+                }
+                await apiFunc.distanceCalculate(postData).then((res)=>{
+                    let resData = res.data.data.rows[0].elements[0].distance;
+                    let miles = getMiles(resData?resData.value:0);
+                    context.setTotalMiles(parseFloat(miles));
+                }).catch((error)=>{
+                    console.log(error);
+                }) 
+                
+            }
+        }
+        
+        
+        
     }
     useEffect(()=>{
         getAllAddress();
@@ -43,7 +77,7 @@ export default function AddressComp(props){
     }
     return(
         <>
-        <div className={`delivery-address bg-white rounded-3 p-3 mb-3 ${props.selectClass?props.selectClass:''}`}>
+        <div className={`delivery-address bg-white rounded-3 p-3 mb-3`}>
             <h6> Choose A Delivery Address </h6> 
             <hr/>
             <div className="delivAddrScrll scroller">

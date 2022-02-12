@@ -264,27 +264,27 @@ export default function OrderDetailPage(props) {
                                     <tbody>   
                                         <tr> 
                                             <td> Sub Total </td>
-                                            <td>${(orderData.subTotal).toFixed(2)}</td>
+                                            <td>${(orderData.subTotal || 0).toFixed(2)}</td>
                                         </tr>
                                         <tr>
                                             <td>Service Fee </td>
-                                            <td>${(orderData.serviceFee).toFixed(2)}</td>
+                                            <td>${(orderData.serviceFee || 0).toFixed(2)}</td>
                                         </tr>
                                         <tr>
                                             <td>Delivery Charge </td>
-                                            <td>${(orderData.deliveryAmount).toFixed(2)}</td>
+                                            <td>${(orderData.deliveryAmount || 0).toFixed(2)}</td>
                                         </tr>
                                         <tr>
                                             <td> Referral </td>
-                                            <td>- ${(orderData.referralDeduction).toFixed(2)}</td>
+                                            <td>- ${(orderData.referralDiscount || 0).toFixed(2)}</td>
                                         </tr>
                                         <tr>
                                             <td>Coupon {orderData.coupon?`(${orderData.coupon.couponIssuer})`:''} </td>
-                                            <td>- ${(orderData.couponDeduction).toFixed(2)}</td>
+                                            <td>- ${(orderData.couponDeduction || 0).toFixed(2)}</td>
                                         </tr>
                                         <tr>
                                             <td>Grand Total </td>
-                                            <td>${(orderData.grandTotal).toFixed(2)}</td>
+                                            <td>${(orderData.grandTotal || 0).toFixed(2)}</td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -1,13 +1,15 @@
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup"
-import apiFunc from "../services/api";
-import common from "../services/common";
+import apiFunc from "../../services/api";
+import common from "../../services/common";
 import { Modal } from "react-bootstrap"
+import { UserContext } from "../context/locationContext";
 
 
 
 function CouponComp(props){
+    const context = useContext(UserContext);
 //couponIsvalid
     const [coupon, setCoupon] = useState({});
     const [couponError, setCouponError] = useState(null);
@@ -34,10 +36,12 @@ function CouponComp(props){
         }
     });
     function removeCoupon(){
-        props.setDataCoupon({
+        /* props.setDataCoupon({
             couponObj:{},
             couponDiscount:0
-        })
+        }) */
+        context.setCouponData({});
+        context.setCouponId('');
         setCoupon({});
         formik.setFieldValue('couponCode','');
         setCouponSuccess(false);
@@ -48,10 +52,12 @@ function CouponComp(props){
             setCoupon(couponObj);
             couponObj.price = props.total
             let couponDiscount = common.coupanTypeDiscount(couponObj)
-            props.setDataCoupon({
+            /* props.setDataCoupon({
                 couponObj:couponObj,
                 couponDiscount:couponDiscount
-            })
+            }) */
+            context.setCouponData(couponObj);
+            context.setCouponId(couponObj._id);
             setCouponSuccess(true)
         })
         .catch((err) => {

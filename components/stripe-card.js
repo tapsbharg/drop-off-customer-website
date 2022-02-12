@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { useMemo,useEffect, useState } from "react";
+import React, { useMemo,useEffect, useState, useContext } from "react";
 import { Modal } from "react-bootstrap"
 import apiFunc from "../services/api";
 import * as Yup from "yup";
@@ -8,6 +8,7 @@ import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import {PaymentElement} from '@stripe/react-stripe-js';
 import CheckoutForm from "./checkoutForm";
+import { UserContext } from "./context/locationContext";
 
 
 const stripePromise = loadStripe('pk_test_51J3DGCCSN2jNmtALotIqwa1DkZIQkHHJALZuHHOFvbWCRwxxlvXUYjuNF7AlSOC65tjBk54I3acnD10OttMHRgmu007HanxG0F');
@@ -15,6 +16,7 @@ const stripePromise = loadStripe('pk_test_51J3DGCCSN2jNmtALotIqwa1DkZIQkHHJALZuH
 // const clientKey =""
 
 const SplitForm = (props) => {
+    const context = useContext(UserContext);
     /* const options = {
         // passing the client secret obtained from the server
         clientSecret: clientKey,
@@ -38,7 +40,8 @@ const SplitForm = (props) => {
     function checkStatus(datas){
         datas.map((data,i)=>{
             if(data.defaultCard == true){
-                props.cardSelct(true);
+                context.setCardId(data.cardId)
+                props.cardSelct?props.cardSelct(true):null;
             }
         })
     }
@@ -53,7 +56,7 @@ const SplitForm = (props) => {
             toast.success(res.data.message);
             setWithdrawalModal(false);
             cardListingFunc();
-            props.reload();
+            props.reload?props.reload():null;
         }).catch((error)=>{
             console.log(error);
         })
@@ -63,7 +66,7 @@ const SplitForm = (props) => {
             toast.success(res.data.message);
             setDefaultCardItem(data);
             cardListingFunc();
-            props.cardSelct(true)
+            props.cardSelct?props.cardSelct(true):null
         }).catch((error)=>{
             console.log(error);
         })
@@ -72,7 +75,7 @@ const SplitForm = (props) => {
   return (
     <Elements stripe={stripePromise}>
     <>
-    {props.page && (
+    {props.page!='checkout' && (
         <a  className="btn custom01" onClick={()=>addCardModal(true)}> <i className="fas fa-plus"></i>  Add New Card </a>
     )}
     {(!props.page || props.page=='checkout') && (

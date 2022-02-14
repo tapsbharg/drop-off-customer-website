@@ -255,7 +255,7 @@ function StoreViewPage(props) {
                                   <nav className="recommended_menu ">
                                       <div className="nav nav-tabs bg-white" id="nav-tab" role="tablist">
                                         {prodData.menu && (prodData.menu.map((subCat, index) => ( 
-                                            <button key={index} className={`nav-link ${
+                                            <button type="button" key={index} className={`nav-link ${
                                                 subcategory==subCat._id?'active':(!subcategory && index == 0?'active':'')}
                                             `} onClick={()=>SubCategoryChange(subCat._id)}>{subCat.name} ({subCat.products.length})</button>
                                         )))}

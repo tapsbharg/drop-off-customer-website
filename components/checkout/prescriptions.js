@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React, { useContext, useEffect, useState } from 'react'
 import apiFunc from '../../services/api';
+import common from '../../services/common';
 import { UserContext } from '../context/locationContext';
 
 const Prescriptions = ({props}) => {
@@ -69,7 +70,7 @@ const Prescriptions = ({props}) => {
                                                 {context.prescripCheck && (
                                                     <>
                                                         {
-                                                            context.prescrpImage && (
+                                                            prescrpImage && (
                                                                 <div>
                                                                     <img src={common.previewURL(prescrpImage)} className="img-fluid" />
                                                                     <hr/>

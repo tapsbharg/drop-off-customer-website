@@ -98,7 +98,7 @@ function pageHasChangedAcc(pageNumber) {
 
                             <div className="referral_box05 d-flex flex-wrap justify-content-center align-items-center bg-red my-3 p-3 rounded-3">
                                 <a className="btn custom01 mb-3" href="#"> Available Balance : ${context.profile.balance} </a>
-                                <p>Invite your friends and earn assured $1 for every friend that signs up and make a order. Your friend also gets $1.</p>
+                                <p>Invite your friends and earn assured $30 for every friend that signs up and make a order. Your friend also gets $30.</p>
                                 <h6> Total Referrals <span> {context.profile.count} </span>  </h6>
                                 <ul className="d-flex flex-wrap justify-content-between align-items-center">
                                     <li> <a href="#"> Registered <span> {context.profile.count} </span> </a> </li>
@@ -167,7 +167,7 @@ function pageHasChangedAcc(pageNumber) {
                                                         </div>
                                                     </div>
                                                     <div className="transactions_detail">
-                                                        <span className={`trns_amount TRNSC_${data.txnType}`}> ${data.amountOut} {data.txnType} </span>
+                                                        <span className={`trns_amount TRNSC_${data.txnType}`}> ${data.txnType=='CR'?data.amountOut:data.amountIn} {data.txnType} </span>
                                                     </div> 
                                                 </div>
                                             ))}

@@ -1019,11 +1019,14 @@ ul.ordr_status li p {
 .ordrInfor h3 span {
     font-size: 13px;
 }
-.all_reviews_img img {
+.liquor_store .all_reviews .all_reviews_box .all_reviews_img img {
     width: 120px;
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
+}
+.liquor_store .liquor_store_03 .recommended_outer .recommended_menu .nav button.nav-link:hover{
+    border-color:transparent;
 }
 .tab-content .store_box .store_box_img {
     width: 180px;
@@ -1161,11 +1164,11 @@ header ul li a {
 .trns_remarks {
     font-size: 14px;
 }
-.TRNSC_CR {
+.TRNSC_DR {
     color: #53D960;
 }
 
-.TRNSC_DR {
+.TRNSC_CR {
     color: #D20400;
 }
 

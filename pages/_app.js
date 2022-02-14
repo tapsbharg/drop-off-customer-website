@@ -3,7 +3,7 @@ import AOS from "aos";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "aos/dist/aos.css";
 import "../public/assets/css/all.css";
-import "../public/favicon.ico";
+// import "../public/favicon.jpg";
 import "react-toastify/dist/ReactToastify.css";
 import "../public/sass/comman.css";
 import "../public/assets/css/custom.css";

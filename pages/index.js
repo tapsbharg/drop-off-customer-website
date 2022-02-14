@@ -138,9 +138,9 @@ export default function HomePage(props) {
                                 ))
                             ))}
                             
-                                <div className="cativerrbbTn">
+                                {/* <div className="cativerrbbTn">
                                     <a className="btn cus_btn custom01 "> View All </a>
-                                </div>
+                                </div> */}
                             </div>
                         </Tab>
                     ))}

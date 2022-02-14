@@ -21,6 +21,20 @@ export const UserProvider = ({ children }) => {
   const [totalMiles,setTotalMiles]=useState(0);
   const [cardId,setCardId]=useState('');
   
+  const clearOrderData = ()=>{
+    setSetigns({})
+    setIdcardCheck(false)
+    setPrescripCheck('')
+    setCouponData('')
+    setCouponId('')
+    setAddressId('')
+    setPrescription('')
+    setOrderDate('')
+    setLatLong('')
+    setTotalMiles('')
+    setCardId('')
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -30,6 +44,7 @@ export const UserProvider = ({ children }) => {
         setAddress,
         setLocation,
         setProfile,
+        clearOrderData,
         settings, setSetigns,
         idcardCheck,setIdcardCheck,
         prescripCheck,setPrescripCheck,

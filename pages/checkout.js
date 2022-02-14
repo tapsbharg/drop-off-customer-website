@@ -146,7 +146,8 @@ export default function CheckoutPage(props) {
             apiFunc.placeOrder(orderTotal).then((res)=>{
                 setOrderData(res.data)
                 props.getCart();
-                orderMsgModalFunc(true)
+                orderMsgModalFunc(true);
+                context.clearOrderData();
                 // toast.success(res);
             }).catch((error)=>{
                 console.log(error.response);
@@ -156,7 +157,7 @@ export default function CheckoutPage(props) {
         }
         /*  */
     }
-console.log(context)
+// console.log(context)
 
 
 

@@ -268,6 +268,14 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
+    getAbout: () =>
+    authAxios({
+      method: "GET",
+      url: `${ROOT_URL}/about/getAll`,
+      loader:true,
+    }).catch((err) => {
+      console.log(err);
+    }),
     getTerms: () =>
     authAxios({
       method: "GET",

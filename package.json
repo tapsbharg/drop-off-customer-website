@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "start2": "next build && next start -p 3000"
+    "startLocal": "NODE_ENV=production node server.js",
+    "startServer": "NODE_ENV=production pm2 start server.js"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^1.7.0",
@@ -14,6 +15,7 @@
     "aos": "^2.3.4",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.2",
+    "express": "^4.17.2",
     "formik": "^2.2.9",
     "google-map-react": "^2.1.10",
     "moment-timezone": "^0.5.33",
@@ -31,6 +33,7 @@
     "react-rating": "^2.0.5",
     "react-toastify": "^7.0.4",
     "reactjs-localstorage": "^1.0.1",
+    "universal-cookie": "^4.0.4",
     "yup": "^0.32.9"
   }
 }

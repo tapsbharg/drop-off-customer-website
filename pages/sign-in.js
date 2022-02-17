@@ -7,7 +7,9 @@ import { reactLocalStorage } from "reactjs-localstorage";
 import ROOT_URL from "../services/api-url";
 import * as Yup from "yup";
 import apiFunc from "../services/api";
+import Cookies from 'universal-cookie';
 export default function SignInPage(props) {
+  const cookies = new Cookies();
   const baseURL=ROOT_URL;
   const history = useRouter();
   const initialValues = {
@@ -48,6 +50,7 @@ export default function SignInPage(props) {
       .then((res) => {
         // console.log(res);
         if(res.data.data != undefined){
+          cookies.set('token', res.data.data.token)
           reactLocalStorage.set("token", res.data.data.token);
           reactLocalStorage.set("userId", res.data.data._id);
           toast.success(res.data.message);

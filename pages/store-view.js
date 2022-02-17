@@ -267,45 +267,47 @@ function StoreViewPage(props) {
                                                 subcategory==subCat._id?'active':(!subcategory && index == 0?'active':'')}
                                             `}>
                                                 <h6>{subCat.name} ({subCat.products.length})</h6>
-                                                {subCat.products && (subCat.products.map((product, key) => ( 
+                                                {subCat.products && (
+                                                    subCat.products.map((product, key) => (
                                                     product.isVisible && (
                                                         <div key={key} className="recommended_item d-flex flex-wrap align-items-center mb-3">
-                                                        {/* {console.log(product)} */}
                                                             <div className="recommended_item_img">
                                                                 {product.defaultImage&& (<img src={product.defaultImage.path} alt=""/>)}
                                                                 {!product.defaultImage&& (<img src="/assets/images/default_img.jpg" alt=""/>)}
                                                             </div>
                                                             <div className="recommended_item_content px-3">
                                                                 <h6>{product.name}</h6>
-                                                                <a className="price" href="#">${product.price}</a>
+                                                                <a className="price" href="#">{product.price}</a>
                                                                 <p>{product.description}</p>
                                                             </div>
                                                             <div className={`recommended_item_add prolislbtn ${product.quantity>0?'active':'deactive'}`}>
                                                                 {product.quantity>0?(
-                                                                <div className={`${product.stock < product.quantity?'stockOut':'stockIn'}`}> 
-                                                                    <div className={`quntityPls`}>
-                                                                        <button type="button" onClick={()=>removeToCart(product)} className="qty-minus">-</button>
-                                                                        <input type="text" readOnly className="qty" value={product.quantity} />
-                                                                        <button type="button" onClick={()=>addToCart(product,subCat)} className="qty-plus">+</button>
-                                                                    </div>
-                                                                    {product.stock < product.quantity && (
-                                                                        <div className="text-danger text-center">Out of stock</div>
-                                                                    )}
-                                                                </div>
-                                                                ):( 
-                                                                    <div className={`${product.stock <= 0?'stockOut':'stockIn'}`}> 
-                                                                        {(product.stock <= 0) ? (
+                                                                    <div className={`${product.stock < product.quantity?'stockOut':'stockIn'}`}> 
+                                                                        <div className={`quntityPls`}>
+                                                                            <button type="button" onClick={()=>removeToCart(product)} className="qty-minus">-</button>
+                                                                            <input type="text" readOnly className="qty" value={product.quantity} />
+                                                                            <button type="button" onClick={()=>addToCart(product,subCat)} className="qty-plus">+</button>
+                                                                        </div>
+                                                                        {product.stock < product.quantity && (
                                                                             <div className="text-danger text-center">Out of stock</div>
-                                                                        ):(
-                                                                            <a className="add_product" onClick={()=>addToCart(product)}> add  <i className="far fa-plus"> </i> </a>
                                                                         )}
                                                                     </div>
-                                                                    
-                                                                )}
+                                                                    ):(
+                                                                        <div className={`${product.stock <= 0?'stockOut':'stockIn'}`}> 
+                                                                            {(product.stock <= 0) ? (
+                                                                                <div className="text-danger text-center">Out of stock</div>
+                                                                            ):(
+                                                                                <a className="add_product" onClick={()=>addToCart(product)}> add  <i className="far fa-plus"> </i> </a>
+                                                                            )}
+                                                                        </div>
+                                                                    )
+                                                                }
                                                             </div>
                                                         </div>
-                                                    )
-                                                )))}
+                                                    
+                                                        )
+                                                    ))
+                                                )}
                                             </div>
                                         )))}
 
@@ -334,17 +336,17 @@ function StoreViewPage(props) {
                           <Tab eventKey="tab2" title="Top Reviews *">
                           <div className="all_reviews">
                                   <h6>All Reviews</h6>
-                                  {reviewData.list.map((data,key)=>(
+                                  {reviewData?.list.map((data,key)=>(
                                   <div className="all_reviews_box d-flex flex-wrap justify-content-between mb-3" key={key}> 
                                       <div className="all_reviews_img ">
-                                          {data.givenByUser && (
-                                            <img src={data.givenByUser.image.path} alt=""/>
+                                          {data?.givenByUser && (
+                                            <img src={data.givenByUser?.image?.path} alt=""/>
                                           )}
                                           
                                       </div>
                                       <div className="all_reviews_content d-flex justify-content-between align-items-center bg-light01 p-3 rounded-3">
                                           <div className="all_reviews_cont">
-                                              <h6>{data.givenByUser?.name}</h6>
+                                              <h6>{data.givenByUser.name}</h6>
                                               <p>"{data.review}"</p>
                                           </div>
                                           <div className="starsRating">

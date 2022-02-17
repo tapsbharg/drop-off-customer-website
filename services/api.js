@@ -260,11 +260,12 @@ const apiFunc = {
     }).catch((err) => {
       console.log(err);
     }),
-    getFaqs: () =>
+    getFaqs: (token) =>
     authAxios({
       method: "GET",
       url: `${ROOT_URL}/faqs`,
-      loader:true,
+      token:token,
+      loader:false,
     }).catch((err) => {
       console.log(err);
     }),

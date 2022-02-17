@@ -1172,11 +1172,48 @@ header ul li a {
     color: #D20400;
 }
 
+.about_outer_page {
+    padding: 50px 0 80px 0px;
+  }
+.about_outer_page {
+    background-image: url("../images//wave-bg.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: repeat;
+    border: 1px solid #fff;
+    animation: wave 140s linear infinite;
+    -webkit-animation: wave 140s linear infinite;
+  }
+  .about_outer_page h5 {
+    text-align: center;
+    position: relative;
+  }
+  .about_outer_page h5::after {
+    display: block;
+    content: "";
+    width: 120px;
+    height: 5px;
+    border-radius: 20px;
+    margin: auto;
+    background-color: #d20400;
+    margin: 15px auto 30px;
+  }
+  .about_outer_page .about_img {
+    display: block;
+    width: 100%;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #fff3d9;
+  }
+  .aboutconstet h2 {
+    font-size: 25px;
+    margin-bottom: 25px;
+}
 
-
-
-
-
+.aboutconstet p {
+    margin-bottom: 15px;
+    font-size: 14px;
+}
 
 
 

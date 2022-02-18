@@ -1,13 +1,27 @@
 import Link from "next/link";
-import { useContext } from "react";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
+import { Modal } from "react-bootstrap";
+import { FacebookIcon, FacebookShareButton, LinkedinIcon, LinkedinShareButton, TelegramIcon, TelegramShareButton, TwitterIcon, TwitterShareButton, WhatsappIcon, WhatsappShareButton } from "react-share";
 import { UserContext } from "../components/context/locationContext";
 import DashLayout from "../components/dashLayout";
+import { toast } from "react-toastify";
+import copy from "copy-to-clipboard";
 
 export default function ReferPage(props) {
-
-
+    const [referralModal, setReferralModal] = useState(false);
+    const [copySuccess, setCopySuccess] = useState('Copy');
     const context = useContext(UserContext);
-
+    const url = 'https://cust.alphonic.net.in/';
+    const quote = 'Please share';
+    const referralCode = context.profile.referralCode;
+    const title = `Da Drop Off`;
+    const message = `Hi there, Welcome to wish, You can now get $30 on signup using ${referralCode} referral code. Please Visit http://cust.alphonic.net.in/sign-up`;
+    const copyToClipboard = () => {
+        copy(referralCode);
+        toast.success(`You have copied "${referralCode}"`);
+        setCopySuccess('Copied')
+    }
 
     return (
       <>
@@ -37,14 +51,51 @@ export default function ReferPage(props) {
                                 <h6>Your Referral Code </h6>
                                     <div className="refer_input d-flex flex-wrap justify-content-between align-items-center">
                                         <input type="text" placeholder="Referral Code" readOnly defaultValue={context.profile.referralCode} />
-                                        <a className="btn custom01" href="#">Refer Now </a>
+                                        <a className="btn custom01" onClick={()=>{setReferralModal(true)}}>Refer Now </a>
                                     </div>
                                 <a className="term-con" href="#"> Terms & Conditions Apply* </a>
                             </div>
 
                         </div>
                     </div>
-                
+                    <Modal
+    show={referralModal}
+    onHide={()=>{setReferralModal(false)}}
+    backdrop="static"
+    keyboard={false}
+    className="modal-gray"
+    centered
+        >
+            <div className="add_new_card">
+                <div className="add_new_card_contant bg-white p-5 rounded-3">
+                    <i className="fal fa-times-circle" onClick={()=>setReferralModal(false)}></i>
+                    <div className="shareOptionWrap">
+                        <div className="shareHeasing">
+                            <h3>Referral</h3>
+                        </div>
+                        <div className={`refrboxwr ${copySuccess}`}>
+                            <div className="rressinput">{referralCode}</div>
+                            <div className="rerBtns" onClick={()=>copyToClipboard()}>{copySuccess}</div>
+                        </div>
+                        <div className="shareinPbpx">
+                            <WhatsappShareButton url={message}>
+                                <WhatsappIcon size={32} borderRadius={10}  />
+                            </WhatsappShareButton>
+                            <FacebookShareButton url={url} quote={message} title={title}>
+                                <FacebookIcon size={32} borderRadius={10}  />
+                            </FacebookShareButton>
+                            <TwitterShareButton url={url} title={title} via="web" hashtags={['#referral']} related={['referral']}>
+                                <TwitterIcon size={32} borderRadius={10}  />
+                            </TwitterShareButton>
+                            <LinkedinShareButton url={url} title={title} summary={message}>
+                                <LinkedinIcon size={32} borderRadius={10}  />
+                            </LinkedinShareButton>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </Modal>
       </DashLayout>
       </>
     )

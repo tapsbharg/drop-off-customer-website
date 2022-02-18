@@ -105,7 +105,7 @@ export default function MyOrdersPage(props) {
                                                     </li>
                                                 </ul>
                                                 <ul className="my_order03 d-flex flex-wrap justify-content-between align-items-center ">
-                                                    <li> <a href="#"> ${data.grandTotal} </a> </li>
+                                                    <li> <a href="#"> {`$`}{data.grandTotal} </a> </li>
                                                     <li> <Link href={`/order-detail?orderId=${data._id}`}>Track Details </Link> </li>
                                                 </ul>
                                             </div>
@@ -138,15 +138,16 @@ export default function MyOrdersPage(props) {
                                                 <ul className="my_order02 d-flex flex-wrap justify-content-between align-items-center py-3 my-3">
                                                     <li>
                                                         <span> Ordered On </span> 
-                                                        <Moment format="DD MMM YYYY">{data.createdAt}</Moment>
+                                                        {data.createdAt ? (<Moment format="DD MMM YYYY">{data.createdAt}</Moment>) : ('N/A')}
                                                     </li>
-                                                    <li>
+                                                    <li className="text-end">
                                                         <span> Scheduled For </span>
-                                                        <Moment format="DD MMM YYYY">{data.scheduleDate}</Moment>
+                                                        {data.scheduleDate ? (<Moment format="DD MMM YYYY">{data.scheduleDate}</Moment>) : ('N/A')}
+                                                        
                                                     </li>
                                                 </ul>
                                                 <ul className="my_order03 d-flex flex-wrap justify-content-between align-items-center ">
-                                                    <li> <a href="#"> ${data.grandTotal} </a> </li>
+                                                    <li> <a href="#"> {`$`}{data.grandTotal} </a> </li>
                                                     <li> <Link href={`/order-detail?orderId=${data._id}`}>Track Details </Link> </li>
                                                 </ul>
                                             </div>

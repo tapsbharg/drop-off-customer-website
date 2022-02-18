@@ -1214,8 +1214,61 @@ header ul li a {
     margin-bottom: 15px;
     font-size: 14px;
 }
+.shareinPbpx button {
+    margin: 0 5px;
+}
 
+.shareinPbpx {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
 
+.shareinPbpx button {
+    margin: 0 5px;
+}
+
+.shareinPbpx {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.shareHeasing {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.shareHeasing h3 {
+    font-size: 23px;
+}
+
+.refrboxwr {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px dashed #e1e1e1;
+    margin-bottom: 35px;
+    padding: 9px 15px;
+}
+
+.rerBtns {
+    color: #d20400;
+    cursor: pointer;
+}
+.refrboxwr.Copied {
+    border-color: #25d366;
+    color: #25d366;
+}
+
+.refrboxwr.Copied .rerBtns {
+    color: #25d366;
+}
 
 
 

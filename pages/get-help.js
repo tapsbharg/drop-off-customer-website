@@ -4,9 +4,11 @@ import { toast, ToastContainer } from "react-toastify";
 import * as Yup from "yup";
 import apiFunc from "../services/api";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function GetHelpsPage(props) {
     const [imageData,setImageData]=useState('')
+    const history = useRouter();
     const initialValues = {
         issue: "",
         subject: "",
@@ -55,7 +57,7 @@ export default function GetHelpsPage(props) {
     function helpdesk(data){
         apiFunc.helpdesk(data).then(res => {
             toast.success(res.data.message)
-
+            history.push("/help");
         }).catch((error) => {
             toast.success(error)
             console.log(error)

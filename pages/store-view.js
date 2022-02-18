@@ -219,7 +219,7 @@ function StoreViewPage(props) {
                         {venderInfo.isAvailable?(
                             <a href="#"> open </a>
                         ):(
-                            <a href="#" className="btn-danger"> close </a>
+                            <a href="#" className="btn-danger"> closed </a>
                         )}
                       
                   </div>
@@ -277,7 +277,7 @@ function StoreViewPage(props) {
                                                             </div>
                                                             <div className="recommended_item_content px-3">
                                                                 <h6>{product.name}</h6>
-                                                                <a className="price" href="#">{product.price}</a>
+                                                                <a className="price" href="#">{`$`}{product.price}</a>
                                                                 <p>{product.description}</p>
                                                             </div>
                                                             <div className={`recommended_item_add prolislbtn ${product.quantity>0?'active':'deactive'}`}>

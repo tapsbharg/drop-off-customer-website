@@ -219,17 +219,17 @@ export default function OrderDetailPage(props) {
                                     </div>
                                 </div>
                                 <ul className={`ordr_status ${orderData.status}`}>
-                                    <li className={`unactive ${(orderData.status == 'ACCEPTS' || orderData.status == 'PACKED' || orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED' || orderData.status == 'REJECTED') ? 'active':''}`}>
+                                    <li className={`unactive ${(orderData.status == 'ACCEPTS' || orderData.status == 'PACKED' || orderData.status == 'PICKED' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED' || orderData.status == 'REJECTED') ? 'active':''}`}>
                                         <i className="fas fa-check "></i > 
                                         <span> <b> Accepted </b></span> 
                                     </li>
                                     {(orderData.status != 'CANCELLED' && orderData.status != 'REJECTED') && (
                                         <>
-                                            <li className={`unactive ${(orderData.status == 'PACKED' || orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
+                                            <li className={`unactive ${(orderData.status == 'PACKED' || orderData.status == 'PICKED' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
                                                 <i className="fas fa-check"></i> 
                                                 <span> <b> Packed </b></span> 
                                             </li>
-                                            <li className={`unactive ${(orderData.status == 'ONTHEWAY' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
+                                            <li className={`unactive ${(orderData.status == 'PICKED' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
                                                 <i className="fas fa-check"></i> 
                                                 <span> <b> On The Way </b>&nbsp;</span > 
                                             </li>

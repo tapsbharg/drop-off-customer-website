@@ -148,6 +148,20 @@ export default function OrderDetailPage(props) {
           }
         
       }
+
+    function statusHistory(object){
+        let statusArray = object?.statusHistory
+        if(statusArray){
+            let len = statusArray.length-1
+            if(statusArray[statusArray.length-2].status == 'PACKED' && statusArray[statusArray.length-1].status == 'ACCEPTS')
+            {
+                return true
+            }
+            else{
+                return false
+            }
+        }
+    }
     return (
       <>
       <AuthLayout props={props}>
@@ -192,7 +206,7 @@ export default function OrderDetailPage(props) {
                                                 <td className="quntity">  
                                                             x{data.quantity}
                                                 </td>
-                                                <td className="price text-end" > ${(data.price).toFixed(2)} </td>
+                                                <td className="price text-end" > {`$`}{(data.price).toFixed(2)} </td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -219,13 +233,13 @@ export default function OrderDetailPage(props) {
                                     </div>
                                 </div>
                                 <ul className={`ordr_status ${orderData.status}`}>
-                                    <li className={`unactive ${(orderData.status == 'ACCEPTS' || orderData.status == 'PACKED' || orderData.status == 'PICKED' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED' || orderData.status == 'REJECTED') ? 'active':''}`}>
+                                    <li className={`unactive ${(orderData.status == 'ACCEPTS' || orderData.status == 'PACKED' || orderData.status == 'PICKED' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED' || orderData.status == 'REJECTED' || statusHistory(orderData) == true) ? 'active':''}`}>
                                         <i className="fas fa-check "></i > 
                                         <span> <b> Accepted </b></span> 
                                     </li>
                                     {(orderData.status != 'CANCELLED' && orderData.status != 'REJECTED') && (
                                         <>
-                                            <li className={`unactive ${(orderData.status == 'PACKED' || orderData.status == 'PICKED' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
+                                            <li className={`unactive ${(orderData.status == 'PACKED' || orderData.status == 'PICKED' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED' || statusHistory(orderData) == true) ? 'active':''}`}>
                                                 <i className="fas fa-check"></i> 
                                                 <span> <b> Packed </b></span> 
                                             </li>

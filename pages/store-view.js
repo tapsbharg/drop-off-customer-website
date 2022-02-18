@@ -346,7 +346,7 @@ function StoreViewPage(props) {
                                       </div>
                                       <div className="all_reviews_content d-flex justify-content-between align-items-center bg-light01 p-3 rounded-3">
                                           <div className="all_reviews_cont">
-                                              <h6>{data.givenByUser.name}</h6>
+                                              <h6>{data.givenByUser?.name}</h6>
                                               <p>"{data.review}"</p>
                                           </div>
                                           <div className="starsRating">

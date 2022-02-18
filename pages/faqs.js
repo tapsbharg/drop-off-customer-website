@@ -5,14 +5,14 @@ import Cookies from "universal-cookie";
 import apiFunc from "../services/api";
 export default function FaqsPage(props) {
     const [faqsData, setFaqsData] = useState([]);
-    /* const getFaqslist = () => {
+    const getFaqslist = () => {
         apiFunc.getFaqs().then((res)=>{
             setFaqsData(res.data.data);
         })
     }
     useEffect(()=>{
         getFaqslist();
-    },[]) */
+    },[])
     /* let faqData = apiFunc.getFaqs();
     async function laodsdata(){
         const [data] = await Promise.all([
@@ -34,9 +34,9 @@ export default function FaqsPage(props) {
     //     console.log(faqssss)
     // }
     // loadata()
-    useEffect(()=>{
+   /*  useEffect(()=>{
         setFaqsData(props.faqs)
-    },[props.faqs]);
+    },[props.faqs]); */
     return (
       <>
       {/* {props.faqs.map((data,key)=>(
@@ -62,7 +62,7 @@ export default function FaqsPage(props) {
             <Accordion defaultActiveKey={0}>
                 
                 {
-                    props.faqs.map((data,key)=>(
+                    faqsData.map((data,key)=>(
                         <Accordion.Item eventKey={key} key={key}>
                             <Accordion.Header>
                                 {data.question} {key}
@@ -81,7 +81,7 @@ export default function FaqsPage(props) {
       </>
     )
   }
-  export async function getServerSideProps(ctx) {
+/*   export async function getServerSideProps(ctx) {
     const cookies = new Cookies(ctx.req?.headers?.cookie);
     const token = cookies.get('token');
     let faqData = apiFunc.getFaqs(token)
@@ -89,7 +89,7 @@ export default function FaqsPage(props) {
         faqData
     ]);
     return { props: { faqs:res.data.data } }
-  }
+  } */
 /*   export async function getServerSideProps(ctx) {
     let faqData = axios({
         method: 'GET',

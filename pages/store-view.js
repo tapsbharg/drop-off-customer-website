@@ -281,7 +281,10 @@ function StoreViewPage(props) {
                                                                 <p>{product.description}</p>
                                                             </div>
                                                             <div className={`recommended_item_add prolislbtn ${product.quantity>0?'active':'deactive'}`}>
-                                                                {product.quantity>0?(
+                                                                {!venderInfo.isAvailable && (
+                                                                    <div className="text-danger text-center closedVendr">Closed</div>
+                                                                )}
+                                                                {venderInfo.isAvailable && (product.quantity>0?(
                                                                     <div className={`${product.stock < product.quantity?'stockOut':'stockIn'}`}> 
                                                                         <div className={`quntityPls`}>
                                                                             <button type="button" onClick={()=>removeToCart(product)} className="qty-minus">-</button>
@@ -289,19 +292,19 @@ function StoreViewPage(props) {
                                                                             <button type="button" onClick={()=>addToCart(product,subCat)} className="qty-plus">+</button>
                                                                         </div>
                                                                         {product.stock < product.quantity && (
-                                                                            <div className="text-danger text-center">Out of stock</div>
+                                                                            <div className="text-danger text-center closedVendr">Out of stock</div>
                                                                         )}
                                                                     </div>
                                                                     ):(
                                                                         <div className={`${product.stock <= 0?'stockOut':'stockIn'}`}> 
                                                                             {(product.stock <= 0) ? (
-                                                                                <div className="text-danger text-center">Out of stock</div>
+                                                                                <div className="text-danger text-center closedVendr">Out of stock</div>
                                                                             ):(
                                                                                 <a className="add_product" onClick={()=>addToCart(product)}> add  <i className="far fa-plus"> </i> </a>
                                                                             )}
                                                                         </div>
                                                                     )
-                                                                }
+                                                                )}
                                                             </div>
                                                         </div>
                                                     

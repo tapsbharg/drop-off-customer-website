@@ -1270,7 +1270,15 @@ header ul li a {
     color: #25d366;
 }
 
-
+.closedVendr {
+    background: transparent;
+    border: 1px solid #ffa19f;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    color: #dc3545!important;
+    cursor: not-allowed;
+}
 
 
 

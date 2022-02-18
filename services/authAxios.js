@@ -15,7 +15,8 @@ const baseURL = 'ROOT_URL';
 const authAxios = axios.create();
 authAxios.interceptors.request.use((config) => {  
     bodyAnimation('add', config.loader);
-    let token = config.token?config.token:reactLocalStorage.get('token');
+    // let token = config.token?config.token:reactLocalStorage.get('token');
+    let token = reactLocalStorage.get('token');
     let headers = {
         'baseURL':baseURL,
         'Content-Type': 'application/json',

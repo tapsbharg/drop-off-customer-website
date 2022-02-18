@@ -20,7 +20,7 @@ export default function SearchPage(props) {
     const router = useRouter()
     const params = router.query || '';
     const search = params.search || '';
-    const category = params.category || '';
+    const category = params.category || 'all';
 
     function getCategory(){
         apiFunc.preference().then((res)=>{
@@ -146,11 +146,11 @@ export default function SearchPage(props) {
                         <div>
                             <i className="far fa-search"></i>
                             <input type="search" className="form-control" {... formik.getFieldProps('search')} placeholder="Search Item..." aria-label="Search"/> 
-                            <i className="far fa-exchange"></i>
+                            {/* <i className="far fa-exchange"></i>
                             <ul className="low_high_price bg-white p-3 rounded-3">
                                 <li> <a href="#"> Price Low to High </a> </li>
                                 <li> <a href="#"> Price High to Low </a> </li>
-                            </ul>
+                            </ul> */}
                             {formik.touched.search && formik.errors.search ? (
                                 <div className="errorMsg">{formik.errors.search}</div>
                             ):null}
@@ -158,6 +158,7 @@ export default function SearchPage(props) {
                     </form>
                     <nav className="mb-4">
                         <div className="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button className={`nav-link ${category=='all'?'active':''}`} onClick={()=>categoryChange('all')}> All</button>
                         {dashdata.map((data, index)=>(
                             <button key={index} className={`nav-link ${category==data._id?'active':''}`} onClick={()=>categoryChange(data._id)}> {data.name}</button>
                         ))}
@@ -167,7 +168,7 @@ export default function SearchPage(props) {
                         {productList.map((data, index)=>(
                             <div  key={index}>
                                 {/* { data.category.name.replaceAll(' ','') == category.replaceAll(' ','')} */}
-                                {data.vendorId.storeType == category  && (
+                                {(data.vendorId.storeType == category || category == 'all')  && (
                             <div className={`product_grpup ${!data.vendorId.isAvailable? 'notAvail':'avail'}`}>
                                 <div className="product_informaction d-flex flex-wrap align-items-center bg-white mb-3">
                                     <div className="product_img">
@@ -181,21 +182,19 @@ export default function SearchPage(props) {
                                     <div className="product_content px-3">
                                         <div className="producliscont">
                                             <h6><b>{data.name}</b></h6>
-                                            <div className="price"><h6> ${data.price} </h6></div>
+                                            <div className="price"><h6> {`$`}{data.price} </h6></div>
                                             <Link href={`/store-view?id=${data.vendorId._id}`}>
-                                                <span> 
+                                                <span>
                                                     {data.vendorId.storeName}
-                                                    {!data.vendorId.isAvailable && (
-                                                        <span className="vendorAvlv">
-                                                            (Not Available)
-                                                        </span>
-                                                    )}
                                                 </span>
                                             </Link>
                                             
                                         </div>
-                                       <div className={`prolislbtn ${data.quantity>0?'active':'deactive'}`}>
-                                       {data.quantity>0?(
+                                       <div className={`prolislbtn ${data.quantity>0?'active':'deactive'}`}>  
+                                        {!data.vendorId.isAvailable && (
+                                            <div className="text-danger text-center closedVendr">Closed</div>
+                                        )}
+                                       {data.vendorId.isAvailable && (data.quantity>0?(
                                            <div className={`${data.stock < data.quantity?'stockOut':'stockIn'}`}> 
                                             <div className={`quntityPls`}>
                                                 <button type="button" onClick={()=>removeToCart(data)} className="qty-minus">-</button>
@@ -203,18 +202,18 @@ export default function SearchPage(props) {
                                                 <button type="button" onClick={()=>addToCart(data)} className="qty-plus">+</button>
                                             </div>
                                             {data.stock < data.quantity && (
-                                                <div className="text-danger text-center">Out of stock</div>
+                                                <div className="text-danger text-center closedVendr">Out of stock</div>
                                             )}
                                             </div>
                                         ):(
                                             <div className={`${data.stock <= 0?'stockOut':'stockIn'}`}> 
                                                 {(data.stock <= 0) ? (
-                                                    <div className="text-danger text-center">Out of stock</div>
+                                                    <div className="text-danger text-center closedVendr">Out of stock</div>
                                                 ):(
                                                     <a className="add_product" onClick={()=>addToCart(data)}> add  <i className="far fa-plus"> </i> </a>
                                                 )}
                                             </div>
-                                        )}
+                                        ))}
                                         </div> 
                                         
                                     </div>

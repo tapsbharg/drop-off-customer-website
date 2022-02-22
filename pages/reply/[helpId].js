@@ -134,9 +134,9 @@ export default function HelpReplyPage(props) {
                 <div className="chatsubmitblwpr">
                     <div className="chatInput">
                         <input type="text"  ref={chatInput} {...formik.getFieldProps("response")} placeholder="Message"/>
-                        {formik.touched.response && formik.errors.response ? (
+                        {/* {formik.touched.response && formik.errors.response ? (
                             <div className="errorMsg">{formik.errors.response}</div>
-                        ) : null}
+                        ) : null} */}
                     </div>
                     <div className="chatSubmit">
                         <button type="submit" className="btn cus_btn custom01"> Send </button>

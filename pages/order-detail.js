@@ -153,7 +153,7 @@ export default function OrderDetailPage(props) {
         let statusArray = object?.statusHistory
         if(statusArray){
             let len = statusArray.length-1
-            if(statusArray[statusArray.length-2].status == 'PACKED' && statusArray[statusArray.length-1].status == 'ACCEPTS')
+            if(statusArray[statusArray.length-2]?.status == 'PACKED' && statusArray[statusArray.length-1]?.status == 'ACCEPTS')
             {
                 return true
             }
@@ -243,7 +243,7 @@ export default function OrderDetailPage(props) {
                                                 <i className="fas fa-check"></i> 
                                                 <span> <b> Packed </b></span> 
                                             </li>
-                                            <li className={`unactive ${(orderData.status == 'PICKED' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED') ? 'active':''}`}>
+                                            <li className={`unactive ${(orderData.status == 'PICKED' || orderData.status == 'CANCELLED' || orderData.status == 'DELIVERED' || statusHistory(orderData) == true) ? 'active':''}`}>
                                                 <i className="fas fa-check"></i> 
                                                 <span> <b> On The Way </b>&nbsp;</span > 
                                             </li>

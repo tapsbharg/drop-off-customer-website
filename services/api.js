@@ -450,7 +450,7 @@ const apiFunc = {
     givenForVendor: (data) =>
     authAxios({
       method: "POST",
-      url: `${ROOT_URL}/ratings/givenForVendor/pagin`,
+      url: `${ROOT_URL}/rate/givenForVendor/pagin`,
       data: data,
     }),
     referralDetail: (data) =>

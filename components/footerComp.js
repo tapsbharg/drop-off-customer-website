@@ -8,9 +8,9 @@ export default function Footer() {
             <div className="footer_widget f_logo">
                 <img src="assets/images/Logo.png" alt=""/>
                 <ul>
-                    <li><a href="#"><i className="fas fa-map-marker-alt"></i> Sapphire Space, Bani Park, Jaipur 302016, India</a></li>
-                    <li><a href="#"> <i className="fas fa-envelope"></i> hola@dadropoff </a></li>
-                    <li><a href="#"> <i className="fas fa-phone-alt"></i> +999999999 </a></li>
+                    <li><a href="#"><i className="fas fa-map-marker-alt"></i> Jane Doe 123 Main Street  Dorm New York, NY 11377 USA</a></li>
+                    <li><a href="#"> <i className="fas fa-envelope"></i> info@dropoff.com </a></li>
+                    <li><a href="#"> <i className="fas fa-phone-alt"></i> +19999999999 </a></li>
                 </ul>
             </div>
             <div className="footer_widget">

@@ -5,7 +5,11 @@ function AuthLayout (props) {
     const [loginCheck, setLoginCheck]=useState();
     const history = useRouter();
     function redirectLogin(){
-        history.push("/sign-in");
+      let urlParams = new URLSearchParams(window.location.search);
+      let ssr = urlParams.get("ssr");
+      if (ssr != 1) {
+          history.push("/sign-in");
+      }
     }
     useEffect(() => {
         setLoginCheck(props.props.auth)

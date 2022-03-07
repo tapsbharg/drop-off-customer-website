@@ -69,9 +69,15 @@ function App({ Component, pageProps }) {
     
   }, [isAuth, guestid]);
   const logOut = () => {
-    reactLocalStorage.clear();
+   
     authDone(false);
-    window.location='/sign-in'
+    let urlParams = new URLSearchParams(window.location.search);
+    let ssr = urlParams.get("ssr");
+    if (ssr != 1) {
+        reactLocalStorage.clear(); 
+        window.location='/sign-in'
+    }
+  
     /* history.push({
       pathname: '/sign-in',
     }) */ 

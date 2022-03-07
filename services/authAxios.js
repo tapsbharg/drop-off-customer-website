@@ -49,8 +49,12 @@ authAxios.interceptors.request.use((config) => {
 const errorshow = (err) =>{
     let errHndle = err.response != undefined ? true : false
     if(errHndle == true && err.response.status === 401){
-        reactLocalStorage.clear();
-        window.location='/sign-in'
+        let urlParams = new URLSearchParams(window.location.search);
+        let ssr = urlParams.get("ssr");
+        if (ssr != 1) {
+            reactLocalStorage.clear();
+            window.location='/sign-in'
+        }
     }
     // return err.response.data.message
   }

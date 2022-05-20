@@ -11,10 +11,9 @@ import CheckoutForm from "./checkoutForm";
 import { UserContext } from "./context/locationContext";
 
 
-const stripePromise = loadStripe('pk_test_51J3DGCCSN2jNmtALotIqwa1DkZIQkHHJALZuHHOFvbWCRwxxlvXUYjuNF7AlSOC65tjBk54I3acnD10OttMHRgmu007HanxG0F');
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIP_KEY_PK);
 
 // const clientKey =""
-
 const SplitForm = (props) => {
     const context = useContext(UserContext);
     /* const options = {

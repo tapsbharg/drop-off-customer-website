@@ -207,12 +207,16 @@ export default function HomePage(props) {
 
               <div className="d-flex flex-wrap align-items-center justify-content-between pt-5">
                   <div className="signup_box" data-aos="zoom-in"  data-aos-duration="1500" data-aos-delay="100">
-                      <img src="assets/images/sig.svg" alt=""/>
-                      <Link href="/vendor/sign-up"><a className="btn cus_btn custom01"> Sign up as a store </a></Link>
+                      <div className="signiMibox">
+                        <img src="assets/images/sig.svg" alt=""/>
+                        <Link href="/vendor/sign-up"><a className="btn cus_btn custom01"> Sign up as a store </a></Link>
+                      </div>
                   </div>
                   <div className="signup_box" data-aos="zoom-in"  data-aos-duration="1500" data-aos-delay="100">
-                      <img src="assets/images/sig01.svg" alt=""/>
-                      <a className="btn cus_btn custom01 ">  Sign up as a driver </a>
+                      <div className="signiMibox">
+                        <img src="assets/images/sig01.png" alt=""/>
+                        <a className="btn cus_btn custom01 ">  Sign up as a driver </a>
+                      </div>
                   </div>
               </div>
           </div>

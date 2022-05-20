@@ -1279,7 +1279,13 @@ header ul li a {
     color: #dc3545!important;
     cursor: not-allowed;
 }
-
+.signiMibox {
+    width: 100%;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    flex-direction: column;
+}
 
 
 

@@ -1047,7 +1047,8 @@ header.header.fixedheader {
 }
 .signup_outer .signup_box img {
   max-height: 250px;
-  width: 100%;
+  /* width: 100%; */  
+  display: block;
 }
 .signup_outer .signup_box a.custom01 {
   color: #d20400;

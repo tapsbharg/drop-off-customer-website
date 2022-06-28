@@ -241,7 +241,8 @@ export default function AddEditAddress(props){
                             onChildClick={() => console.log("child click")}
                             onClick={(e)=>_onClick(e)}
                             bootstrapURLKeys={{
-                            key: "AIzaSyCENlSIWBjZtyUo92Zj9SmIbqBB4FMx54A",
+                            // key: "AIzaSyCENlSIWBjZtyUo92Zj9SmIbqBB4FMx54A",
+                            key: process.env.NEXT_PUBLIC_MAP_KEY,
                             libraries: ["places", "geometry"],
                             }}
                             yesIWantToUseGoogleMapApiInternals

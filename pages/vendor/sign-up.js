@@ -148,7 +148,7 @@ export default function SignUpPage(props) {
               >
                 <div className="sign_upform comman_from my-4">
                   <form onSubmit={formik.handleSubmit}>
-                    <h5> Vendor Signup </h5>
+                    <h5> Vendor Sign Up </h5>
                     <div className="mb-3">
                       <label className="form-label">Store Name</label>
                       <input
@@ -281,8 +281,7 @@ export default function SignUpPage(props) {
                                     "By continuing you will receive a one-time verification code to your phone number by SMS. Message and data rates may apply."
                                     </label> */}
                       <button type="submit" className="btn cus_btn custom01">
-                        {" "}
-                        Sign Up{" "}
+                        Sign Up
                       </button>
                     </div>
                     <div className="continu_social_icons my-3">
@@ -290,23 +289,20 @@ export default function SignUpPage(props) {
                       <ul className="d-flex align-items-center  justify-content-center my-2">
                         <li>
                           <a href="#">
-                            {" "}
-                            <i className="fab fa-facebook"></i>{" "}
+                            <i className="fab fa-facebook"></i>
                           </a>
                         </li>
                         <li>
                           <a href="#">
-                            {" "}
-                            <i className="fab fa-google"></i>{" "}
+                            <i className="fab fa-google"></i>
                           </a>
                         </li>
                       </ul>
                     </div>
 
                     <span>
-                      {" "}
-                      Already have an account ?{" "}
-                      <Link href="/sign-in"> Sign In </Link>{" "}
+                      Already have an account ?
+                      <Link href="/sign-in"> Sign In </Link>
                     </span>
                   </form>
                 </div>

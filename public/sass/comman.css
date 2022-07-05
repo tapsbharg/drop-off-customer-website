@@ -3822,11 +3822,33 @@ input.form-check-input:checked {
 .referral_outer .referral_box04 a.term-con {
   text-align: center;
   color: #d20400;
-  width: 100%;
+  width: 205px;
   text-align: center;
   font-weight: 600;
   padding: 15px 0;
 }
+
+.term-con-par{
+  width: 100%;
+  height:20px;
+  text-align: center;
+  display: flex;
+  margin: 5px 0px 0px 0px;
+  align-items: center;
+  justify-content: center;  
+}
+.referral_terms{
+  text-align: center;
+  cursor: pointer;
+  color: #d20400;
+  
+  width: 40px;
+  text-align: center;
+  font-weight: 600;
+  padding: 15px 0;
+  padding:auto
+}
+
 .referral_outer .referral_box04 .refer_input {
   width: 100%;
 }

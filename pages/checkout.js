@@ -103,7 +103,8 @@ export default function CheckoutPage(props) {
         let cardId = context.cardId || "";
         let prescriptionImage = context.prescription || "";
         let deliveryDistanceInMiles = context.totalMiles || 0
-        let couponId = context.couponId || ""
+        let couponId = context.couponId || "";
+        let scheduleDate = context.orderDate || null
         await setOrderTotal({
             ...orderTotal,
             subTotal :subTotal.toFixed(2) ,
@@ -121,6 +122,7 @@ export default function CheckoutPage(props) {
             deliveryDistanceInMiles:deliveryDistanceInMiles,
             serviceFeePercent:serviceFeePercent,
             couponId:couponId,
+            scheduleDate:scheduleDate,
         });
         common.loader(false)
     }

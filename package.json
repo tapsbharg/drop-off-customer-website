@@ -5,11 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build2": "next build && next export",
-    "start": "next start",
-    "start2": "next build && next start",
-    "startLocal": "NODE_ENV=production node server.js",
-    "startServer": "NODE_ENV=production pm2 start server.js"
+    "start": "next start"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^1.7.0",

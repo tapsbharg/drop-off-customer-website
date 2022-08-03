@@ -81,29 +81,3 @@ export default function FaqsPage(props) {
       </>
     )
   }
-/*   export async function getServerSideProps(ctx) {
-    const cookies = new Cookies(ctx.req?.headers?.cookie);
-    const token = cookies.get('token');
-    let faqData = apiFunc.getFaqs(token)
-    const [res] = await Promise.all([
-        faqData
-    ]);
-    return { props: { faqs:res.data.data } }
-  } */
-/*   export async function getServerSideProps(ctx) {
-    let faqData = axios({
-        method: 'GET',
-        url: 'https://jsonplaceholder.typicode.com/posts'
-    });
-    const [res] = await Promise.all([
-        faqData
-    ]);
-    return { props: { faqs:res.data } }
-  } */
-/*   export async function getServerSideProps(ctx) {
-    const res = await fetch(`https://jsonplaceholder.typicode.com/posts`)
-    const data = await res.json()
-    // Pass data to the page via props
-    return { props: { faqs:data } }
-  }
-   */

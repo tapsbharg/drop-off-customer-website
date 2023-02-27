@@ -63,6 +63,7 @@ export default function SignInPage(props) {
           } else {
             props.setlogin();
             history.push("/profile");
+            
           }
         } else {
           toast.error(res.data.message);
@@ -129,7 +130,7 @@ export default function SignInPage(props) {
                     <div className="submitbtn text-center">
                       <button className="btn cus_btn custom01">Sign In</button>
                     </div>
-                    <div className="continu_social_icons my-3">
+                    {/* <div className="continu_social_icons my-3">
                       <label> Continue with : </label>
                       <ul className="d-flex align-items-center  justify-content-center my-2">
                         <li>
@@ -143,7 +144,7 @@ export default function SignInPage(props) {
                           </a>
                         </li>
                         Please select store type </ul>
-                    </div>
+                    </div> */}
                     <span>
                       Don't have an account?
                       <Link href="/sign-up"> Sign Up Now </Link>

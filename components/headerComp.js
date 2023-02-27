@@ -16,7 +16,8 @@ export default function Header(appProps) {
   const [notificationList, setNotification] = useState(new Array());
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const history = useRouter();
-
+  const[homecolor, setHomeColor] =useState(true);
+  // const[signincolor, setSignInColor] = useState(false);
   const context = useContext(UserContext);
   const calendarStrings = {
     lastDay: "[Yesterday at] LT",
@@ -127,11 +128,11 @@ export default function Header(appProps) {
             {!appProps.props.auth && (
               <nav className="d-flex flex-wrap">
                 <ul className="d-flex text-end ">
-                  <li className="active">
-                    <Link href="/">Home</Link>
+                  <li className={ homecolor?"active": ""}>
+                    <Link href="/"  onClick={()=>setHomeColor(true)}>Home</Link>
                   </li>
-                  <li>
-                    <Link href="/sign-in">Sign in</Link>
+                  <li className={ homecolor?"": "active"}>
+                    <Link href="/sign-in" onClick={()=>setHomeColor(false)} >Sign in</Link>
                   </li>
                 </ul>
               </nav>

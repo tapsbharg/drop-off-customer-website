@@ -144,15 +144,15 @@ export default function SignUpPage(props) {
                                     <label className="mb-2">
                                     "By continuing you will receive a one-time verification code to your phone number by SMS. Message and data rates may apply."
                                     </label>
-                                    <button className="btn cus_btn custom01"> Sign Up </button>
+                                    <button className="btn cus_btn custom01 mt_10"> Sign Up </button>
                                 </div>
-                                <div className="continu_social_icons my-3">
+                                {/* <div className="continu_social_icons my-3">
                                     <label > Continue with : </label>
                                     <ul className="d-flex align-items-center  justify-content-center my-2">
                                         <li><a href="#"> <i className="fab fa-facebook"></i> </a></li>
                                         <li><a href="#"> <i className="fab fa-google"></i> </a></li>
                                     </ul>
-                                </div>
+                                </div> */}
 
                                 <span> Already have an account ? <Link href="/sign-in"> Sign In </Link> </span>
                             </form>

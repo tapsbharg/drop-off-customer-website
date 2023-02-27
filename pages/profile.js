@@ -229,6 +229,7 @@ export default function ProfilePage(props) {
                   <input
                     type="email"
                     readOnly
+                    disabled
                     // {...formik.getFieldProps("email")}
                     value={formik.values.email}
                     className="form-control"
@@ -253,6 +254,7 @@ export default function ProfilePage(props) {
                     // {...formik.getFieldProps("phone")}
                     value={formik.values.phone}
                     readOnly
+                    disabled
                     className="form-control"
                     id=""
                     placeholder="Enter Your Mobile Number"

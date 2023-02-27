@@ -29,6 +29,9 @@ export default function ForgotPasswordPage(props) {
     });
     const forgotPassword = (values) =>{
         common.loader(true);
+        setTimeout(() => {
+            common.loader(false);
+        }, 3000);
         reactLocalStorage.set('email',values.email)
         axios.post(`${baseURL}/forgotPassword`, values).then((res) => {
             toast.success(res.data.message);  

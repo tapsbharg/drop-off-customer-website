@@ -307,7 +307,9 @@ export default function HomePage(props) {
               >
                 <div className="signiMibox">
                   <img src="assets/images/sig01.png" alt="" />
+                  <Link href="https://play.google.com/store/apps/details?id=com.alphonic.drop_off_driver" target="_blank">
                   <a className="btn cus_btn custom01 "> Sign up as a driver </a>
+                  </Link>
                 </div>
               </div>
             </div>

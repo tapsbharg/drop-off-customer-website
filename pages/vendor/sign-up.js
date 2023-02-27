@@ -284,7 +284,7 @@ export default function SignUpPage(props) {
                         Sign Up
                       </button>
                     </div>
-                    <div className="continu_social_icons my-3">
+                    {/* <div className="continu_social_icons my-3">
                       <label> Continue with : </label>
                       <ul className="d-flex align-items-center  justify-content-center my-2">
                         <li>
@@ -298,7 +298,7 @@ export default function SignUpPage(props) {
                           </a>
                         </li>
                       </ul>
-                    </div>
+                    </div> */}
 
                     <span>
                       Already have an account ?

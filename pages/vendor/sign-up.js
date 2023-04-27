@@ -4,17 +4,18 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast, ToastContainer } from "react-toastify";
 import { reactLocalStorage } from "reactjs-localstorage";
-import ROOT_URL from "../../services/api-url";
 import * as Yup from "yup";
 import common from "../../services/common";
 import { useEffect, useState } from "react";
+import { ROOT_URL_VENDOR } from "../../services/api-url";
 export default function SignUpPage(props) {
-  const VendroBaseURL = "https://doapi.alphonic.net.in/api/v1/v";
+  // const VendroBaseURL = "https://doapi.alphonic.net.in/api/v1/v";
   const history = useRouter();
   const [category, setCategory] = useState(null);
   const initialValues = {
     storeName: "",
-    location: {},
+    location_lat: {},
+    location_long: {},
     storeType: "",
     email: "",
     phone: "",
@@ -23,7 +24,8 @@ export default function SignUpPage(props) {
     appPassword: "",
   };
   const validationSchema = Yup.object({
-    location: Yup.object().required("Please enter location"),
+    location_lat: Yup.number().required("Please allow location in your brower"),
+    location_long: Yup.number().required("Please allow location in your brower"),
     storeName: Yup.string().required("Please enter store name"),
     storeType: Yup.string().required("Please select store type"),
     email: Yup.string()
@@ -66,23 +68,26 @@ export default function SignUpPage(props) {
   const signUp = (userData) => {
     common.loader(true);
     axios
-      .post(`${VendroBaseURL}/signup`, userData)
+      .post(`${ROOT_URL_VENDOR}/signup`, userData)
       .then((res) => {
         if (res.data.data != undefined) {
-          toast.success("success");
-          // props.setlogin();
-          common.loader(false);
-          //http://staging.alphonic.net.in:6200
-          // console.log(res.data.data)
-          let urlOrigin = "https://vendor.alphonic.net.in";
-          history.push({
-            pathname: `${urlOrigin}/verifyEmail`,
-            query: { email: userData.email, otp: res.data.otp },
+          toast.success('😊 Congratulations! you have successfully sign up and your account is in under review.', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
           });
+          formik.resetForm()
         } else {
           common.loader(false);
           toast.error(res.data.message);
         }
+        
+        common.loader(false);
       })
       .catch((error) => {
         var message = JSON.parse(error.request.response).message;
@@ -92,7 +97,7 @@ export default function SignUpPage(props) {
   };
   function getCategory() {
     axios
-      .get(`${VendroBaseURL}/vendorCategory/getAll`)
+      .get(`${ROOT_URL_VENDOR}/vendorCategory/getAll`)
       .then((res) => {
         setCategory(res.data.data);
       })
@@ -102,10 +107,13 @@ export default function SignUpPage(props) {
   }
   useEffect(() => {
     getCategory();
-    formik.setFieldValue("location", {
-      type: "Point",
-      coordinates: [letlong().lng, letlong().let],
-    });
+    formik.setFieldValue("location_lat", letlong().let)
+    formik.setFieldValue("location_long", letlong().lng)
+    // formik.setFieldValue("location", {
+    //   type: "Point",
+    //   coordinates: [letlong().lng, letlong().let],
+    // });
+      
   }, []);
 
   const letlong = () => {

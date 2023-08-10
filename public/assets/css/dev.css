@@ -1287,5 +1287,7 @@ header ul li a {
     flex-direction: column;
 }
 
-
+.works_outer.comman_h2 h2::after, .signup_outer.comman_h2 h2::after {
+    background: #000;
+}
 

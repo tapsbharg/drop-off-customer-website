@@ -608,9 +608,9 @@ form input, form input.form-control[type="file"]{
 .slider ul li .active a span {
     color: #d90d00;
 }
-.slider ul li .active a img {
+/* .slider ul li .active a img {
     filter: brightness(0.1) sepia(0.9) saturate(6000%);
-}
+} */
 .cativerrbbTn {
     text-align: center;
     width: 100%;

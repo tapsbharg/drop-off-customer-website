@@ -35,7 +35,7 @@ export default function ForgotPasswordPage(props) {
         reactLocalStorage.set('email',values.email)
         axios.post(`${baseURL}/forgotPassword`, values).then((res) => {
             toast.success(res.data.message);  
-            reactLocalStorage.set('otp',res.data.otp)          
+            // reactLocalStorage.set('otp',res.data.otp)          
             common.loader(false);
             history.push('reset-password');
         }).catch((error) => {
